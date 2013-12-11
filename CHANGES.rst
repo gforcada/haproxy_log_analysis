@@ -12,3 +12,6 @@ CHANGES
   parse HTTP requests path.
   Both have quite a few tests to ensure they work as expected.
   [GF]
+
+- Add argument parsing and custom validation logic for all arguments.
+  [GF]
