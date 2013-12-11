@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from haproxy.haproxy import HAPROXY_LINE_REGEX
+from haproxy.haproxy import HTTP_REQUEST_REGEX
 
 import unittest
 
@@ -223,3 +224,160 @@ class HaproxyLogLineRegexTest(unittest.TestCase):
         matches = HAPROXY_LINE_REGEX.match(log_line)
 
         self.assertEqual(matches.group('http_request'), http_request)
+
+
+class HttpRequestRegexTest(unittest.TestCase):
+
+    def setUp(self):
+        self.method = 'GET'
+        self.path = '/path/to/image'
+        self.protocol = 'HTTP/1.1'
+
+    def _build_test_request(self):
+        log_line = '{0} {1} {2}'.format(
+            self.method,
+            self.path,
+            self.protocol,
+        )
+        return log_line
+
+    def test_http_request_regex(self):
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('method'), self.method)
+        self.assertEqual(matches.group('path'), self.path)
+        self.assertEqual(matches.group('protocol'), self.protocol)
+
+    def test_http_request_regex_with_port(self):
+        self.path = '/path/with/port:80'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_domain(self):
+        self.path = '/path/with/example.com'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_anchor(self):
+        self.path = '/path/to/article#section'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_parameters(self):
+        self.path = '/path/to/article?hello=world&goodbye=lennin'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_dashes_and_underscores(self):
+        self.path = '/path/to/article-with-dashes_and_underscores'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_double_slashes(self):
+        self.path = '/redirect_to?http://example.com'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_at_signs(self):
+        self.path = '/@@funny'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_percent_sign(self):
+        self.path = '/something%20encoded'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_plus_sign(self):
+        self.path = '/++adding++is+always+fun'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_vertical_bar_sign(self):
+        self.path = '/here_or|here'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_tilde_sign(self):
+        self.path = '/here~~~e'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_asterisk_sign(self):
+        self.path = '/here_*or'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_colon_sign(self):
+        self.path = '/something;or-not'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_exclamation_mark_sign(self):
+        self.path = '/something-important!'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_dollar_sign(self):
+        self.path = '/something$important'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_single_quote_sign(self):
+        self.path = '/there\'s-one\'s-way-or-another\'s'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_comma_sign(self):
+        self.path = '/there?la=as,is'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_parenthesis(self):
+        self.path = '/here_or(here)'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_square_brackets(self):
+        self.path = '/here_or[here]'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
