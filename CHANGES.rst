@@ -18,3 +18,6 @@ CHANGES
 
 - Add travis support.
   [GF]
+
+- Add coveralls support.
+  [GF]
