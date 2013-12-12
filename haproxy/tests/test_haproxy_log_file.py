@@ -134,3 +134,17 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(log_file.total_lines, 9)
         self.assertEqual(log_file.cmd_counter(), 3)
         self.assertEqual(log_file.cmd_counter_invalid(), 0)
+
+    def test_haproxy_log_file_lines_sorted(self):
+        """Check that after parsing a log file, the valid log lines are kept
+        sorted to ease further work on them.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_unsorted.log',
+        )
+        log_file.parse_file()
+
+        previous = log_file._valid_lines[0]
+        previous_date = previous.accept_date
+        for line in log_file._valid_lines[1:]:
+            self.assertTrue(previous_date < line.accept_date)
