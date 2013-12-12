@@ -134,7 +134,26 @@ def _parse_arg_filename(filename):
         raise ValueError('filename {0} does not exist'.format(filepath))
 
 
+def main(args):
+    log_file = HaproxyLogFile(
+        logfile=args['filename'],
+        start=args['start'],
+        delta=args['delta'],
+    )
+    log_file.parse_file()
+    command_string = 'log_file.cmd_{0}()'
+    for command in args['commands']:
+        string = 'command: {0}'.format(command)
+        print(string)
+        print('=' * len(string))
+
+        result = eval(command_string.format(command))
+        print(result)
+
+    return log_file  # return the log_file object so that tests can inspect it
+
+
 if __name__ == '__main__':
     parser = create_parser()
     arguments = parse_arguments(parser.parse_args())
-    log_file = HaproxyLogFile(arguments)
+    main(arguments)
