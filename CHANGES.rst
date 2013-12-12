@@ -21,3 +21,6 @@ CHANGES
 
 - Add coveralls support.
   [GF]
+
+- Add a requirements.txt file to keep track of dependencies and pin them.
+  [GF]
