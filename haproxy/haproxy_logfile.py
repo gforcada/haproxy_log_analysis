@@ -6,10 +6,14 @@ class HaproxyLogFile(object):
 
     def __init__(self, logfile=None, start=None, delta=None):
         self.logfile = logfile
-        self.start = start
+        self.start_time = start
         self.delta = delta
 
-        self.total_lines = None
+        self.end_time = None
+        if self.start_time is not None and self.delta is not None:
+            self.end_time = start + delta
+
+        self.total_lines = 0
 
         self._valid_lines = []
         self._invalid_lines = []
@@ -23,10 +27,12 @@ class HaproxyLogFile(object):
                 self.total_lines += 1
                 stripped_line = line.strip()
                 parsed_line = HaproxyLogLine(stripped_line)
-                if parsed_line.valid:
-                    self._valid_lines.append(parsed_line)
-                else:
+
+                if not parsed_line.valid:
                     self._invalid_lines.append(stripped_line)
+                elif self._is_in_time_range(parsed_line):
+                    self._valid_lines.append(parsed_line)
+
 
     @classmethod
     def commands(cls):
@@ -42,3 +48,19 @@ class HaproxyLogFile(object):
 
     def cmd_http_methods(self):
         pass
+
+    def _is_in_time_range(self, log_line):
+        """'log_line' is in time range if there is a time range to begin with
+        and the 'log_line' time is within 'start_time' and 'end_time'
+        """
+        if self.start_time is None:
+            return True
+        elif self.start_time > log_line.accept_date:
+            return False
+
+        if self.end_time is None:
+            return True
+        elif self.end_time < log_line.accept_date:
+            return False
+
+        return True

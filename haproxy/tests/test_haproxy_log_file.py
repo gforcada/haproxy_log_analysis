@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+from datetime import timedelta
 from haproxy.haproxy_logfile import HaproxyLogFile
 
 import unittest
@@ -15,7 +17,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_parsed(self):
         """Check that log files are parsed"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log'
+            logfile='haproxy/tests/files/dummy_unsorted.log'
         )
         self.assertEqual(log_file.cmd_counter(), 0)
         log_file.parse_file()
@@ -41,3 +43,94 @@ class HaproxyLogFileTest(unittest.TestCase):
         log_file.parse_file()
         self.assertEqual(log_file.cmd_counter(), 2)
         self.assertEqual(log_file.cmd_counter_invalid(), 1)
+
+    def test_haproxy_log_file_attributes_start_and_end_time(self):
+        """Check that both 'start_time' and 'end_time' are correct"""
+        now = datetime.now()
+        one_day = timedelta(days=1)
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_2_ok_1_invalid.log',
+            start=now,
+            delta=one_day,
+        )
+        self.assertEqual(log_file.start_time, now)
+        self.assertEqual(log_file.end_time, now + one_day)
+
+    def test_haproxy_log_file_attributes_start_and_end_time_no_value(self):
+        """Check that both 'start_time' and 'end_time' are None if no value
+        is passed on HaproxyLogFile __init__ method.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_2_ok_1_invalid.log'
+        )
+        self.assertEqual(log_file.start_time, None)
+        self.assertEqual(log_file.end_time, None)
+
+    def test_haproxy_log_file_attributes_start_time_no_delta(self):
+        """Check how 'start_time', 'delta' and 'end_time' attributes are
+        set as they should if only start time is given.
+        """
+        now = datetime.now()
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_2_ok_1_invalid.log',
+            start=now,
+        )
+        self.assertEqual(log_file.start_time, now)
+        self.assertEqual(log_file.delta, None)
+        self.assertEqual(log_file.end_time, None)
+
+    def test_haproxy_log_file_start_time_no_results(self):
+        """Check that if the start time is after all log entries, no log
+        entries are considered.
+        """
+        after_log_entries = datetime(year=2013, month=12, day=13)
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_test_times.log',
+            start=after_log_entries,
+        )
+        self.assertEqual(log_file.start_time, after_log_entries)
+        self.assertEqual(log_file.delta, None)
+        self.assertEqual(log_file.end_time, None)
+
+        log_file.parse_file()
+        self.assertEqual(log_file.total_lines, 9)
+        self.assertEqual(log_file.cmd_counter(), 0)
+        self.assertEqual(log_file.cmd_counter_invalid(), 0)
+
+    def test_haproxy_log_file_start_time_some_results(self):
+        """Check that if the start time is between some log entries, the log
+        entries are considered.
+        """
+        between_log_entries = datetime(year=2013, month=12, day=10)
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_test_times.log',
+            start=between_log_entries,
+        )
+        self.assertEqual(log_file.start_time, between_log_entries)
+        self.assertEqual(log_file.delta, None)
+        self.assertEqual(log_file.end_time, None)
+
+        log_file.parse_file()
+        self.assertEqual(log_file.total_lines, 9)
+        self.assertEqual(log_file.cmd_counter(), 6)
+        self.assertEqual(log_file.cmd_counter_invalid(), 0)
+
+    def test_haproxy_log_file_start_time_and_end_time_some_results(self):
+        """Check that if the start time is between some log entries and there
+        is a end_time, the entries that fit in are counted.
+        """
+        between_log_entries = datetime(year=2013, month=12, day=9, hour=11)
+        one_day = timedelta(days=1)
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_test_times.log',
+            start=between_log_entries,
+            delta=one_day,
+        )
+        self.assertEqual(log_file.start_time, between_log_entries)
+        self.assertEqual(log_file.delta, one_day)
+        self.assertEqual(log_file.end_time, between_log_entries + one_day)
+
+        log_file.parse_file()
+        self.assertEqual(log_file.total_lines, 9)
+        self.assertEqual(log_file.cmd_counter(), 3)
+        self.assertEqual(log_file.cmd_counter_invalid(), 0)
