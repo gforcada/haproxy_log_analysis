@@ -114,7 +114,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
         self.assertEqual(self.http_request, log_line.raw_http_request)
 
-        self.assertTrue(log_line.parsed)
+        self.assertTrue(log_line.valid)
 
     def test_haproxy_log_line_unused_values(self):
         raw_line = self._build_test_string()
@@ -144,10 +144,10 @@ class HaproxyLogLineTest(unittest.TestCase):
 
     def test_haproxy_log_line_invalid(self):
         """Check that if a log line can not be parsed with the regular
-        expression, 'parsed' is False.
+        expression, 'valid' is False.
         """
         self.bytes = 'wrooooong'
         raw_line = self._build_test_string()
         log_line = HaproxyLogLine(raw_line)
 
-        self.assertFalse(log_line.parsed)
+        self.assertFalse(log_line.valid)

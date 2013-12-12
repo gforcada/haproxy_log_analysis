@@ -109,7 +109,7 @@ class HaproxyLogLine(object):
 
         self.raw_line = line
 
-        self.parsed = self._parse_line(line)
+        self.valid = self._parse_line(line)
 
     def _parse_line(self, line):
         matches = HAPROXY_LINE_REGEX.match(line)
