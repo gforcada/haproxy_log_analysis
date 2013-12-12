@@ -15,3 +15,6 @@ CHANGES
 
 - Add argument parsing and custom validation logic for all arguments.
   [GF]
+
+- Add travis support.
+  [GF]
