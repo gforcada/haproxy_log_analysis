@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from datetime import timedelta
-from haproxy.haproxy import create_parser
-from haproxy.haproxy import parse_arguments
+from haproxy.main import create_parser
+from haproxy.main import parse_arguments
 
 import unittest
 

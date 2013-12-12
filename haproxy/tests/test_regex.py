@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from haproxy.haproxy import HAPROXY_LINE_REGEX
-from haproxy.haproxy import HTTP_REQUEST_REGEX
+from haproxy.haproxy_logline import HAPROXY_LINE_REGEX
+from haproxy.haproxy_logline import HTTP_REQUEST_REGEX
 
 import unittest
 

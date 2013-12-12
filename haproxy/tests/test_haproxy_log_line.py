@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from haproxy.haproxy import HaproxyLogLine
+from haproxy.haproxy_logline import HaproxyLogLine
 
 import unittest
 
