@@ -17,7 +17,7 @@ LICENSE
 
 {2}
 """.format(
-    open('README.md').read(),
+    open('README.rst').read(),
     open('CHANGES.rst').read(),
     open('LICENSE').read(),
 )
