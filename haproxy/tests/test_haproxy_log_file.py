@@ -206,3 +206,18 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(status_codes['404'], 3)
         self.assertEqual(status_codes['200'], 2)
         self.assertEqual(status_codes['300'], 4)
+
+    def test_haproxy_log_file_cmd_request_path_counter(self):
+        """Check that the request path counter command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_unsorted.log',
+        )
+        log_file.parse_file()
+        path_counter = log_file.cmd_request_path_counter()
+
+        self.assertEqual(len(path_counter), 5)
+        self.assertEqual(path_counter['/hello'], 3)
+        self.assertEqual(path_counter['/world'], 2)
+        self.assertEqual(path_counter['/free'], 2)
+        self.assertEqual(path_counter['/fra'], 1)
+        self.assertEqual(path_counter['/freitag'], 1)

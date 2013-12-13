@@ -74,6 +74,13 @@ class HaproxyLogFile(object):
             status_codes[line.status_code] += 1
         return status_codes
 
+    def cmd_request_path_counter(self):
+        """Generate statistics about HTTP requests path."""
+        paths = defaultdict(int)
+        for line in self._valid_lines:
+            paths[line.http_request_path] += 1
+        return paths
+
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
         and the 'log_line' time is within 'start_time' and 'end_time'
