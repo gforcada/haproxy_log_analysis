@@ -9,14 +9,14 @@ import re
 
 
 def create_parser():
-    desc = 'Analyze Haproxy log files and outputs statistics about it'
+    desc = 'Analyze HAProxy log files and outputs statistics about it'
     parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument('filename', help='Haproxy log file to analyze')
     parser.add_argument(
         '-s',
         '--start',
-        help='Process log entries starting at this time, in haproxy date '
+        help='Process log entries starting at this time, in HAProxy date '
              'format (e.g. 11/Dec/2013 or 11/Dec/2013:19:31:41). '
              'At least provide the day/month/year. Values not specified will '
              'use their base value (e.g. 00 for hour). Use in conjunction '
