@@ -24,3 +24,16 @@ CHANGES
 
 - Add a requirements.txt file to keep track of dependencies and pin them.
   [GF]
+
+- Run commands passed as arguments (with -c flag).
+  [GF]
+
+- Add two commands: counter and counter_invalid.
+  [GF]
+
+- Make sure that the, optional with -s and -d, time range is taken into
+  account when processing the log file.
+  [GF]
+
+- Keep valid log lines sorted so that the exact order of connections is kept.
+  [GF]
