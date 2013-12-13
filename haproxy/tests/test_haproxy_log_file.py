@@ -166,3 +166,16 @@ class HaproxyLogFileTest(unittest.TestCase):
         previous_date = previous.accept_date
         for line in log_file._valid_lines[1:]:
             self.assertTrue(previous_date < line.accept_date)
+
+    def test_haproxy_log_file_cmd_http_methods(self):
+        """Check that the http methods command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_unsorted.log',
+        )
+        log_file.parse_file()
+        http_methods = log_file.cmd_http_methods()
+
+        self.assertEqual(len(http_methods), 3)
+        self.assertEqual(http_methods['GET'], 4)
+        self.assertEqual(http_methods['POST'], 2)
+        self.assertEqual(http_methods['HEAD'], 3)

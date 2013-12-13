@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 from haproxy.haproxy_logline import HaproxyLogLine
 
 
@@ -48,7 +49,10 @@ class HaproxyLogFile(object):
         return len(self._invalid_lines)
 
     def cmd_http_methods(self):
-        pass
+        methods = defaultdict(int)
+        for line in self._valid_lines:
+            methods[line.http_request_method] += 1
+        return methods
 
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
