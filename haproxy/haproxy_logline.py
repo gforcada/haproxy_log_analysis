@@ -35,8 +35,8 @@ HAPROXY_LINE_REGEX = re.compile(
     # 0/67
     r'(?P<queue_server>\d+)/(?P<queue_backend>\d+)\s+'
     # {77.24.148.74}
-    r'((?P<request_headers>{.*})\s+(?P<response_headers>{.*})|'
-    r'(?P<headers>{.*})|)\s+'
+    r'((?P<request_headers>{.*})\s+(?P<response_headers>{.*})\s+|'
+    r'(?P<headers>{.*})\s+|)'
     # "GET /path/to/image HTTP/1.1"
     r'"(?P<http_request>.*)"'
     r'\Z'  # end of line

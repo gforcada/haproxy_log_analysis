@@ -5,7 +5,10 @@ from haproxy.haproxy_logline import HaproxyLogLine
 import unittest
 
 
-LINE = '{0} {1} {2} [{3}] {4} {5} {6} - - ---- {7} {8} {9} "{10}"'
+# 8 and 9 parameters are together because if no headers are saved the field
+# is completely empty and thus there is no double space between queue backend
+# and http request.
+LINE = '{0} {1} {2} [{3}] {4} {5} {6} - - ---- {7} {8}{9} "{10}"'
 
 
 class HaproxyLogLineTest(unittest.TestCase):
@@ -40,7 +43,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
         self.queue_server = '2'
         self.queue_backend = '67'
-        self.headers = '{77.24.148.74}'
+        self.headers = ' {77.24.148.74}'
         self.http_request = 'GET /path/to/image HTTP/1.1'
 
     def _build_test_string(self):
@@ -109,7 +112,8 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertEqual(self.queue_server, log_line.queue_server)
         self.assertEqual(self.queue_backend, log_line.queue_backend)
 
-        self.assertEqual(self.headers, log_line.captured_request_headers)
+        self.assertEqual(self.headers.strip(),
+                         log_line.captured_request_headers)
         self.assertEqual(None, log_line.captured_response_headers)
 
         self.assertEqual(self.http_request, log_line.raw_http_request)
@@ -151,3 +155,27 @@ class HaproxyLogLineTest(unittest.TestCase):
         log_line = HaproxyLogLine(raw_line)
 
         self.assertFalse(log_line.valid)
+
+    def test_haproxy_log_line_no_captured_headers(self):
+        """Check that if a log line does not have any captured headers, the
+        line is still valid.
+        """
+        self.headers = ''
+        raw_line = self._build_test_string()
+        log_line = HaproxyLogLine(raw_line)
+
+        self.assertTrue(log_line.valid)
+
+    def test_haproxy_log_line_request_and_response_captured_headers(self):
+        """Check that if a log line does have both request and response headers
+        captured, both are parsed correctly.
+        """
+        request_headers = '{something}'
+        response_headers = '{something_else}'
+        self.headers = ' {0} {1}'.format(request_headers, response_headers)
+        raw_line = self._build_test_string()
+        log_line = HaproxyLogLine(raw_line)
+
+        self.assertTrue(log_line.valid)
+        self.assertEqual(log_line.captured_request_headers, request_headers)
+        self.assertEqual(log_line.captured_response_headers, response_headers)
