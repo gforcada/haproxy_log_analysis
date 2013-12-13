@@ -2,11 +2,29 @@
 from datetime import datetime
 from datetime import timedelta
 from haproxy.haproxy_logfile import HaproxyLogFile
+from haproxy.main import main
 
 import unittest
 
 
 class HaproxyLogFileTest(unittest.TestCase):
+
+    def test_haproxy_log_file_from_main(self):
+        start = datetime.now()
+        delta = timedelta(1)
+        filename = 'haproxy/tests/files/dummy_unsorted.log'
+        data = {
+            'start': start,
+            'delta': delta,
+            'filename': filename,
+            'commands': ['counter', ],
+        }
+        logfile = main(data)
+
+        self.assertEqual(logfile.start_time, start)
+        self.assertEqual(logfile.delta, delta)
+        self.assertEqual(logfile.end_time, start + delta)
+        self.assertEqual(logfile.logfile, filename)
 
     def test_haproxy_log_file_error_no_file(self):
         """Check that trying to parse a non existing file raises an error"""
