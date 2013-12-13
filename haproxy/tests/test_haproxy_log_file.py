@@ -193,3 +193,16 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(ip_counter['123.123.124.124'], 2)
         self.assertEqual(ip_counter['123.123.124.123'], 1)
         self.assertEqual(ip_counter['123.123.123.124'], 1)
+
+    def test_haproxy_log_file_cmd_status_codes(self):
+        """Check that the status codes command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_unsorted.log',
+        )
+        log_file.parse_file()
+        status_codes = log_file.cmd_status_codes_counter()
+
+        self.assertEqual(len(status_codes), 3)
+        self.assertEqual(status_codes['404'], 3)
+        self.assertEqual(status_codes['200'], 2)
+        self.assertEqual(status_codes['300'], 4)

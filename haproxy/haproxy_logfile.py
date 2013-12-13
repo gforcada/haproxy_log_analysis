@@ -66,6 +66,14 @@ class HaproxyLogFile(object):
                 ip_counter[stripped_brackets] += 1
         return ip_counter
 
+    def cmd_status_codes_counter(self):
+        """Generate statistics about HTTP status codes. 404, 500 and so on.
+        """
+        status_codes = defaultdict(int)
+        for line in self._valid_lines:
+            status_codes[line.status_code] += 1
+        return status_codes
+
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
         and the 'log_line' time is within 'start_time' and 'end_time'
