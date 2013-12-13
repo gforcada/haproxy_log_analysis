@@ -34,6 +34,7 @@ setup(
         'Environment :: Console',
         'Intended Audience :: System Administrators',
         'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Topic :: Internet :: Log Analysis',
     ],
     keywords='haproxy log analysis report',
