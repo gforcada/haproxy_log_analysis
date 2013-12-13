@@ -179,3 +179,17 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(http_methods['GET'], 4)
         self.assertEqual(http_methods['POST'], 2)
         self.assertEqual(http_methods['HEAD'], 3)
+
+    def test_haproxy_log_file_cmd_ip_counter(self):
+        """Check that the ip counter command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_unsorted.log',
+        )
+        log_file.parse_file()
+        ip_counter = log_file.cmd_ip_counter()
+
+        self.assertEqual(len(ip_counter), 4)
+        self.assertEqual(ip_counter['123.123.123.123'], 4)
+        self.assertEqual(ip_counter['123.123.124.124'], 2)
+        self.assertEqual(ip_counter['123.123.124.123'], 1)
+        self.assertEqual(ip_counter['123.123.123.124'], 1)

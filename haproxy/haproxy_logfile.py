@@ -54,6 +54,18 @@ class HaproxyLogFile(object):
             methods[line.http_request_method] += 1
         return methods
 
+    def cmd_ip_counter(self):
+        """To enable this command requests need to provide a header with the
+        forwarded IP (usually X-Forwarded-For) and be it the only header
+        being captured.
+        """
+        ip_counter = defaultdict(int)
+        for line in self._valid_lines:
+            if line.captured_request_headers is not None:
+                stripped_brackets = line.captured_request_headers[1:-1]
+                ip_counter[stripped_brackets] += 1
+        return ip_counter
+
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
         and the 'log_line' time is within 'start_time' and 'end_time'
