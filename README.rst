@@ -82,13 +82,16 @@ command-line interface section above) to the haproxy log file being analyzed.
 ``request_path_counter``
   Reports a breakdown of how many requests per path (/rss, /, /another/path).
 
+``slow_requests``
+  Reports a list of requests that downstream servers took more than 1 second
+  to response.
+
 
 TODO
 ----
 
 - add more commands: *(help appreciated)*
 
-  - reports on slow requests
   - reports on the backend load
   - reports on the queue
   - reports on slow connections
