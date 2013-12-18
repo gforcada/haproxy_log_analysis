@@ -86,7 +86,7 @@ command-line interface section above) to the haproxy log file being analyzed.
 TODO
 ----
 
-- add more of commands: *(help appreciated)*
+- add more commands: *(help appreciated)*
 
   - reports on slow requests
   - reports on the backend load
