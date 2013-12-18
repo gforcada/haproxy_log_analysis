@@ -102,6 +102,10 @@ TODO
 
 - think of a way to show the commands output in a meaningful way
 
+- be able to specify an output format. For any command that makes sense (slow
+  requests for example) output the given fields for each log line (i.e.
+  acceptance date, path, downstream server, load at that time...)
+
 - *your ideas*
 
 
