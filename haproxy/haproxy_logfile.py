@@ -96,6 +96,15 @@ class HaproxyLogFile(object):
                 slow_requests.append(response_time)
         return slow_requests
 
+    def cmd_server_load(self):
+        """Generate statistics regarding how many requests were processed by
+        each downstream server.
+        """
+        servers = defaultdict(int)
+        for line in self._valid_lines:
+            servers[line.server_name] += 1
+        return servers
+
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
         and the 'log_line' time is within 'start_time' and 'end_time'

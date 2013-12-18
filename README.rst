@@ -87,13 +87,17 @@ command-line interface section above) to the haproxy log file being analyzed.
   Reports a list of requests that downstream servers took more than 1 second
   to response.
 
+``server_load``
+  Reports a breakdown of how many requests were processed by each downstream
+  server. Note that currently it does not take into account the backend the
+  server is configured on.
+
 
 TODO
 ----
 
 - add more commands: *(help appreciated)*
 
-  - reports on the backend load
   - reports on the queue
   - reports on slow connections
   - reports on servers connection time

@@ -234,3 +234,16 @@ class HaproxyLogFileTest(unittest.TestCase):
         slow_requests.sort()  # sort them as the log analyzer sorts by dates
         self.assertEqual(slow_requests,
                          [1293, 2936, 2942, 20095, 29408, ])
+
+    def test_haproxy_log_file_cmd_server_load(self):
+        """Check that the server load counter command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_small.log',
+        )
+        log_file.parse_file()
+        servers = log_file.cmd_server_load()
+
+        self.assertEqual(len(servers), 3)
+        self.assertEqual(servers['instance1'], 4)
+        self.assertEqual(servers['instance2'], 3)
+        self.assertEqual(servers['instance3'], 2)
