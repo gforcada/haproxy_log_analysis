@@ -81,6 +81,21 @@ class HaproxyLogFile(object):
             paths[line.http_request_path] += 1
         return paths
 
+    def cmd_slow_requests(self):
+        """List all requests that took a certain amount of time to be
+        processed.
+
+        TODO: by now hardcoded to 1 second (1000 milliseconds), improve the
+        command line interface to allow to send parameters to each command or
+        globally.
+        """
+        slow_requests = []
+        for line in self._valid_lines:
+            response_time = line.time_wait_response
+            if response_time > 1000:
+                slow_requests.append(response_time)
+        return slow_requests
+
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
         and the 'log_line' time is within 'start_time' and 'end_time'

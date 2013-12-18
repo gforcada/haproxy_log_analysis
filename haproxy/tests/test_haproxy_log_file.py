@@ -221,3 +221,16 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(path_counter['/free'], 2)
         self.assertEqual(path_counter['/fra'], 1)
         self.assertEqual(path_counter['/freitag'], 1)
+
+    def test_haproxy_log_file_cmd_slow_requests(self):
+        """Check that the slow requests counter command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_small.log',
+        )
+        log_file.parse_file()
+        slow_requests = log_file.cmd_slow_requests()
+
+        self.assertEqual(len(slow_requests), 5)
+        slow_requests.sort()  # sort them as the log analyzer sorts by dates
+        self.assertEqual(slow_requests,
+                         [1293, 2936, 2942, 20095, 29408, ])
