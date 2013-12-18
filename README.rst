@@ -92,13 +92,17 @@ command-line interface section above) to the haproxy log file being analyzed.
   server. Note that currently it does not take into account the backend the
   server is configured on.
 
+``queue_peaks``
+  Reports a list of queue peaks. A queue peak is defined by the biggest
+  value on the backend queue on a series of log lines that are between log
+  lines without being queued.
+
 
 TODO
 ----
 
 - add more commands: *(help appreciated)*
 
-  - reports on the queue
   - reports on slow connections
   - reports on servers connection time
   - reports on termination state

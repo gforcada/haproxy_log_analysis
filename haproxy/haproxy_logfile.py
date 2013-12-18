@@ -105,6 +105,37 @@ class HaproxyLogFile(object):
             servers[line.server_name] += 1
         return servers
 
+    def cmd_queue_peaks(self):
+        """Generate a list of the requests peaks on the queue.
+
+        A queue peak is defined by the biggest value on the backend queue
+        on a series of log lines that are between log lines without being
+        queued.
+
+        TODO: allow to configure up to which peak can be ignored. Currently
+        set to 1.
+        """
+        threshold = 1
+        peaks = []
+        current_peak = 0
+        queue = 0
+
+        for line in self._valid_lines:
+            queue = line.queue_backend
+
+            if queue == 0 and current_peak > threshold:
+                peaks.append(current_peak)
+                current_peak = 0
+
+            if queue > current_peak:
+                current_peak = queue
+
+        # case of a series that does not end
+        if queue > 0 and current_peak > threshold:
+            peaks.append(current_peak)
+
+        return peaks
+
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
         and the 'log_line' time is within 'start_time' and 'end_time'

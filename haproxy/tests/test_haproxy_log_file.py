@@ -247,3 +247,27 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(servers['instance1'], 4)
         self.assertEqual(servers['instance2'], 3)
         self.assertEqual(servers['instance3'], 2)
+
+    def test_haproxy_log_file_cmd_queue_peaks(self):
+        """Check that the queue peaks command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_queue.log',
+        )
+        log_file.parse_file()
+        peaks = log_file.cmd_queue_peaks()
+
+        self.assertEqual(len(peaks), 4)
+        self.assertEqual(peaks, [4, 19, 49, 3, ])
+
+    def test_haproxy_log_file_cmd_queue_peaks_no_end(self):
+        """Check that the queue peaks command reports as expected when the
+        last log request did not have any queue.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_queue_2.log',
+        )
+        log_file.parse_file()
+        peaks = log_file.cmd_queue_peaks()
+
+        self.assertEqual(len(peaks), 3)
+        self.assertEqual(peaks, [4, 19, 49, ])
