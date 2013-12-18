@@ -4,7 +4,8 @@ HAProxy log analyzer
 This Python package is a `HAProxy`_ log parser that allows you to analyze
 your HAProxy log files in multiple ways (see commands section below).
 
-Note: currently only the `HTTP log format`_ is supported.
+.. note::
+   Currently only the `HTTP log format`_ is supported.
 
 
 Tests and coverage
