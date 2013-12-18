@@ -18,7 +18,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.process_name_and_pid = 'localhost haproxy[28029]:'
 
         self.client_ip = '127.0.0.1'
-        self.client_port = '2345'
+        self.client_port = 2345
 
         self.accept_date = '09/Dec/2013:12:59:46.633'
 
@@ -26,10 +26,10 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.backend_name = 'default'
         self.server_name = 'instance8'
 
-        self.tq = '0'
-        self.tw = '51536'
-        self.tc = '1'
-        self.tr = '48082'
+        self.tq = 0
+        self.tw = 51536
+        self.tc = 1
+        self.tr = 48082
         self.tt = '99627'
 
         self.status = '200'
@@ -41,8 +41,8 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.srv = '1'
         self.retries = '20'
 
-        self.queue_server = '2'
-        self.queue_backend = '67'
+        self.queue_server = 2
+        self.queue_backend = 67
         self.headers = ' {77.24.148.74}'
         self.http_request = 'GET /path/to/image HTTP/1.1'
 
@@ -86,7 +86,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
         self.assertEqual(raw_line, log_line.raw_line)
         self.assertEqual(self.client_ip, log_line.client_ip)
-        self.assertEqual(int(self.client_port), log_line.client_port)
+        self.assertEqual(self.client_port, log_line.client_port)
 
         self.assertTrue(log_line.raw_accept_date in self.accept_date)
 
@@ -94,10 +94,10 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertEqual(self.backend_name, log_line.backend_name)
         self.assertEqual(self.server_name, log_line.server_name)
 
-        self.assertEqual(int(self.tq), log_line.time_wait_request)
-        self.assertEqual(int(self.tw), log_line.time_wait_queues)
-        self.assertEqual(int(self.tc), log_line.time_connect_server)
-        self.assertEqual(int(self.tr), log_line.time_wait_response)
+        self.assertEqual(self.tq, log_line.time_wait_request)
+        self.assertEqual(self.tw, log_line.time_wait_queues)
+        self.assertEqual(self.tc, log_line.time_connect_server)
+        self.assertEqual(self.tr, log_line.time_wait_response)
         self.assertEqual(self.tt, log_line.total_time)
 
         self.assertEqual(self.status, log_line.status_code)

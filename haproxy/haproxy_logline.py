@@ -138,8 +138,8 @@ class HaproxyLogLine(object):
         self.connections_server = matches.group('srv')
         self.retries = matches.group('retries')
 
-        self.queue_server = matches.group('queue_server')
-        self.queue_backend = matches.group('queue_backend')
+        self.queue_server = int(matches.group('queue_server'))
+        self.queue_backend = int(matches.group('queue_backend'))
 
         self.captured_request_headers = matches.group('request_headers')
         self.captured_response_headers = matches.group('response_headers')
