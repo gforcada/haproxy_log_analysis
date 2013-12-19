@@ -76,31 +76,16 @@ class HaproxyLogFile(object):
         ips_dict = self.cmd_ip_counter()
         ips_list = []
 
-        # set a usual big enough value so that it will be replaced
-        min_repetitions = 99999
-        min_ip = None
-
         for ip in ips_dict:
-            repetitions = ips_dict[ip]
-            current_ip = {'ip': ip,
-                          'repetitions': repetitions, }
+            ips_list.append(
+                {'ip': ip,
+                 'repetitions': ips_dict[ip], }
+            )
 
-            if len(ips_list) < threshold:
-                ips_list.append(current_ip)
-
-                if repetitions < min_repetitions:
-                    min_repetitions = repetitions
-                    min_ip = ip
-            else:
-                if repetitions > min_repetitions:
-                    for position, ip_info in enumerate(ips_list):
-                        if ip_info['ip'] == min_ip:
-                            ips_list[position] = current_ip
-                            break
-
-        return sorted(ips_list,
-                      key=lambda ip_info: ip_info['repetitions'],
-                      reverse=True)
+        ips_list = sorted(ips_list,
+                          key=lambda ip_info: ip_info['repetitions'],
+                          reverse=True)
+        return ips_list[:threshold]
 
     def cmd_status_codes_counter(self):
         """Generate statistics about HTTP status codes. 404, 500 and so on.
