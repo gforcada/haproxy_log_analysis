@@ -271,3 +271,42 @@ class HaproxyLogFileTest(unittest.TestCase):
 
         self.assertEqual(len(peaks), 3)
         self.assertEqual(peaks, [4, 19, 49, ])
+
+    def test_haproxy_log_file_cmd_top_ips(self):
+        """Check that the queue top ips reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_top_ips.log',
+        )
+        log_file.parse_file()
+        top_ips = log_file.cmd_top_ips()
+
+        self.assertEqual(len(top_ips), 10)
+        self.assertEqual(top_ips[0], {'ip': '1.1.1.15', 'repetitions': 6})
+        self.assertEqual(top_ips[1], {'ip': '1.1.1.11', 'repetitions': 5})
+
+        # as the 3rd and 4th have the same repetitions their order is unknown
+        self.assertEqual(top_ips[2]['repetitions'], 4)
+        self.assertEqual(top_ips[3]['repetitions'], 4)
+        self.assertTrue(top_ips[2]['ip'] in ('1.1.1.10', '1.1.1.19'))
+        self.assertTrue(top_ips[3]['ip'] in ('1.1.1.10', '1.1.1.19'))
+
+        # the same as above for all the others
+        other_ips = [
+            '1.1.1.12',
+            '1.1.1.13',
+            '1.1.1.14',
+            '1.1.1.16',
+            '1.1.1.17',
+            '1.1.1.18',
+        ]
+        for ip_info in top_ips[4:]:
+            self.assertEqual(ip_info['repetitions'], 2)
+            self.assertTrue(ip_info['ip'] in other_ips)
+
+            # remove the other_ips to ensure all ips are there
+            for position, current in enumerate(other_ips):
+                if current == ip_info['ip']:
+                    del other_ips[position]
+                    break
+
+        self.assertEqual(other_ips, [])

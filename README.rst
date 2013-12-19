@@ -76,6 +76,9 @@ command-line interface section above) to the haproxy log file being analyzed.
   has the ip on it (usually the X-Forwarded-For header). Something like:
   ``capture request header X-Forwarded-For len 20``
 
+``top_ips``
+  Reports the 10 IPs with most requests (and the amount of requests).
+
 ``status_codes_counter``
   Reports a breakdown of how many requests per HTTP status code (404, 500,
   200, 301..) are on the log file.

@@ -66,6 +66,42 @@ class HaproxyLogFile(object):
                 ip_counter[stripped_brackets] += 1
         return ip_counter
 
+    def cmd_top_ips(self):
+        """Returns the most frequent IPs.
+
+        TODO: right now is hardcoded to 20 IPs, improve the command line
+        interface to allow to send parameters to each command or globally.
+        """
+        threshold = 10
+        ips_dict = self.cmd_ip_counter()
+        ips_list = []
+
+        # set a usual big enough value so that it will be replaced
+        min_repetitions = 99999
+        min_ip = None
+
+        for ip in ips_dict:
+            repetitions = ips_dict[ip]
+            current_ip = {'ip': ip,
+                          'repetitions': repetitions, }
+
+            if len(ips_list) < threshold:
+                ips_list.append(current_ip)
+
+                if repetitions < min_repetitions:
+                    min_repetitions = repetitions
+                    min_ip = ip
+            else:
+                if repetitions > min_repetitions:
+                    for position, ip_info in enumerate(ips_list):
+                        if ip_info['ip'] == min_ip:
+                            ips_list[position] = current_ip
+                            break
+
+        return sorted(ips_list,
+                      key=lambda ip_info: ip_info['repetitions'],
+                      reverse=True)
+
     def cmd_status_codes_counter(self):
         """Generate statistics about HTTP status codes. 404, 500 and so on.
         """
