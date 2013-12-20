@@ -67,17 +67,11 @@ class HaproxyLogFile(object):
         return ip_counter
 
     def cmd_top_ips(self):
-        """Returns the most frequent IPs.
-
-        TODO: right now is hardcoded to 10 IPs, improve the command line
-        interface to allow to send parameters to each command or globally.
-        """
-        threshold = 10
-        ips_list = self.cmd_ip_counter().items()
-        ips_list = sorted(ips_list,
-                          key=lambda ip_info: ip_info[1],
-                          reverse=True)
-        return ips_list[:threshold]
+        """Returns the most frequent IPs."""
+        return self._sort_and_trim(
+            self.cmd_ip_counter(),
+            reverse=True
+        )
 
     def cmd_status_codes_counter(self):
         """Generate statistics about HTTP status codes. 404, 500 and so on.
@@ -95,17 +89,11 @@ class HaproxyLogFile(object):
         return paths
 
     def cmd_top_request_paths(self):
-        """Returns the most frequent paths.
-
-        TODO: right now is hardcoded to 10 paths, improve the command line
-        interface to allow to send parameters to each command or globally.
-        """
-        threshold = 10
-        paths_list = self.cmd_request_path_counter().items()
-        paths_list = sorted(paths_list,
-                            key=lambda path_info: path_info[1],
-                            reverse=True)
-        return paths_list[:threshold]
+        """Returns the most frequent paths."""
+        return self._sort_and_trim(
+            self.cmd_request_path_counter(),
+            reverse=True
+        )
 
     def cmd_slow_requests(self):
         """List all requests that took a certain amount of time to be
@@ -190,3 +178,18 @@ class HaproxyLogFile(object):
         """
         self._valid_lines = sorted(self._valid_lines,
                                    key=lambda line: line.accept_date)
+
+    @staticmethod
+    def _sort_and_trim(data, reverse=False):
+        """Sorts a dictionary with at least two fields on each of them sorting
+        by the second element.
+
+        TODO: right now is hardcoded to 10 paths, improve the command line
+        interface to allow to send parameters to each command or globally.
+        """
+        threshold = 10
+        data_list = data.items()
+        data_list = sorted(data_list,
+                           key=lambda data_info: data_info[1],
+                           reverse=reverse)
+        return data_list[:threshold]
