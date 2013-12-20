@@ -108,6 +108,10 @@ command-line interface section above) to the haproxy log file being analyzed.
   This command only works if the default port for SSL (443) appears on the
   path.
 
+``requests_per_minute``
+  Reports on how many requests were made per minute. It works best when used
+  with ``-s``and ``-d``command line arguments, as the output can be huge.
+
 
 TODO
 ----

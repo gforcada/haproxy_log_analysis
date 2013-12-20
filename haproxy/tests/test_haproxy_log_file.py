@@ -365,3 +365,47 @@ class HaproxyLogFileTest(unittest.TestCase):
 
         self.assertEqual(ssl, 7)
         self.assertEqual(non_ssl, 5)
+
+    def test_haproxy_log_file_cmd_requests_per_minute(self):
+        """Check that the requests per minute command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/requests_per_minute.log',
+        )
+        log_file.parse_file()
+        requests = log_file.cmd_requests_per_minute()
+
+        self.assertEqual(len(requests), 5)
+
+        self.assertEqual(
+            requests[0],
+            (datetime(2013, 12, 11, 11, 2), 8)
+        )
+        self.assertEqual(
+            requests[1],
+            (datetime(2013, 12, 11, 11, 3), 3)
+        )
+        self.assertEqual(
+            requests[2],
+            (datetime(2013, 12, 11, 11, 13), 5)
+        )
+        self.assertEqual(
+            requests[3],
+            (datetime(2013, 12, 11, 11, 52), 7)
+        )
+        self.assertEqual(
+            requests[4],
+            (datetime(2013, 12, 11, 12, 2), 9)
+        )
+
+    def test_haproxy_log_file_cmd_requests_per_minute_no_lines(self):
+        """Check that the requests per minute command reports nothing if there
+        are no valid lines to check for.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/requests_per_minute.log',
+            start=datetime(2014, 3, 18)
+        )
+        log_file.parse_file()
+        requests = log_file.cmd_requests_per_minute()
+
+        self.assertEqual(requests, None)
