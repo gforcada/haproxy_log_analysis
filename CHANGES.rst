@@ -5,21 +5,18 @@ CHANGES
 0.0.1 (unreleased)
 ------------------
 
-- Create distribution
+- Create distribution.
   [GF]
 
 - Add regular expressions for haproxy log lines (HTTP format) and to
   parse HTTP requests path.
-  Both have quite a few tests to ensure they work as expected.
+  Added tests to ensure they work as expected.
   [GF]
 
 - Add argument parsing and custom validation logic for all arguments.
   [GF]
 
-- Add travis support.
-  [GF]
-
-- Add coveralls support.
+- Add travis_ and coveralls_ support. See its badges on `README.rst`_
   [GF]
 
 - Add a requirements.txt file to keep track of dependencies and pin them.
@@ -28,12 +25,15 @@ CHANGES
 - Run commands passed as arguments (with -c flag).
   [GF]
 
-- Add two commands: counter and counter_invalid.
-  [GF]
-
-- Make sure that the, optional with -s and -d, time range is taken into
-  account when processing the log file.
+- Add quite a few commands, see `README.rst`_ for a complete list of them.
   [GF]
 
 - Keep valid log lines sorted so that the exact order of connections is kept.
   [GF]
+
+- Add Sphinx documentation system, still empty.
+
+
+.. _travis: https://travis-ci.org/
+.. _coveralls: https://coveralls.io/
+.. _README.rst: http://github.com/gforcada/haproxy_log_analysis
