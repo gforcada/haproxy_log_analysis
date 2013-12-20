@@ -69,7 +69,7 @@ class HaproxyLogFile(object):
     def cmd_top_ips(self):
         """Returns the most frequent IPs.
 
-        TODO: right now is hardcoded to 20 IPs, improve the command line
+        TODO: right now is hardcoded to 10 IPs, improve the command line
         interface to allow to send parameters to each command or globally.
         """
         threshold = 10
