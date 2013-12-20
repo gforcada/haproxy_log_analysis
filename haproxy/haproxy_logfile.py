@@ -150,6 +150,24 @@ class HaproxyLogFile(object):
 
         return peaks
 
+    def cmd_connection_type(self):
+        """Generates statistics on how many requests are made via HTTP and how
+        many are made via SSL.
+
+        Note: this only works if the request path contains the default port
+        for SSL (443).
+
+        TODO: allow to set the ports to be checked.
+        """
+        https = 0
+        non_https = 0
+        for line in self._valid_lines:
+            if line.is_https():
+                https += 1
+            else:
+                non_https += 1
+        return https, non_https
+
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
         and the 'log_line' time is within 'start_time' and 'end_time'

@@ -103,6 +103,11 @@ command-line interface section above) to the haproxy log file being analyzed.
   value on the backend queue on a series of log lines that are between log
   lines without being queued.
 
+``connection_type``
+  Reports on how many requests were made on SSL and how many on plain HTTP.
+  This command only works if the default port for SSL (443) appears on the
+  path.
+
 
 TODO
 ----

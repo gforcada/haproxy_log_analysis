@@ -354,3 +354,14 @@ class HaproxyLogFileTest(unittest.TestCase):
                     break
 
         self.assertEqual(len(other_paths), 4)
+
+    def test_haproxy_log_file_cmd_connection_type(self):
+        """Check that the connection type command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_connection.log',
+        )
+        log_file.parse_file()
+        ssl, non_ssl = log_file.cmd_connection_type()
+
+        self.assertEqual(ssl, 7)
+        self.assertEqual(non_ssl, 5)
