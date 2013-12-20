@@ -179,3 +179,25 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertTrue(log_line.valid)
         self.assertEqual(log_line.captured_request_headers, request_headers)
         self.assertEqual(log_line.captured_response_headers, response_headers)
+
+    def test_haproxy_log_line_request_is_https_valid(self):
+        """Check that if a log line contains the SSL port on it, is reported
+        as a https connection.
+        """
+        self.http_request = 'GET /domain:443/to/image HTTP/1.1'
+        raw_line = self._build_test_string()
+        log_line = HaproxyLogLine(raw_line)
+
+        self.assertTrue(log_line.valid)
+        self.assertTrue(log_line.is_https())
+
+    def test_haproxy_log_line_request_is_https_false(self):
+        """Check that if a log line does not contains the SSL port on it, is
+        not reported as a https connection.
+        """
+        self.http_request = 'GET /domain:80/to/image HTTP/1.1'
+        raw_line = self._build_test_string()
+        log_line = HaproxyLogLine(raw_line)
+
+        self.assertTrue(log_line.valid)
+        self.assertFalse(log_line.is_https())
