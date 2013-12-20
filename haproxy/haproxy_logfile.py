@@ -73,17 +73,9 @@ class HaproxyLogFile(object):
         interface to allow to send parameters to each command or globally.
         """
         threshold = 10
-        ips_dict = self.cmd_ip_counter()
-        ips_list = []
-
-        for ip in ips_dict:
-            ips_list.append(
-                {'ip': ip,
-                 'repetitions': ips_dict[ip], }
-            )
-
+        ips_list = self.cmd_ip_counter().items()
         ips_list = sorted(ips_list,
-                          key=lambda ip_info: ip_info['repetitions'],
+                          key=lambda ip_info: ip_info[1],
                           reverse=True)
         return ips_list[:threshold]
 
