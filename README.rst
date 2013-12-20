@@ -86,6 +86,9 @@ command-line interface section above) to the haproxy log file being analyzed.
 ``request_path_counter``
   Reports a breakdown of how many requests per path (/rss, /, /another/path).
 
+``top_request_paths``
+  Reports the 10 paths with most requests.
+
 ``slow_requests``
   Reports a list of requests that downstream servers took more than 1 second
   to response.

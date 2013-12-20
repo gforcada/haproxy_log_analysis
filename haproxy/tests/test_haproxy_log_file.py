@@ -310,3 +310,47 @@ class HaproxyLogFileTest(unittest.TestCase):
                     break
 
         self.assertEqual(other_ips, [])
+
+    def test_haproxy_log_file_cmd_top_request_paths(self):
+        """Check that the top request paths command reports as expected"""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/dummy_top_paths.log',
+        )
+        log_file.parse_file()
+        top_paths = log_file.cmd_top_request_paths()
+
+        self.assertEqual(len(top_paths), 10)
+        self.assertEqual(top_paths[0], ('/14', 6))
+        self.assertEqual(top_paths[1], ('/13', 4))
+
+        # as the 3rd and 4th have the same repetitions their order is unknown
+        self.assertEqual(top_paths[2][1], 3)
+        self.assertEqual(top_paths[3][1], 3)
+        self.assertEqual(top_paths[4][1], 3)
+        self.assertTrue(top_paths[2][0] in ('/12', '/15', '/11', ))
+        self.assertTrue(top_paths[3][0] in ('/12', '/15', '/11', ))
+        self.assertTrue(top_paths[4][0] in ('/12', '/15', '/11', ))
+
+        # the same as above for all the others
+        other_paths = [
+            '/1',
+            '/2',
+            '/3',
+            '/4',
+            '/5',
+            '/6',
+            '/7',
+            '/8',
+            '/9',
+        ]
+        for path_info in top_paths[5:]:
+            self.assertEqual(path_info[1], 2)
+            self.assertTrue(path_info[0] in other_paths)
+
+            # remove the other_ips to ensure all ips are there
+            for position, current in enumerate(other_paths):
+                if current == path_info[0]:
+                    del other_paths[position]
+                    break
+
+        self.assertEqual(len(other_paths), 4)

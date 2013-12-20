@@ -102,6 +102,19 @@ class HaproxyLogFile(object):
             paths[line.http_request_path] += 1
         return paths
 
+    def cmd_top_request_paths(self):
+        """Returns the most frequent paths.
+
+        TODO: right now is hardcoded to 10 paths, improve the command line
+        interface to allow to send parameters to each command or globally.
+        """
+        threshold = 10
+        paths_list = self.cmd_request_path_counter().items()
+        paths_list = sorted(paths_list,
+                            key=lambda path_info: path_info[1],
+                            reverse=True)
+        return paths_list[:threshold]
+
     def cmd_slow_requests(self):
         """List all requests that took a certain amount of time to be
         processed.
