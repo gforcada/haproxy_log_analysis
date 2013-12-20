@@ -273,7 +273,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(peaks, [4, 19, 49, ])
 
     def test_haproxy_log_file_cmd_top_ips(self):
-        """Check that the queue top ips reports as expected"""
+        """Check that the top ips command reports as expected"""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/dummy_top_ips.log',
         )
