@@ -12,7 +12,7 @@ class ArgumentParsingTest(unittest.TestCase):
     def setUp(self):
         self.parser = create_parser()
         self.default_arguments = [
-            '-c', 'counter', 'haproxy/tests/files/dummy.log',
+            '-c', 'counter', 'haproxy/tests/files/huge.log',
         ]
 
     def test_arg_parser_start_valid(self):
@@ -90,7 +90,7 @@ class ArgumentParsingTest(unittest.TestCase):
 
     def test_arg_parser_commands_valid(self):
         """Test that valid commands are correctly parsed"""
-        arguments = ['-c', 'http_methods', 'haproxy/tests/files/dummy.log', ]
+        arguments = ['-c', 'http_methods', 'haproxy/tests/files/huge.log', ]
         data = parse_arguments(self.parser.parse_args(arguments))
         self.assertEqual(['http_methods', ], data['commands'])
 
@@ -100,5 +100,5 @@ class ArgumentParsingTest(unittest.TestCase):
         """
         with self.assertRaises(ValueError):
             arguments = ['-c', 'non_existing_method',
-                         'haproxy/tests/files/dummy.log', ]
+                         'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))

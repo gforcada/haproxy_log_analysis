@@ -12,7 +12,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_from_main(self):
         start = datetime.now()
         delta = timedelta(1)
-        filename = 'haproxy/tests/files/dummy_small.log'
+        filename = 'haproxy/tests/files/small.log'
         data = {
             'start': start,
             'delta': delta,
@@ -35,7 +35,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_parsed(self):
         """Check that log files are parsed"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log'
+            logfile='haproxy/tests/files/small.log'
         )
         self.assertEqual(log_file.cmd_counter(), 0)
         log_file.parse_file()
@@ -46,7 +46,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         all of them.
         """
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_2_ok_1_invalid.log'
+            logfile='haproxy/tests/files/2_ok_1_invalid.log'
         )
         log_file.parse_file()
         self.assertEqual(log_file.total_lines, 3)
@@ -56,7 +56,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         correctly reported.
         """
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_2_ok_1_invalid.log'
+            logfile='haproxy/tests/files/2_ok_1_invalid.log'
         )
         log_file.parse_file()
         self.assertEqual(log_file.cmd_counter(), 2)
@@ -67,7 +67,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         now = datetime.now()
         one_day = timedelta(days=1)
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_2_ok_1_invalid.log',
+            logfile='haproxy/tests/files/2_ok_1_invalid.log',
             start=now,
             delta=one_day,
         )
@@ -79,7 +79,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         is passed on HaproxyLogFile __init__ method.
         """
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_2_ok_1_invalid.log'
+            logfile='haproxy/tests/files/2_ok_1_invalid.log'
         )
         self.assertEqual(log_file.start_time, None)
         self.assertEqual(log_file.end_time, None)
@@ -90,7 +90,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         """
         now = datetime.now()
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_2_ok_1_invalid.log',
+            logfile='haproxy/tests/files/2_ok_1_invalid.log',
             start=now,
         )
         self.assertEqual(log_file.start_time, now)
@@ -103,7 +103,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         """
         after_log_entries = datetime(year=2013, month=12, day=13)
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_test_times.log',
+            logfile='haproxy/tests/files/times.log',
             start=after_log_entries,
         )
         self.assertEqual(log_file.start_time, after_log_entries)
@@ -121,7 +121,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         """
         between_log_entries = datetime(year=2013, month=12, day=10)
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_test_times.log',
+            logfile='haproxy/tests/files/times.log',
             start=between_log_entries,
         )
         self.assertEqual(log_file.start_time, between_log_entries)
@@ -140,7 +140,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         between_log_entries = datetime(year=2013, month=12, day=9, hour=11)
         one_day = timedelta(days=1)
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_test_times.log',
+            logfile='haproxy/tests/files/times.log',
             start=between_log_entries,
             delta=one_day,
         )
@@ -158,7 +158,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         sorted to ease further work on them.
         """
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log',
+            logfile='haproxy/tests/files/small.log',
         )
         log_file.parse_file()
 
@@ -170,7 +170,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_http_methods(self):
         """Check that the http methods command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log',
+            logfile='haproxy/tests/files/small.log',
         )
         log_file.parse_file()
         http_methods = log_file.cmd_http_methods()
@@ -183,7 +183,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_ip_counter(self):
         """Check that the ip counter command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log',
+            logfile='haproxy/tests/files/small.log',
         )
         log_file.parse_file()
         ip_counter = log_file.cmd_ip_counter()
@@ -197,7 +197,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_status_codes(self):
         """Check that the status codes command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log',
+            logfile='haproxy/tests/files/small.log',
         )
         log_file.parse_file()
         status_codes = log_file.cmd_status_codes_counter()
@@ -210,7 +210,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_request_path_counter(self):
         """Check that the request path counter command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log',
+            logfile='haproxy/tests/files/small.log',
         )
         log_file.parse_file()
         path_counter = log_file.cmd_request_path_counter()
@@ -225,7 +225,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_slow_requests(self):
         """Check that the slow requests counter command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log',
+            logfile='haproxy/tests/files/small.log',
         )
         log_file.parse_file()
         slow_requests = log_file.cmd_slow_requests()
@@ -238,7 +238,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_server_load(self):
         """Check that the server load counter command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_small.log',
+            logfile='haproxy/tests/files/small.log',
         )
         log_file.parse_file()
         servers = log_file.cmd_server_load()
@@ -251,7 +251,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_queue_peaks(self):
         """Check that the queue peaks command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_queue.log',
+            logfile='haproxy/tests/files/queue.log',
         )
         log_file.parse_file()
         peaks = log_file.cmd_queue_peaks()
@@ -264,7 +264,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         last log request did not have any queue.
         """
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_queue_2.log',
+            logfile='haproxy/tests/files/queue_2.log',
         )
         log_file.parse_file()
         peaks = log_file.cmd_queue_peaks()
@@ -275,7 +275,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_top_ips(self):
         """Check that the top ips command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_top_ips.log',
+            logfile='haproxy/tests/files/top_ips.log',
         )
         log_file.parse_file()
         top_ips = log_file.cmd_top_ips()
@@ -314,7 +314,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_top_request_paths(self):
         """Check that the top request paths command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_top_paths.log',
+            logfile='haproxy/tests/files/top_paths.log',
         )
         log_file.parse_file()
         top_paths = log_file.cmd_top_request_paths()
@@ -358,7 +358,7 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_cmd_connection_type(self):
         """Check that the connection type command reports as expected"""
         log_file = HaproxyLogFile(
-            logfile='haproxy/tests/files/dummy_connection.log',
+            logfile='haproxy/tests/files/connection.log',
         )
         log_file.parse_file()
         ssl, non_ssl = log_file.cmd_connection_type()
