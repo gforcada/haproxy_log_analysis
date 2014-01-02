@@ -54,4 +54,5 @@ setup(
             'nose',
         ],
     },
+    test_suite='haproxy.tests',
 )
