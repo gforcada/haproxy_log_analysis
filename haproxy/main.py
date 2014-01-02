@@ -153,7 +153,10 @@ def main(args):
     return log_file  # return the log_file object so that tests can inspect it
 
 
-if __name__ == '__main__':
+def console_script():
     parser = create_parser()
     arguments = parse_arguments(parser.parse_args())
     main(arguments)
+
+if __name__ == '__main__':
+    console_script()

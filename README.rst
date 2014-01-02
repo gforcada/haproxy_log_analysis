@@ -110,7 +110,16 @@ command-line interface section above) to the haproxy log file being analyzed.
 
 ``requests_per_minute``
   Reports on how many requests were made per minute. It works best when used
-  with ``-s``and ``-d``command line arguments, as the output can be huge.
+  with ``-s``and ``-d`` command line arguments, as the output can be huge.
+
+
+Installation
+------------
+
+After installation you will have a console script `haproxy_log_analysis`.
+
+::
+    $ python setup.py install
 
 
 TODO
@@ -134,8 +143,6 @@ TODO
   acceptance date, path, downstream server, load at that time...)
 
 - generate an api doc for ``HaproxyLogFile``
-
-- create a ``console_script`` for ease of use, see `Setuptools console script`_
 
 - *your ideas*
 

@@ -5,6 +5,9 @@ CHANGES
 0.0.1 (unreleased)
 ------------------
 
+- create a ``console_script`` `haproxy_log_analysis` for ease of use
+  [bogdangi]
+
 - Create distribution.
   [GF]
 
