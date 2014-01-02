@@ -110,7 +110,7 @@ command-line interface section above) to the haproxy log file being analyzed.
 
 ``requests_per_minute``
   Reports on how many requests were made per minute. It works best when used
-  with ``-s``and ``-d``command line arguments, as the output can be huge.
+  with ``-s``and ``-d`` command line arguments, as the output can be huge.
 
 
 TODO

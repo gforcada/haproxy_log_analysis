@@ -6,6 +6,7 @@ CHANGES
 ------------------
 
 - Add Sphinx documentation system, still empty.
+  [GF]
 
 - Keep valid log lines sorted so that the exact order of connections is kept.
   [GF]
