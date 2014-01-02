@@ -54,5 +54,10 @@ setup(
             'nose',
         ],
     },
+    entry_points={
+        'console_scripts': [
+            'haproxy_log_analysis = haproxy.main:console_script',
+            ],
+        },
     test_suite='haproxy.tests',
 )
