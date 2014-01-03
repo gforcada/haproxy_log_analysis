@@ -123,6 +123,7 @@ Installation
 ------------
 
 After installation you will have a console script `haproxy_log_analysis`::
+
     $ python setup.py install
 
 
