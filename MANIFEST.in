@@ -1,0 +1,9 @@
+include *.rst
+include .coveragerc
+include .travis.yml
+include LICENSE
+include requirements.txt
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs Makefile
+recursive-include haproxy *.log

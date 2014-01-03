@@ -33,8 +33,8 @@ setup(
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Intended Audience :: System Administrators',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
         'Topic :: Internet :: Log Analysis',
     ],
     keywords='haproxy log analysis report',
@@ -58,5 +58,6 @@ setup(
         'console_scripts': [
             'haproxy_log_analysis = haproxy.main:console_script',
             ],
-        }
+        },
+    test_suite='haproxy.tests',
 )

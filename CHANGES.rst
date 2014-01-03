@@ -8,7 +8,25 @@ CHANGES
 - create a ``console_script`` `haproxy_log_analysis` for ease of use
   [bogdangi]
 
-- Create distribution.
+- Add Sphinx documentation system, still empty.
+  [GF]
+
+- Keep valid log lines sorted so that the exact order of connections is kept.
+  [GF]
+
+- Add quite a few commands, see `README.rst`_ for a complete list of them.
+  [GF]
+
+- Run commands passed as arguments (with -c flag).
+  [GF]
+
+- Add a requirements.txt file to keep track of dependencies and pin them.
+  [GF]
+
+- Add travis_ and coveralls_ support. See its badges on `README.rst`_
+  [GF]
+
+- Add argument parsing and custom validation logic for all arguments.
   [GF]
 
 - Add regular expressions for haproxy log lines (HTTP format) and to
@@ -16,26 +34,8 @@ CHANGES
   Added tests to ensure they work as expected.
   [GF]
 
-- Add argument parsing and custom validation logic for all arguments.
+- Create distribution.
   [GF]
-
-- Add travis_ and coveralls_ support. See its badges on `README.rst`_
-  [GF]
-
-- Add a requirements.txt file to keep track of dependencies and pin them.
-  [GF]
-
-- Run commands passed as arguments (with -c flag).
-  [GF]
-
-- Add quite a few commands, see `README.rst`_ for a complete list of them.
-  [GF]
-
-- Keep valid log lines sorted so that the exact order of connections is kept.
-  [GF]
-
-- Add Sphinx documentation system, still empty.
-
 
 .. _travis: https://travis-ci.org/
 .. _coveralls: https://coveralls.io/

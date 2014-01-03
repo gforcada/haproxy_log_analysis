@@ -116,9 +116,7 @@ command-line interface section above) to the haproxy log file being analyzed.
 Installation
 ------------
 
-After installation you will have a console script `haproxy_log_analysis`.
-
-::
+After installation you will have a console script `haproxy_log_analysis`::
     $ python setup.py install
 
 
