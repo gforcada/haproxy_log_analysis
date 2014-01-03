@@ -1,5 +1,5 @@
 Haproxy Modules
-***************
+===============
 
 .. automodule:: haproxy.haproxy_logline
  
