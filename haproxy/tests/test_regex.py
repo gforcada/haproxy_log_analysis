@@ -381,3 +381,17 @@ class HttpRequestRegexTest(unittest.TestCase):
         matches = HTTP_REQUEST_REGEX.match(line)
 
         self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_less_than_symbol(self):
+        self.path = '/here_or<'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_greater_than_symbol(self):
+        self.path = '/here_or>'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
