@@ -157,6 +157,3 @@ def console_script():
     parser = create_parser()
     arguments = parse_arguments(parser.parse_args())
     main(arguments)
-
-if __name__ == '__main__':
-    console_script()
