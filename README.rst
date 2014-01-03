@@ -145,4 +145,3 @@ TODO
 
 .. _HAProxy: http://haproxy.1wt.eu/
 .. _HTTP log format: http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
-.. _Setuptools console script: http://pythonhosted.org/setuptools/setuptools.html
