@@ -12,7 +12,11 @@ def create_parser():
     desc = 'Analyze HAProxy log files and outputs statistics about it'
     parser = argparse.ArgumentParser(description=desc)
 
-    parser.add_argument('filename', help='Haproxy log file to analyze')
+    parser.add_argument(
+        '-f',
+        '--filename',
+        help='Haproxy log file to analyze',
+    )
     parser.add_argument(
         '-s',
         '--start',
