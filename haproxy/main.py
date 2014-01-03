@@ -38,10 +38,8 @@ def create_parser():
     parser.add_argument(
         '-c',
         '--command',
-        help='List of commands, comma separated, to run on the log file. '
-             'Commands available: '
-             'counter (count how many entries are on the log file)',
-        required=True,
+        help='List of commands, comma separated, to run on the log file. See'
+             '-l to get a full list of them.',
     )
 
     return parser
@@ -123,9 +121,9 @@ def _parse_arg_commands(commands):
     available_commands = HaproxyLogFile.commands()
     for cmd in input_commands:
         if cmd not in available_commands:
-            msg = 'command "{0}" is not available. List of available ' \
-                  'commands: {1}'
-            raise ValueError(msg.format(cmd, available_commands))
+            msg = 'command "{0}" is not available. Use -l to get a list of ' \
+                  'all available commands.'
+            raise ValueError(msg.format(cmd))
     return input_commands
 
 
