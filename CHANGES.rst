@@ -5,6 +5,9 @@ CHANGES
 0.0.1 (unreleased)
 ------------------
 
+- generate an api doc for ``HaproxyLogLine`` and ``HaproxyLogFile``
+  [bogdangi]
+
 - create a ``console_script`` `haproxy_log_analysis` for ease of use
   [bogdangi]
 
