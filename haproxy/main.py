@@ -44,29 +44,26 @@ def create_parser():
 
 
 def parse_arguments(args):
-    start = getattr(args, 'start', None)
-    delta = getattr(args, 'delta', None)
-    commands = getattr(args, 'command', None)
-    filename = getattr(args, 'filename', None)
-
-    if start is not None:
-        start = _parse_arg_date(start)
-
-    if delta is not None:
-        delta = _parse_arg_delta(delta)
-
-    if commands is not None:
-        commands = _parse_arg_commands(commands)
-
-    if filename is not None:
-        _parse_arg_filename(filename)
-
     data = {
-        'start': start,
-        'delta': delta,
-        'commands': commands,
-        'filename': filename,
+        'start': None,
+        'delta': None,
+        'commands': None,
+        'filename': None,
     }
+
+    if args.start is not None:
+        data['start'] = _parse_arg_date(args.start)
+
+    if args.delta is not None:
+        data['delta'] = _parse_arg_delta(args.delta)
+
+    if args.command is not None:
+        data['commands'] = _parse_arg_commands(args.command)
+
+    if args.filename is not None:
+        _parse_arg_filename(args.filename)
+        data['filename'] = args.filename
+
     return data
 
 
