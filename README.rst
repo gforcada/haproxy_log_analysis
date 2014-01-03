@@ -20,6 +20,12 @@ No project is trustworthy if does not have tests and a decent coverage!
     :target: https://coveralls.io/r/gforcada/haproxy_log_analysis
 
 
+Documentation
+-------------
+
+See the `documentation and API`_ at ReadTheDocs_.
+
+
 Command-line interface
 ----------------------
 
@@ -145,3 +151,5 @@ TODO
 
 .. _HAProxy: http://haproxy.1wt.eu/
 .. _HTTP log format: http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
+.. _documentation and API: http://haproxy-log-analyzer.readthedocs.org/en/latest/
+.. _ReadTheDocs: http://readthedocs.org
