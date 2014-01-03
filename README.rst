@@ -140,8 +140,6 @@ TODO
   requests for example) output the given fields for each log line (i.e.
   acceptance date, path, downstream server, load at that time...)
 
-- generate an api doc for ``HaproxyLogFile``
-
 - *your ideas*
 
 
