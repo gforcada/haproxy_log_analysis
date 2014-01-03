@@ -109,7 +109,8 @@ class HaproxyLogLine(object):
         self.valid = self._parse_line(line)
 
     def is_https(self):
-        """Returns True if the log line is a SSL connection. False otherwise."""
+        """Returns True if the log line is a SSL connection. False otherwise.
+        """
         if ':443' in self.http_request_path:
             return True
         return False
