@@ -13,6 +13,7 @@ Contents:
 
    README_link
    modules
+   changelog
 
 
 Indices and tables
