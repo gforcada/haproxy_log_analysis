@@ -5,10 +5,10 @@ CHANGES
 0.0.1 (unreleased)
 ------------------
 
-- generate an api doc for ``HaproxyLogLine`` and ``HaproxyLogFile``
+- Generate an api doc for ``HaproxyLogLine`` and ``HaproxyLogFile``.
   [bogdangi]
 
-- create a ``console_script`` `haproxy_log_analysis` for ease of use
+- Create a ``console_script`` `haproxy_log_analysis` for ease of use.
   [bogdangi]
 
 - Add Sphinx documentation system, still empty.
@@ -26,7 +26,7 @@ CHANGES
 - Add a requirements.txt file to keep track of dependencies and pin them.
   [GF]
 
-- Add travis_ and coveralls_ support. See its badges on `README.rst`_
+- Add travis_ and coveralls_ support. See its badges on `README.rst`_.
   [GF]
 
 - Add argument parsing and custom validation logic for all arguments.
