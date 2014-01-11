@@ -12,7 +12,11 @@ def create_parser():
     desc = 'Analyze HAProxy log files and outputs statistics about it'
     parser = argparse.ArgumentParser(description=desc)
 
-    parser.add_argument('filename', help='Haproxy log file to analyze')
+    parser.add_argument(
+        '-f',
+        '--filename',
+        help='Haproxy log file to analyze',
+    )
     parser.add_argument(
         '-s',
         '--start',
@@ -34,10 +38,14 @@ def create_parser():
     parser.add_argument(
         '-c',
         '--command',
-        help='List of commands, comma separated, to run on the log file. '
-             'Commands available: '
-             'counter (count how many entries are on the log file)',
-        required=True,
+        help='List of commands, comma separated, to run on the log file. See'
+             '-l to get a full list of them.',
+    )
+    parser.add_argument(
+        '-l',
+        '--list-commands',
+        action='store_true',
+        help='Lists all commands available.',
     )
 
     return parser
@@ -49,7 +57,13 @@ def parse_arguments(args):
         'delta': None,
         'commands': None,
         'filename': None,
+        'list_commands': False,
     }
+
+    if args.list_commands:
+        data['list_commands'] = True
+        # no need to further process any other input parameter
+        return data
 
     if args.start is not None:
         data['start'] = _parse_arg_date(args.start)
@@ -119,9 +133,9 @@ def _parse_arg_commands(commands):
     available_commands = HaproxyLogFile.commands()
     for cmd in input_commands:
         if cmd not in available_commands:
-            msg = 'command "{0}" is not available. List of available ' \
-                  'commands: {1}'
-            raise ValueError(msg.format(cmd, available_commands))
+            msg = 'command "{0}" is not available. Use -l to get a list of ' \
+                  'all available commands.'
+            raise ValueError(msg.format(cmd))
     return input_commands
 
 
@@ -131,7 +145,29 @@ def _parse_arg_filename(filename):
         raise ValueError('filename {0} does not exist'.format(filepath))
 
 
+def print_commands():
+    """Prints all commands available from HaproxyLogFile with their
+    description.
+    """
+    dummy_log_file = HaproxyLogFile()
+    commands = HaproxyLogFile.commands()
+    commands.sort()
+
+    for cmd in commands:
+        description = eval('dummy_log_file.cmd_{0}.__doc__'.format(cmd))
+        if description:
+            description = re.sub(r'\n\s+', ' ', description)
+            description.strip()
+
+        print('{0}: {1}\n'.format(cmd, description))
+
+
 def main(args):
+    if args['list_commands']:
+        print_commands()
+        # no need to process further
+        return
+
     log_file = HaproxyLogFile(
         logfile=args['filename'],
         start=args['start'],

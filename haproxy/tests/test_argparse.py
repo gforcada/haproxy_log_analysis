@@ -2,9 +2,29 @@
 from datetime import datetime
 from datetime import timedelta
 from haproxy.main import create_parser
+from haproxy.main import main
 from haproxy.main import parse_arguments
+from haproxy.haproxy_logfile import HaproxyLogFile
+from tempfile import NamedTemporaryFile
 
+import sys
 import unittest
+
+
+class RedirectStdout(object):
+
+    def __init__(self, stdout=None):
+        self._stdout = stdout or sys.stdout
+        self.old_stdout = None
+
+    def __enter__(self):
+        self.old_stdout = sys.stdout
+        self.old_stdout.flush()
+        sys.stdout = self._stdout
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._stdout.flush()
+        sys.stdout = self.old_stdout
 
 
 class ArgumentParsingTest(unittest.TestCase):
@@ -12,7 +32,7 @@ class ArgumentParsingTest(unittest.TestCase):
     def setUp(self):
         self.parser = create_parser()
         self.default_arguments = [
-            '-c', 'counter', 'haproxy/tests/files/huge.log',
+            '-c', 'counter', '-f', 'haproxy/tests/files/huge.log',
         ]
 
     def test_arg_parser_start_valid(self):
@@ -76,7 +96,8 @@ class ArgumentParsingTest(unittest.TestCase):
         """Check that any filename passed does exist before handling it
         further.
         """
-        arguments = ['-c', 'counter', 'haproxy/tests/test_argparse.py', ]
+        arguments = ['-c', 'counter',
+                     '-f', 'haproxy/tests/test_argparse.py', ]
         data = parse_arguments(self.parser.parse_args(arguments))
         self.assertEqual('haproxy/tests/test_argparse.py', data['filename'])
 
@@ -84,13 +105,15 @@ class ArgumentParsingTest(unittest.TestCase):
         """Check that if the filename passed does not exist an exception is
         raised.
         """
-        arguments = ['-c', 'counter', 'non_existing.log', ]
+        arguments = ['-c', 'counter',
+                     '-f', 'non_existing.log', ]
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_commands_valid(self):
         """Test that valid commands are correctly parsed"""
-        arguments = ['-c', 'http_methods', 'haproxy/tests/files/huge.log', ]
+        arguments = ['-c', 'http_methods',
+                     '-f', 'haproxy/tests/files/huge.log', ]
         data = parse_arguments(self.parser.parse_args(arguments))
         self.assertEqual(['http_methods', ], data['commands'])
 
@@ -100,5 +123,31 @@ class ArgumentParsingTest(unittest.TestCase):
         """
         with self.assertRaises(ValueError):
             arguments = ['-c', 'non_existing_method',
-                         'haproxy/tests/files/huge.log', ]
+                         '-f', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
+
+    def test_arg_parser_list_commands(self):
+        """Test that list commands argument is parsed."""
+        arguments = ['-l', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+
+        for arg in data:
+            if arg == 'list_commands':
+                self.assertTrue(data['list_commands'])
+            else:
+                self.assertEqual(data[arg], None)
+
+    def test_arg_parser_list_commands_output(self):
+        """Test that list commands argument outputs what's expected."""
+        arguments = ['-l', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        output_file = open(test_output.name, 'r')
+        output_text = output_file.read()
+
+        for cmd in HaproxyLogFile.commands():
+            self.assertIn(cmd, output_text)
