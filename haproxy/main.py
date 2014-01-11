@@ -41,6 +41,12 @@ def create_parser():
         help='List of commands, comma separated, to run on the log file. See'
              '-l to get a full list of them.',
     )
+    parser.add_argument(
+        '-l',
+        '--list-commands',
+        action='store_true',
+        help='Lists all commands available.',
+    )
 
     return parser
 
@@ -51,7 +57,13 @@ def parse_arguments(args):
         'delta': None,
         'commands': None,
         'filename': None,
+        'list_commands': False,
     }
+
+    if args.list_commands:
+        data['list_commands'] = True
+        # no need to further process any other input parameter
+        return data
 
     if args.start is not None:
         data['start'] = _parse_arg_date(args.start)
@@ -133,7 +145,29 @@ def _parse_arg_filename(filename):
         raise ValueError('filename {0} does not exist'.format(filepath))
 
 
+def print_commands():
+    """Prints all commands available from HaproxyLogFile with their
+    description.
+    """
+    dummy_log_file = HaproxyLogFile()
+    commands = HaproxyLogFile.commands()
+    commands.sort()
+
+    for cmd in commands:
+        description = eval('dummy_log_file.cmd_{0}.__doc__'.format(cmd))
+        if description:
+            description = re.sub(r'\n\s+', ' ', description)
+            description.strip()
+
+        print('{0}: {1}\n'.format(cmd, description))
+
+
 def main(args):
+    if args['list_commands']:
+        print_commands()
+        # no need to process further
+        return
+
     log_file = HaproxyLogFile(
         logfile=args['filename'],
         start=args['start'],

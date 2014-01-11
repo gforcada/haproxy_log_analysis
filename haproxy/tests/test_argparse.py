@@ -2,9 +2,29 @@
 from datetime import datetime
 from datetime import timedelta
 from haproxy.main import create_parser
+from haproxy.main import main
 from haproxy.main import parse_arguments
+from haproxy.haproxy_logfile import HaproxyLogFile
+from tempfile import NamedTemporaryFile
 
+import sys
 import unittest
+
+
+class RedirectStdout(object):
+
+    def __init__(self, stdout=None):
+        self._stdout = stdout or sys.stdout
+        self.old_stdout = None
+
+    def __enter__(self):
+        self.old_stdout = sys.stdout
+        self.old_stdout.flush()
+        sys.stdout = self._stdout
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._stdout.flush()
+        sys.stdout = self.old_stdout
 
 
 class ArgumentParsingTest(unittest.TestCase):
@@ -105,3 +125,29 @@ class ArgumentParsingTest(unittest.TestCase):
             arguments = ['-c', 'non_existing_method',
                          '-f', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
+
+    def test_arg_parser_list_commands(self):
+        """Test that list commands argument is parsed."""
+        arguments = ['-l', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+
+        for arg in data:
+            if arg == 'list_commands':
+                self.assertTrue(data['list_commands'])
+            else:
+                self.assertEqual(data[arg], None)
+
+    def test_arg_parser_list_commands_output(self):
+        """Test that list commands argument outputs what's expected."""
+        arguments = ['-l', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        output_file = open(test_output.name, 'r')
+        output_text = output_file.read()
+
+        for cmd in HaproxyLogFile.commands():
+            self.assertIn(cmd, output_text)

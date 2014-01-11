@@ -18,6 +18,7 @@ class HaproxyLogFileTest(unittest.TestCase):
             'delta': delta,
             'filename': filename,
             'commands': ['counter', ],
+            'list_commands': False,
         }
         logfile = main(data)
 
