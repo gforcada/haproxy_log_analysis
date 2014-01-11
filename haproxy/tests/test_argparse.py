@@ -141,7 +141,7 @@ class ArgumentParsingTest(unittest.TestCase):
         """Test that list commands argument outputs what's expected."""
         arguments = ['-l', ]
         data = parse_arguments(self.parser.parse_args(arguments))
-        test_output = NamedTemporaryFile(delete=False)
+        test_output = NamedTemporaryFile(mode='w', delete=False)
 
         with RedirectStdout(stdout=test_output):
             main(data)
