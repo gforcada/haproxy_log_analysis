@@ -57,7 +57,7 @@ def parse_arguments(args):
         'delta': None,
         'commands': None,
         'filename': None,
-        'list_commands': False,
+        'list_commands': None,
     }
 
     if args.list_commands:
@@ -162,7 +162,25 @@ def print_commands():
         print('{0}: {1}\n'.format(cmd, description))
 
 
-def main(args):
+def show_help(data, parser):
+# make sure that if no arguments are passed the help is shown
+    show = True
+    for key in data:
+        if data[key] is not None and key != 'filename':
+            show = False
+            break
+
+    if show:
+        parser.print_help()
+        return True
+    return False
+
+
+def main(args, parser):
+    if show_help(args, parser):
+        return
+
+    # show the command list
     if args['list_commands']:
         print_commands()
         # no need to process further
@@ -189,4 +207,4 @@ def main(args):
 def console_script():
     parser = create_parser()
     arguments = parse_arguments(parser.parse_args())
-    main(arguments)
+    main(arguments, parser)

@@ -144,10 +144,39 @@ class ArgumentParsingTest(unittest.TestCase):
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
         with RedirectStdout(stdout=test_output):
-            main(data)
+            main(data, self.parser)
 
         with open(test_output.name, 'r') as output_file:
             output_text = output_file.read()
 
             for cmd in HaproxyLogFile.commands():
                 self.assertIn(cmd, output_text)
+
+    def test_arg_parser_help_output(self):
+        """Test that when no arguments are given the help is shown."""
+        data = parse_arguments(self.parser.parse_args([]))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data, self.parser)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            for keyword in ('FILENAME', 'START', 'DELTA', 'COMMAND'):
+                self.assertIn(keyword, output_text)
+
+    def test_arg_parser_help_output_only_filename(self):
+        """Test that when only the no arguments are given the help is shown."""
+        arguments = ['-f', 'haproxy/tests/files/huge.log', ]
+        data = parse_arguments(self.parser.parse_args([]))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data, self.parser)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            for keyword in ('FILENAME', 'START', 'DELTA', 'COMMAND'):
+                self.assertIn(keyword, output_text)

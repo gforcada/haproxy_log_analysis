@@ -2,6 +2,7 @@
 from datetime import datetime
 from datetime import timedelta
 from haproxy.haproxy_logfile import HaproxyLogFile
+from haproxy.main import create_parser
 from haproxy.main import main
 
 import unittest
@@ -20,7 +21,8 @@ class HaproxyLogFileTest(unittest.TestCase):
             'commands': ['counter', ],
             'list_commands': False,
         }
-        logfile = main(data)
+        parser = create_parser()
+        logfile = main(data, parser)
 
         self.assertEqual(logfile.start_time, start)
         self.assertEqual(logfile.delta, delta)
