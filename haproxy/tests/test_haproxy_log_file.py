@@ -28,7 +28,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(logfile.logfile, filename)
 
     def test_haproxy_log_file_error_no_file(self):
-        """Check that trying to parse a non existing file raises an error"""
+        """Check that trying to parse a non existing file raises an error."""
         log_file = HaproxyLogFile()
         with self.assertRaises(ValueError):
             log_file.parse_file()
@@ -64,7 +64,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(log_file.cmd_counter_invalid(), 1)
 
     def test_haproxy_log_file_attributes_start_and_end_time(self):
-        """Check that both 'start_time' and 'end_time' are correct"""
+        """Check that both 'start_time' and 'end_time' are correct."""
         now = datetime.now()
         one_day = timedelta(days=1)
         log_file = HaproxyLogFile(
@@ -169,7 +169,7 @@ class HaproxyLogFileTest(unittest.TestCase):
             self.assertTrue(previous_date < line.accept_date)
 
     def test_haproxy_log_file_cmd_http_methods(self):
-        """Check that the http methods command reports as expected"""
+        """Check that the http methods command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/small.log',
         )
@@ -182,7 +182,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(http_methods['HEAD'], 3)
 
     def test_haproxy_log_file_cmd_ip_counter(self):
-        """Check that the ip counter command reports as expected"""
+        """Check that the ip counter command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/small.log',
         )
@@ -196,7 +196,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(ip_counter['123.123.123.124'], 1)
 
     def test_haproxy_log_file_cmd_status_codes(self):
-        """Check that the status codes command reports as expected"""
+        """Check that the status codes command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/small.log',
         )
@@ -209,7 +209,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(status_codes['300'], 4)
 
     def test_haproxy_log_file_cmd_request_path_counter(self):
-        """Check that the request path counter command reports as expected"""
+        """Check that the request path counter command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/small.log',
         )
@@ -224,7 +224,9 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(path_counter['/freitag'], 1)
 
     def test_haproxy_log_file_cmd_slow_requests(self):
-        """Check that the slow requests counter command reports as expected"""
+        """Check that the slow requests counter command reports as
+        expected.
+        """
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/small.log',
         )
@@ -237,7 +239,7 @@ class HaproxyLogFileTest(unittest.TestCase):
                          [1293, 2936, 2942, 20095, 29408, ])
 
     def test_haproxy_log_file_cmd_server_load(self):
-        """Check that the server load counter command reports as expected"""
+        """Check that the server load counter command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/small.log',
         )
@@ -250,7 +252,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(servers['instance3'], 2)
 
     def test_haproxy_log_file_cmd_queue_peaks(self):
-        """Check that the queue peaks command reports as expected"""
+        """Check that the queue peaks command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/queue.log',
         )
@@ -274,7 +276,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(peaks, [4, 19, 49, ])
 
     def test_haproxy_log_file_cmd_top_ips(self):
-        """Check that the top ips command reports as expected"""
+        """Check that the top ips command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/top_ips.log',
         )
@@ -313,7 +315,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(other_ips, [])
 
     def test_haproxy_log_file_cmd_top_request_paths(self):
-        """Check that the top request paths command reports as expected"""
+        """Check that the top request paths command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/top_paths.log',
         )
@@ -357,7 +359,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(len(other_paths), 4)
 
     def test_haproxy_log_file_cmd_connection_type(self):
-        """Check that the connection type command reports as expected"""
+        """Check that the connection type command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/connection.log',
         )
@@ -368,7 +370,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(non_ssl, 5)
 
     def test_haproxy_log_file_cmd_requests_per_minute(self):
-        """Check that the requests per minute command reports as expected"""
+        """Check that the requests per minute command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/requests_per_minute.log',
         )

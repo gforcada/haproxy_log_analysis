@@ -111,7 +111,7 @@ class ArgumentParsingTest(unittest.TestCase):
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_commands_valid(self):
-        """Test that valid commands are correctly parsed"""
+        """Test that valid commands are correctly parsed."""
         arguments = ['-c', 'http_methods',
                      '-f', 'haproxy/tests/files/huge.log', ]
         data = parse_arguments(self.parser.parse_args(arguments))
