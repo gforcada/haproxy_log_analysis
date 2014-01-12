@@ -39,26 +39,34 @@ class HaproxyLogFile(object):
 
     @classmethod
     def commands(cls):
-        """Returns a list of all methods that start with ``cmd_``"""
+        """Returns a list of all methods that start with ``cmd_``."""
         cmds = [cmd[4:] for cmd in dir(cls) if cmd.startswith('cmd_')]
         return cmds
 
     def cmd_counter(self):
+        """Returns the number of valid lines."""
         return len(self._valid_lines)
 
     def cmd_counter_invalid(self):
+        """Returns the number of invalid lines."""
         return len(self._invalid_lines)
 
     def cmd_http_methods(self):
+        """Reports a breakdown of how many requests have been made per HTTP
+        method (GET, POST...).
+        """
         methods = defaultdict(int)
         for line in self._valid_lines:
             methods[line.http_request_method] += 1
         return methods
 
     def cmd_ip_counter(self):
-        """To enable this command requests need to provide a header with the
-        forwarded IP (usually X-Forwarded-For) and be it the only header
-        being captured.
+        """Reports a breakdown of how many requests have been made per IP.
+
+        .. note::
+          To enable this command requests need to provide a header with the
+          forwarded IP (usually X-Forwarded-For) and be it the only header
+          being captured.
         """
         ip_counter = defaultdict(int)
         for line in self._valid_lines:
@@ -68,7 +76,11 @@ class HaproxyLogFile(object):
         return ip_counter
 
     def cmd_top_ips(self):
-        """Returns the most frequent IPs."""
+        """Returns the top most frequent IPs.
+
+        .. note::
+          See ``_sort_and_trim`` for its current limitations.
+        """
         return self._sort_and_trim(
             self.cmd_ip_counter(),
             reverse=True
@@ -83,14 +95,18 @@ class HaproxyLogFile(object):
         return status_codes
 
     def cmd_request_path_counter(self):
-        """Generate statistics about HTTP requests path."""
+        """Generate statistics about HTTP requests' path."""
         paths = defaultdict(int)
         for line in self._valid_lines:
             paths[line.http_request_path] += 1
         return paths
 
     def cmd_top_request_paths(self):
-        """Returns the most frequent paths."""
+        """Returns the top most frequent paths.
+
+        .. note::
+          See ``_sort_and_trim`` for its current limitations.
+        """
         return self._sort_and_trim(
             self.cmd_request_path_counter(),
             reverse=True
@@ -100,9 +116,10 @@ class HaproxyLogFile(object):
         """List all requests that took a certain amount of time to be
         processed.
 
-        TODO: by now hardcoded to 1 second (1000 milliseconds), improve the
-        command line interface to allow to send parameters to each command or
-        globally.
+        .. warning::
+           By now hardcoded to 1 second (1000 milliseconds), improve the
+           command line interface to allow to send parameters to each command
+           or globally.
         """
         slow_requests = []
         for line in self._valid_lines:
@@ -127,8 +144,9 @@ class HaproxyLogFile(object):
         on a series of log lines that are between log lines without being
         queued.
 
-        TODO: allow to configure up to which peak can be ignored. Currently
-        set to 1.
+        .. warning::
+          Allow to configure up to which peak can be ignored. Currently
+          set to 1.
         """
         threshold = 1
         peaks = []
@@ -155,10 +173,12 @@ class HaproxyLogFile(object):
         """Generates statistics on how many requests are made via HTTP and how
         many are made via SSL.
 
-        Note: this only works if the request path contains the default port
-        for SSL (443).
+        .. note::
+          This only works if the request path contains the default port for
+          SSL (443).
 
-        TODO: allow to set the ports to be checked.
+        .. warning::
+          The ports are hardcoded, they should be configurable.
         """
         https = 0
         non_https = 0
@@ -170,7 +190,12 @@ class HaproxyLogFile(object):
         return https, non_https
 
     def cmd_requests_per_minute(self):
-        """Generates statistics on how many requests were made per minute."""
+        """Generates statistics on how many requests were made per minute.
+
+        .. note::
+          Try to combine it with time constrains (``-s`` and ``-d``) as this
+          command output can be huge if not.
+        """
         if len(self._valid_lines) == 0:
             return
 
@@ -214,7 +239,7 @@ class HaproxyLogFile(object):
 
     def _is_in_time_range(self, log_line):
         """'log_line' is in time range if there is a time range to begin with
-        and the 'log_line' time is within 'start_time' and 'end_time'
+        and the 'log_line' time is within 'start_time' and 'end_time'.
         """
         if self.start_time is None:
             return True
@@ -246,8 +271,9 @@ class HaproxyLogFile(object):
         """Sorts a dictionary with at least two fields on each of them sorting
         by the second element.
 
-        TODO: right now is hardcoded to 10 paths, improve the command line
-        interface to allow to send parameters to each command or globally.
+        .. warning::
+          Right now is hardcoded to 10 paths, improve the command line
+          interface to allow to send parameters to each command or globally.
         """
         threshold = 10
         data_list = data.items()
