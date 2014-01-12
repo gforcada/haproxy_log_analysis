@@ -146,8 +146,8 @@ class ArgumentParsingTest(unittest.TestCase):
         with RedirectStdout(stdout=test_output):
             main(data)
 
-        output_file = open(test_output.name, 'r')
-        output_text = output_file.read()
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
 
-        for cmd in HaproxyLogFile.commands():
-            self.assertIn(cmd, output_text)
+            for cmd in HaproxyLogFile.commands():
+                self.assertIn(cmd, output_text)
