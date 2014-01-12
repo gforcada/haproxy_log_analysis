@@ -31,17 +31,17 @@ Command-line interface
 
 The current ``--help`` looks like this::
 
-  usage: main.py [-h] [-s START] [-d DELTA] -c COMMAND filename
+  usage: haproxy_log_analysis [-h] [-f FILENAME] [-s START] [-d DELTA]
+                              [-c COMMAND] [-l]
 
   Analyze HAProxy log files and outputs statistics about it
 
-  positional arguments:
-    filename              Haproxy log file to analyze
-
   optional arguments:
     -h, --help            show this help message and exit
+    -f FILENAME, --filename FILENAME
+                          Haproxy log file to analyze
     -s START, --start START
-                          Process log entries starting at this time, in haproxy
+                          Process log entries starting at this time, in HAProxy
                           date format (e.g. 11/Dec/2013 or
                           11/Dec/2013:19:31:41). At least provide the
                           day/month/year. Values not specified will use their
@@ -56,8 +56,8 @@ The current ``--help`` looks like this::
                           time on the first line will be used instead.
     -c COMMAND, --command COMMAND
                           List of commands, comma separated, to run on the log
-                          file. Commands available: counter (count how many
-                          entries are on the log file)
+                          file. See-l to get a full list of them.
+    -l, --list-commands   Lists all commands available.
 
 
 Commands
