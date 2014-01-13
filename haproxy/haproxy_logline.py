@@ -115,6 +115,12 @@ class HaproxyLogLine(object):
             return True
         return False
 
+    def get_ip(self):
+        """Returns the IP provided on the log line."""
+        if self.captured_request_headers is not None:
+            return self.captured_request_headers[1:-1]
+        return None
+
     def _parse_line(self, line):
         matches = HAPROXY_LINE_REGEX.match(line)
         if matches is None:

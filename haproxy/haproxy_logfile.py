@@ -70,9 +70,9 @@ class HaproxyLogFile(object):
         """
         ip_counter = defaultdict(int)
         for line in self._valid_lines:
-            if line.captured_request_headers is not None:
-                stripped_brackets = line.captured_request_headers[1:-1]
-                ip_counter[stripped_brackets] += 1
+            ip = line.get_ip()
+            if ip is not None:
+                ip_counter[ip] += 1
         return ip_counter
 
     def cmd_top_ips(self):
