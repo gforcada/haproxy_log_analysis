@@ -262,7 +262,25 @@ class HaproxyLogFileTest(unittest.TestCase):
         peaks = log_file.cmd_queue_peaks()
 
         self.assertEqual(len(peaks), 4)
-        self.assertEqual(peaks, [4, 19, 49, 3, ])
+        self.assertEqual(peaks[0]['peak'], 4)
+        self.assertEqual(peaks[0]['span'], 5)
+
+        self.assertEqual(peaks[1]['peak'], 19)
+        self.assertEqual(peaks[1]['span'], 5)
+
+        self.assertEqual(peaks[2]['peak'], 49)
+        self.assertEqual(peaks[2]['span'], 3)
+
+        self.assertEqual(peaks[3]['peak'], 3)
+        self.assertEqual(peaks[3]['span'], 1)
+
+        self.assertTrue(peaks[0]['first'] < peaks[1]['first'])
+        self.assertTrue(peaks[1]['first'] < peaks[2]['first'])
+        self.assertTrue(peaks[2]['first'] < peaks[3]['first'])
+
+        self.assertTrue(peaks[0]['last'] < peaks[1]['last'])
+        self.assertTrue(peaks[1]['last'] < peaks[2]['last'])
+        self.assertTrue(peaks[2]['last'] < peaks[3]['last'])
 
     def test_haproxy_log_file_cmd_queue_peaks_no_end(self):
         """Check that the queue peaks command reports as expected when the
@@ -275,7 +293,20 @@ class HaproxyLogFileTest(unittest.TestCase):
         peaks = log_file.cmd_queue_peaks()
 
         self.assertEqual(len(peaks), 3)
-        self.assertEqual(peaks, [4, 19, 49, ])
+        self.assertEqual(peaks[0]['peak'], 4)
+        self.assertEqual(peaks[0]['span'], 5)
+
+        self.assertEqual(peaks[1]['peak'], 19)
+        self.assertEqual(peaks[1]['span'], 5)
+
+        self.assertEqual(peaks[2]['peak'], 49)
+        self.assertEqual(peaks[2]['span'], 3)
+
+        self.assertTrue(peaks[0]['first'] < peaks[1]['first'])
+        self.assertTrue(peaks[1]['first'] < peaks[2]['first'])
+
+        self.assertTrue(peaks[0]['last'] < peaks[1]['last'])
+        self.assertTrue(peaks[1]['last'] < peaks[2]['last'])
 
     def test_haproxy_log_file_cmd_top_ips(self):
         """Check that the top ips command reports as expected."""
