@@ -17,6 +17,7 @@ def create_parser():
         '--log',
         help='Haproxy log file to analyze',
     )
+
     parser.add_argument(
         '-s',
         '--start',
@@ -26,6 +27,7 @@ def create_parser():
              'use their base value (e.g. 00 for hour). Use in conjunction '
              'with -d to limit the number of entries to process.'
     )
+
     parser.add_argument(
         '-d',
         '--delta',
@@ -35,12 +37,14 @@ def create_parser():
              '-s to only analyze certain time delta. If no start time is '
              'given, the time on the first line will be used instead.'
     )
+
     parser.add_argument(
         '-c',
         '--command',
         help='List of commands, comma separated, to run on the log file. See'
              '-l to get a full list of them.',
     )
+
     parser.add_argument(
         '--list-commands',
         action='store_true',
