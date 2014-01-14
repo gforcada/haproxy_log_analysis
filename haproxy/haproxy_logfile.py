@@ -289,7 +289,7 @@ class HaproxyLogFile(object):
         by the second element.
 
         .. warning::
-          Right now is hardcoded to 10 paths, improve the command line
+          Right now is hardcoded to 10 elements, improve the command line
           interface to allow to send parameters to each command or globally.
         """
         threshold = 10
