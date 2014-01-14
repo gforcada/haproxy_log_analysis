@@ -79,7 +79,8 @@ class HaproxyLogFile(object):
         """Returns the top most frequent IPs.
 
         .. note::
-          See ``_sort_and_trim`` for its current limitations.
+          See :meth:`.HaproxyLogFile._sort_and_trim` for its current
+          limitations.
         """
         return self._sort_and_trim(
             self.cmd_ip_counter(),
@@ -105,7 +106,8 @@ class HaproxyLogFile(object):
         """Returns the top most frequent paths.
 
         .. note::
-          See ``_sort_and_trim`` for its current limitations.
+          See :meth:`.HaproxyLogFile._sort_and_trim` for its current
+          limitations.
         """
         return self._sort_and_trim(
             self.cmd_request_path_counter(),
