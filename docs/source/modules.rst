@@ -10,3 +10,4 @@ Haproxy Modules
  
 .. autoclass:: HaproxyLogFile
     :members:
+    :private-members:
