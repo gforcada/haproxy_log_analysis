@@ -157,7 +157,7 @@ def print_commands():
         description = eval('dummy_log_file.cmd_{0}.__doc__'.format(cmd))
         if description:
             description = re.sub(r'\n\s+', ' ', description)
-            description.strip()
+            description = description.strip()
 
         print('{0}: {1}\n'.format(cmd, description))
 
