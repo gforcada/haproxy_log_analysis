@@ -37,6 +37,44 @@ class HaproxyLogFile(object):
 
         self._sort_lines()
 
+    def filter(self, filter_func):
+        """Filter current log lines by a given filter function.
+
+        This allows to drill down data out of the log file by filtering the
+        relevant log lines to analyze.
+
+        For example, filter by a given IP so only log lines for that IP are
+        further processed with commands (top paths, http status counter...).
+
+        :param filter_func: [required] Filter method, see filters.py for all
+          available filters.
+        :type filter_func: function
+        :returns: a new instance of HaproxyLogFile containing only log lines
+          that passed the filter function.
+        :rtype: :class:`HaproxyLogFile`
+
+        TODO:
+            Deep copy implementation.
+        """
+        new_log_file = HaproxyLogFile()
+        new_log_file.logfile = self.logfile
+        new_log_file.start_time = self.start_time
+        new_log_file.delta = self.delta
+
+        new_log_file.end_time = self.end_time
+
+        new_log_file.total_lines = 0
+
+        new_log_file._valid_lines = []
+        new_log_file._invalid_lines = self._invalid_lines[:]
+
+        for i in self._valid_lines:
+            if filter_func(i):
+                new_log_file.total_lines += 1
+                new_log_file._valid_lines.append(i)
+
+        return new_log_file
+
     @classmethod
     def commands(cls):
         """Returns a list of all methods that start with ``cmd_``."""
