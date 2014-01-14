@@ -11,3 +11,6 @@ Haproxy Modules
 .. autoclass:: HaproxyLogFile
    :members:
    :private-members:
+
+.. automodule:: haproxy.filters
+   :members:
