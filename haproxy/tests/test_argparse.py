@@ -32,7 +32,7 @@ class ArgumentParsingTest(unittest.TestCase):
     def setUp(self):
         self.parser = create_parser()
         self.default_arguments = [
-            '-c', 'counter', '-f', 'haproxy/tests/files/huge.log',
+            '-c', 'counter', '-l', 'haproxy/tests/files/huge.log',
         ]
 
     def test_arg_parser_start_valid(self):
@@ -92,28 +92,28 @@ class ArgumentParsingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
 
-    def test_arg_parser_filename_valid(self):
-        """Check that any filename passed does exist before handling it
+    def test_arg_parser_log_file_valid(self):
+        """Check that any log file passed does exist before handling it
         further.
         """
         arguments = ['-c', 'counter',
-                     '-f', 'haproxy/tests/test_argparse.py', ]
+                     '-l', 'haproxy/tests/test_argparse.py', ]
         data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual('haproxy/tests/test_argparse.py', data['filename'])
+        self.assertEqual('haproxy/tests/test_argparse.py', data['log'])
 
-    def test_arg_parser_filename_invalid(self):
-        """Check that if the filename passed does not exist an exception is
+    def test_arg_parser_log_file_invalid(self):
+        """Check that if the log file passed does not exist an exception is
         raised.
         """
         arguments = ['-c', 'counter',
-                     '-f', 'non_existing.log', ]
+                     '-l', 'non_existing.log', ]
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_commands_valid(self):
         """Test that valid commands are correctly parsed."""
         arguments = ['-c', 'http_methods',
-                     '-f', 'haproxy/tests/files/huge.log', ]
+                     '-l', 'haproxy/tests/files/huge.log', ]
         data = parse_arguments(self.parser.parse_args(arguments))
         self.assertEqual(['http_methods', ], data['commands'])
 
@@ -123,12 +123,12 @@ class ArgumentParsingTest(unittest.TestCase):
         """
         with self.assertRaises(ValueError):
             arguments = ['-c', 'non_existing_method',
-                         '-f', 'haproxy/tests/files/huge.log', ]
+                         '-l', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_list_commands(self):
         """Test that list commands argument is parsed."""
-        arguments = ['-l', ]
+        arguments = ['--list-commands', ]
         data = parse_arguments(self.parser.parse_args(arguments))
 
         for arg in data:
@@ -139,7 +139,7 @@ class ArgumentParsingTest(unittest.TestCase):
 
     def test_arg_parser_list_commands_output(self):
         """Test that list commands argument outputs what's expected."""
-        arguments = ['-l', ]
+        arguments = ['--list-commands', ]
         data = parse_arguments(self.parser.parse_args(arguments))
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
@@ -163,12 +163,12 @@ class ArgumentParsingTest(unittest.TestCase):
         with open(test_output.name, 'r') as output_file:
             output_text = output_file.read()
 
-            for keyword in ('FILENAME', 'START', 'DELTA', 'COMMAND'):
+            for keyword in ('LOG', 'START', 'DELTA', 'COMMAND'):
                 self.assertIn(keyword, output_text)
 
-    def test_arg_parser_help_output_only_filename(self):
-        """Test that when only the no arguments are given the help is shown."""
-        arguments = ['-f', 'haproxy/tests/files/huge.log', ]
+    def test_arg_parser_help_output_only_log_file(self):
+        """Test that when no arguments are given the help is shown."""
+        arguments = ['-l', 'haproxy/tests/files/huge.log', ]
         data = parse_arguments(self.parser.parse_args([]))
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
@@ -178,5 +178,5 @@ class ArgumentParsingTest(unittest.TestCase):
         with open(test_output.name, 'r') as output_file:
             output_text = output_file.read()
 
-            for keyword in ('FILENAME', 'START', 'DELTA', 'COMMAND'):
+            for keyword in ('LOG', 'START', 'DELTA', 'COMMAND'):
                 self.assertIn(keyword, output_text)

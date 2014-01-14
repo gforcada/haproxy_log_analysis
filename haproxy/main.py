@@ -13,8 +13,8 @@ def create_parser():
     parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument(
-        '-f',
-        '--filename',
+        '-l',
+        '--log',
         help='Haproxy log file to analyze',
     )
     parser.add_argument(
@@ -42,7 +42,6 @@ def create_parser():
              '-l to get a full list of them.',
     )
     parser.add_argument(
-        '-l',
         '--list-commands',
         action='store_true',
         help='Lists all commands available.',
@@ -56,7 +55,7 @@ def parse_arguments(args):
         'start': None,
         'delta': None,
         'commands': None,
-        'filename': None,
+        'log': None,
         'list_commands': None,
     }
 
@@ -74,9 +73,9 @@ def parse_arguments(args):
     if args.command is not None:
         data['commands'] = _parse_arg_commands(args.command)
 
-    if args.filename is not None:
-        _parse_arg_filename(args.filename)
-        data['filename'] = args.filename
+    if args.log is not None:
+        _parse_arg_logfile(args.log)
+        data['log'] = args.log
 
     return data
 
@@ -139,7 +138,7 @@ def _parse_arg_commands(commands):
     return input_commands
 
 
-def _parse_arg_filename(filename):
+def _parse_arg_logfile(filename):
     filepath = os.path.join(os.getcwd(), filename)
     if not os.path.exists(filepath):
         raise ValueError('filename {0} does not exist'.format(filepath))
@@ -187,7 +186,7 @@ def main(args, parser):
         return
 
     log_file = HaproxyLogFile(
-        logfile=args['filename'],
+        logfile=args['log'],
         start=args['start'],
         delta=args['delta'],
     )

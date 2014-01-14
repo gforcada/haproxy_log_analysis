@@ -13,11 +13,11 @@ class HaproxyLogFileTest(unittest.TestCase):
     def test_haproxy_log_file_from_main(self):
         start = datetime.now()
         delta = timedelta(1)
-        filename = 'haproxy/tests/files/small.log'
+        log_path = 'haproxy/tests/files/small.log'
         data = {
             'start': start,
             'delta': delta,
-            'filename': filename,
+            'log': log_path,
             'commands': ['counter', ],
             'list_commands': False,
         }
@@ -27,7 +27,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(logfile.start_time, start)
         self.assertEqual(logfile.delta, delta)
         self.assertEqual(logfile.end_time, start + delta)
-        self.assertEqual(logfile.logfile, filename)
+        self.assertEqual(logfile.logfile, log_path)
 
     def test_haproxy_log_file_error_no_file(self):
         """Check that trying to parse a non existing file raises an error."""
