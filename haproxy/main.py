@@ -2,10 +2,14 @@
 from datetime import datetime
 from datetime import timedelta
 from haproxy.haproxy_logfile import HaproxyLogFile
+from haproxy import filters
 
 import argparse
 import os
 import re
+
+
+VALID_FILTERS = [f[7:] for f in dir(filters) if f.startswith('filter_')]
 
 
 def create_parser():
@@ -51,6 +55,12 @@ def create_parser():
         help='Lists all commands available.',
     )
 
+    parser.add_argument(
+        '--list-filters',
+        action='store_true',
+        help='Lists all filters available.',
+    )
+
     return parser
 
 
@@ -61,10 +71,16 @@ def parse_arguments(args):
         'commands': None,
         'log': None,
         'list_commands': None,
+        'list_filters': None,
     }
 
     if args.list_commands:
         data['list_commands'] = True
+        # no need to further process any other input parameter
+        return data
+
+    if args.list_filters:
+        data['list_filters'] = True
         # no need to further process any other input parameter
         return data
 
@@ -165,6 +181,17 @@ def print_commands():
         print('{0}: {1}\n'.format(cmd, description))
 
 
+def print_filters():
+    """Prints all filters available with their description."""
+    for filter_name in VALID_FILTERS:
+        description = eval('filters.filter_{0}.__doc__'.format(filter_name))
+        if description:
+            description = re.sub(r'\n\s+', ' ', description)
+            description.strip()
+
+        print('{0}: {1}\n'.format(filter_name, description))
+
+
 def show_help(data):
     # make sure that if no arguments are passed the help is shown
     show = True
@@ -187,6 +214,12 @@ def main(args):
     # show the command list
     if args['list_commands']:
         print_commands()
+        # no need to process further
+        return
+
+    # show the filter list
+    if args['list_filters']:
+        print_filters()
         # no need to process further
         return
 

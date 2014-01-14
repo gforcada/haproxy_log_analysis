@@ -19,6 +19,7 @@ class HaproxyLogFileTest(unittest.TestCase):
             'log': log_path,
             'commands': ['counter', ],
             'list_commands': False,
+            'list_filters': False,
         }
         logfile = main(data)
 
