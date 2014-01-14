@@ -158,6 +158,13 @@ class ArgumentParsingTest(unittest.TestCase):
                          '-f', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
 
+    def test_arg_parser_filters_without_closing_bracket(self):
+        """Test that trying to input an invalid filter expression fails."""
+        with self.assertRaises(ValueError):
+            arguments = ['--filter', 'ip],ssl',
+                         '-f', 'haproxy/tests/files/huge.log', ]
+            parse_arguments(self.parser.parse_args(arguments))
+
     def test_arg_parser_list_commands(self):
         """Test that list commands argument is parsed."""
         arguments = ['--list-commands', ]
