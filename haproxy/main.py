@@ -262,12 +262,28 @@ def main(args):
         # no need to process further
         return
 
+    # create a HaproxyLogFile instance and parse the log file
     log_file = HaproxyLogFile(
         logfile=args['log'],
         start=args['start'],
         delta=args['delta'],
     )
     log_file.parse_file()
+
+    # apply any filter given
+    if args['filters'] is not None:
+        filter_string = 'filters.filter_{0}({1})'
+        for filter_data in args['filters']:
+            arg = ''
+            if filter_data[1] is not None:
+                arg = filter_data[1]
+                arg = "'{0}'".format(arg)
+
+            filter_func = eval(filter_string.format(filter_data[0], arg))
+
+            log_file = log_file.filter(filter_func)
+
+    # run all commands
     command_string = 'log_file.cmd_{0}()'
     for command in args['commands']:
         string = 'command: {0}'.format(command)

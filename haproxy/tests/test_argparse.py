@@ -229,3 +229,21 @@ class ArgumentParsingTest(unittest.TestCase):
 
             for filter_name in filters_list:
                 self.assertIn(filter_name[7:], output_text)
+
+    def test_arg_parser_filters(self):
+        """Check that the filter logic on haproxy.main.main works as expected.
+        """
+        arguments = ['-f', 'ssl,ip[1.2.3.4]',
+                     '-c', 'counter',
+                     '-l', 'haproxy/tests/files/filters.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('2', output_text)
