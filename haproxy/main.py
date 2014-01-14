@@ -2,10 +2,14 @@
 from datetime import datetime
 from datetime import timedelta
 from haproxy.haproxy_logfile import HaproxyLogFile
+from haproxy import filters
 
 import argparse
 import os
 import re
+
+
+VALID_FILTERS = [f[7:] for f in dir(filters) if f.startswith('filter_')]
 
 
 def create_parser():
@@ -46,9 +50,24 @@ def create_parser():
     )
 
     parser.add_argument(
+        '-f',
+        '--filter',
+        help='List of filters to apply on the log file. Passed as comma '
+             'separated and parameters within square brackets, e.g '
+             'ip[192.168.1.1],ssl,path[/some/path]. See '
+             '--list-filters to get a full list of them.',
+    )
+
+    parser.add_argument(
         '--list-commands',
         action='store_true',
         help='Lists all commands available.',
+    )
+
+    parser.add_argument(
+        '--list-filters',
+        action='store_true',
+        help='Lists all filters available.',
     )
 
     return parser
@@ -59,12 +78,19 @@ def parse_arguments(args):
         'start': None,
         'delta': None,
         'commands': None,
+        'filters': None,
         'log': None,
         'list_commands': None,
+        'list_filters': None,
     }
 
     if args.list_commands:
         data['list_commands'] = True
+        # no need to further process any other input parameter
+        return data
+
+    if args.list_filters:
+        data['list_filters'] = True
         # no need to further process any other input parameter
         return data
 
@@ -76,6 +102,9 @@ def parse_arguments(args):
 
     if args.command is not None:
         data['commands'] = _parse_arg_commands(args.command)
+
+    if args.filter is not None:
+        data['filters'] = _parse_arg_filters(args.filter)
 
     if args.log is not None:
         _parse_arg_logfile(args.log)
@@ -142,6 +171,32 @@ def _parse_arg_commands(commands):
     return input_commands
 
 
+def _parse_arg_filters(filters_arg):
+    input_filters = filters_arg.split(',')
+
+    return_data = []
+    for filter_expression in input_filters:
+        filter_name = filter_expression
+        filter_arg = None
+
+        if filter_expression.endswith(']'):
+            if '[' not in filter_expression:
+                msg = 'Error on filter "{0}". It is missing an opening ' \
+                      'square bracket.'
+                raise ValueError(msg.format(filter_expression))
+            filter_name, filter_arg = filter_expression.split('[')
+            filter_arg = filter_arg[:-1]  # remove the closing square bracket
+
+        if filter_name not in VALID_FILTERS:
+            msg = 'filter "{0}" is not available. Use --list-filters to ' \
+                  'get a list of all available filters.'
+            raise ValueError(msg.format(filter_name))
+
+        return_data.append((filter_name, filter_arg))
+
+    return return_data
+
+
 def _parse_arg_logfile(filename):
     filepath = os.path.join(os.getcwd(), filename)
     if not os.path.exists(filepath):
@@ -163,6 +218,17 @@ def print_commands():
             description = description.strip()
 
         print('{0}: {1}\n'.format(cmd, description))
+
+
+def print_filters():
+    """Prints all filters available with their description."""
+    for filter_name in VALID_FILTERS:
+        description = eval('filters.filter_{0}.__doc__'.format(filter_name))
+        if description:
+            description = re.sub(r'\n\s+', ' ', description)
+            description.strip()
+
+        print('{0}: {1}\n'.format(filter_name, description))
 
 
 def show_help(data):
@@ -190,12 +256,34 @@ def main(args):
         # no need to process further
         return
 
+    # show the filter list
+    if args['list_filters']:
+        print_filters()
+        # no need to process further
+        return
+
+    # create a HaproxyLogFile instance and parse the log file
     log_file = HaproxyLogFile(
         logfile=args['log'],
         start=args['start'],
         delta=args['delta'],
     )
     log_file.parse_file()
+
+    # apply any filter given
+    if args['filters'] is not None:
+        filter_string = 'filters.filter_{0}({1})'
+        for filter_data in args['filters']:
+            arg = ''
+            if filter_data[1] is not None:
+                arg = filter_data[1]
+                arg = "'{0}'".format(arg)
+
+            filter_func = eval(filter_string.format(filter_data[0], arg))
+
+            log_file = log_file.filter(filter_func)
+
+    # run all commands
     command_string = 'log_file.cmd_{0}()'
     for command in args['commands']:
         string = 'command: {0}'.format(command)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from datetime import timedelta
+from haproxy import filters
 from haproxy.main import create_parser
 from haproxy.main import main
 from haproxy.main import parse_arguments
@@ -126,6 +127,37 @@ class ArgumentParsingTest(unittest.TestCase):
                          '-l', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
 
+    def test_arg_parser_filters_valid(self):
+        """Test that valid filters are correctly parsed."""
+        arguments = ['-f', 'ssl',
+                     '-l', 'haproxy/tests/files/huge.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        self.assertEqual([('ssl', None)], data['filters'])
+
+    def test_arg_parser_filters_valid_with_argument(self):
+        """Test that valid filters with arguments are correctly parsed."""
+        arguments = ['-f', 'ip[something],ssl',
+                     '-l', 'haproxy/tests/files/huge.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        self.assertEqual([('ip', 'something'), ('ssl', None)],
+                         data['filters'])
+
+    def test_arg_parser_filters_invalid(self):
+        """Test that trying to input non existing filters raises an
+        exception.
+        """
+        with self.assertRaises(ValueError):
+            arguments = ['--filter', 'non_existing_filter',
+                         '-f', 'haproxy/tests/files/huge.log', ]
+            parse_arguments(self.parser.parse_args(arguments))
+
+    def test_arg_parser_filters_invalid_argument(self):
+        """Test that trying to input an invalid filter expression fails."""
+        with self.assertRaises(ValueError):
+            arguments = ['--filter', 'ip_with_error],ssl',
+                         '-f', 'haproxy/tests/files/huge.log', ]
+            parse_arguments(self.parser.parse_args(arguments))
+
     def test_arg_parser_list_commands(self):
         """Test that list commands argument is parsed."""
         arguments = ['--list-commands', ]
@@ -180,3 +212,38 @@ class ArgumentParsingTest(unittest.TestCase):
 
             for keyword in ('LOG', 'START', 'DELTA', 'COMMAND'):
                 self.assertIn(keyword, output_text)
+
+    def test_arg_parser_list_filters_output(self):
+        """Test that list filters argument outputs what's expected."""
+        arguments = ['--list-filters', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            filters_list = [f for f in dir(filters) if f.startswith('filter_')]
+
+            for filter_name in filters_list:
+                self.assertIn(filter_name[7:], output_text)
+
+    def test_arg_parser_filters(self):
+        """Check that the filter logic on haproxy.main.main works as expected.
+        """
+        arguments = ['-f', 'ssl,ip[1.2.3.4]',
+                     '-c', 'counter',
+                     '-l', 'haproxy/tests/files/filters.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('2', output_text)
