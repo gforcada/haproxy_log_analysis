@@ -50,6 +50,15 @@ def create_parser():
     )
 
     parser.add_argument(
+        '-f',
+        '--filter',
+        help='List of filters to apply on the log file. Passed as comma '
+             'separated and parameters within square brackets, e.g '
+             'ip[192.168.1.1],ssl,path[/some/path]. See '
+             '--list-filters to get a full list of them.',
+    )
+
+    parser.add_argument(
         '--list-commands',
         action='store_true',
         help='Lists all commands available.',
@@ -69,6 +78,7 @@ def parse_arguments(args):
         'start': None,
         'delta': None,
         'commands': None,
+        'filters': None,
         'log': None,
         'list_commands': None,
         'list_filters': None,
@@ -92,6 +102,9 @@ def parse_arguments(args):
 
     if args.command is not None:
         data['commands'] = _parse_arg_commands(args.command)
+
+    if args.filter is not None:
+        data['filters'] = _parse_arg_filters(args.filter)
 
     if args.log is not None:
         _parse_arg_logfile(args.log)
@@ -156,6 +169,32 @@ def _parse_arg_commands(commands):
                   'all available commands.'
             raise ValueError(msg.format(cmd))
     return input_commands
+
+
+def _parse_arg_filters(filters_arg):
+    input_filters = filters_arg.split(',')
+
+    return_data = []
+    for filter_expression in input_filters:
+        filter_name = filter_expression
+        filter_arg = None
+
+        if filter_expression.endswith(']'):
+            if '[' not in filter_expression:
+                msg = 'Error on filter "{0}". It is missing an opening ' \
+                      'square bracket.'
+                raise ValueError(msg.format(filter_expression))
+            filter_name, filter_arg = filter_expression.split('[')
+            filter_arg = filter_arg[:-1]  # remove the closing square bracket
+
+        if filter_name not in VALID_FILTERS:
+            msg = 'filter "{0}" is not available. Use --list-filters to ' \
+                  'get a list of all available filters.'
+            raise ValueError(msg.format(filter_name))
+
+        return_data.append((filter_name, filter_arg))
+
+    return return_data
 
 
 def _parse_arg_logfile(filename):

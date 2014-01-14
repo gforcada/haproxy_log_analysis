@@ -18,6 +18,7 @@ class HaproxyLogFileTest(unittest.TestCase):
             'delta': delta,
             'log': log_path,
             'commands': ['counter', ],
+            'filters': None,
             'list_commands': False,
             'list_filters': False,
         }

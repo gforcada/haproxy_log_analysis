@@ -127,6 +127,37 @@ class ArgumentParsingTest(unittest.TestCase):
                          '-l', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
 
+    def test_arg_parser_filters_valid(self):
+        """Test that valid filters are correctly parsed."""
+        arguments = ['-f', 'ssl',
+                     '-l', 'haproxy/tests/files/huge.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        self.assertEqual([('ssl', None)], data['filters'])
+
+    def test_arg_parser_filters_valid_with_argument(self):
+        """Test that valid filters with arguments are correctly parsed."""
+        arguments = ['-f', 'ip[something],ssl',
+                     '-l', 'haproxy/tests/files/huge.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        self.assertEqual([('ip', 'something'), ('ssl', None)],
+                         data['filters'])
+
+    def test_arg_parser_filters_invalid(self):
+        """Test that trying to input non existing filters raises an
+        exception.
+        """
+        with self.assertRaises(ValueError):
+            arguments = ['--filter', 'non_existing_filter',
+                         '-f', 'haproxy/tests/files/huge.log', ]
+            parse_arguments(self.parser.parse_args(arguments))
+
+    def test_arg_parser_filters_invalid_argument(self):
+        """Test that trying to input an invalid filter expression fails."""
+        with self.assertRaises(ValueError):
+            arguments = ['--filter', 'ip_with_error],ssl',
+                         '-f', 'haproxy/tests/files/huge.log', ]
+            parse_arguments(self.parser.parse_args(arguments))
+
     def test_arg_parser_list_commands(self):
         """Test that list commands argument is parsed."""
         arguments = ['--list-commands', ]
