@@ -165,8 +165,8 @@ def print_commands():
         print('{0}: {1}\n'.format(cmd, description))
 
 
-def show_help(data, parser):
-# make sure that if no arguments are passed the help is shown
+def show_help(data):
+    # make sure that if no arguments are passed the help is shown
     show = True
     for key in data:
         if data[key] is not None and key != 'filename':
@@ -174,13 +174,14 @@ def show_help(data, parser):
             break
 
     if show:
+        parser = create_parser()
         parser.print_help()
         return True
     return False
 
 
-def main(args, parser):
-    if show_help(args, parser):
+def main(args):
+    if show_help(args):
         return
 
     # show the command list
@@ -210,4 +211,4 @@ def main(args, parser):
 def console_script():
     parser = create_parser()
     arguments = parse_arguments(parser.parse_args())
-    main(arguments, parser)
+    main(arguments)

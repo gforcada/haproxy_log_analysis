@@ -144,7 +144,7 @@ class ArgumentParsingTest(unittest.TestCase):
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
         with RedirectStdout(stdout=test_output):
-            main(data, self.parser)
+            main(data)
 
         with open(test_output.name, 'r') as output_file:
             output_text = output_file.read()
@@ -158,7 +158,7 @@ class ArgumentParsingTest(unittest.TestCase):
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
         with RedirectStdout(stdout=test_output):
-            main(data, self.parser)
+            main(data)
 
         with open(test_output.name, 'r') as output_file:
             output_text = output_file.read()
@@ -173,7 +173,7 @@ class ArgumentParsingTest(unittest.TestCase):
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
         with RedirectStdout(stdout=test_output):
-            main(data, self.parser)
+            main(data)
 
         with open(test_output.name, 'r') as output_file:
             output_text = output_file.read()
