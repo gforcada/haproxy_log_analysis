@@ -31,15 +31,14 @@ Command-line interface
 
 The current ``--help`` looks like this::
 
-  usage: haproxy_log_analysis [-h] [-f FILENAME] [-s START] [-d DELTA]
-                              [-c COMMAND] [-l]
+  usage: haproxy_log_analysis [-h] [-l LOG] [-s START] [-d DELTA] [-c COMMAND]
+                              [-f FILTER] [--list-commands] [--list-filters]
 
   Analyze HAProxy log files and outputs statistics about it
 
   optional arguments:
     -h, --help            show this help message and exit
-    -f FILENAME, --filename FILENAME
-                          Haproxy log file to analyze
+    -l LOG, --log LOG     Haproxy log file to analyze
     -s START, --start START
                           Process log entries starting at this time, in HAProxy
                           date format (e.g. 11/Dec/2013 or
@@ -57,7 +56,13 @@ The current ``--help`` looks like this::
     -c COMMAND, --command COMMAND
                           List of commands, comma separated, to run on the log
                           file. See-l to get a full list of them.
-    -l, --list-commands   Lists all commands available.
+    -f FILTER, --filter FILTER
+                          List of filters to apply on the log file. Passed as
+                          comma separated and parameters within square brackets,
+                          e.g ip[192.168.1.1],ssl,path[/some/path]. See --list-
+                          filters to get a full list of them.
+    --list-commands       Lists all commands available.
+    --list-filters        Lists all filters available.
 
 
 Commands
