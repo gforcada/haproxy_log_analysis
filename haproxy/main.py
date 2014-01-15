@@ -237,7 +237,16 @@ def main(args):
     )
     log_file.parse_file()
 
-    # apply any filter given
+    # apply the time frame filter
+    if args['start'] is not None or args['delta'] is not None:
+        start = args['start'] or ''
+        delta = args['delta'] or ''
+        filter_string = 'filters.filter_time_frame("{0}", "{1}")'
+        filter_func = eval(filter_string.format(start, delta))
+
+        log_file = log_file.filter(filter_func)
+
+    # apply all other filters given
     if args['filters'] is not None:
         filter_string = 'filters.filter_{0}({1})'
         for filter_data in args['filters']:

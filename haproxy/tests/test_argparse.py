@@ -232,3 +232,42 @@ class ArgumentParsingTest(unittest.TestCase):
 
             self.assertIn('counter', output_text)
             self.assertIn('2', output_text)
+
+    def test_arg_parser_filters_start(self):
+        """Check that the filter_time is applied on the log file if a start
+        argument is given.
+        """
+        arguments = ['-s', '12/Dec/2015',
+                     '-c', 'counter',
+                     '-l', 'haproxy/tests/files/filters.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('4', output_text)
+
+    def test_arg_parser_filters_start_and_delta(self):
+        """Check that the filter_time is applied on the log file if a start
+        and delta arguments are given.
+        """
+        arguments = ['-s', '11/Dec/2015:11',
+                     '-d', '3h',
+                     '-c', 'counter',
+                     '-l', 'haproxy/tests/files/filters.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('2', output_text)
