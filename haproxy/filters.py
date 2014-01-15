@@ -82,6 +82,45 @@ def filter_slow_requests(slowness):
     return filter_func
 
 
+def filter_time_frame(start, delta):
+    """Filter :class:`.HaproxyLogLine` objects by their connection time.
+
+    :param start:
+    :type start: string
+    :param delta:
+    :type delta: string
+    :returns: a function that filters by the time a request is made.
+    :rtype: function
+    """
+    start_value = start
+    delta_value = delta
+    end_value = None
+
+    if start_value is not '':
+        start_value = _date_str_to_datetime(start_value)
+
+    if delta_value is not '':
+        delta_value = _delta_str_to_timedelta(delta_value)
+
+    if start_value is not '' and delta_value is not '':
+        end_value = start_value + delta_value
+
+    def filter_func(log_line):
+        if start_value is '':
+            return True
+        elif start_value > log_line.accept_date:
+            return False
+
+        if end_value is None:
+            return True
+        elif end_value < log_line.accept_date:
+            return False
+
+        return True
+
+    return filter_func
+
+
 def _date_str_to_datetime(date):
     matches = START_REGEX.match(date)
 
