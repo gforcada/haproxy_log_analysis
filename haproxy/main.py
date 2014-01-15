@@ -19,7 +19,7 @@ def create_parser():
     parser.add_argument(
         '-l',
         '--log',
-        help='Haproxy log file to analyze',
+        help='HAProxy log file to analyze',
     )
 
     parser.add_argument(
