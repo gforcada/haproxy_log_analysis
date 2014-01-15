@@ -55,7 +55,7 @@ The current ``--help`` looks like this::
                           time on the first line will be used instead.
     -c COMMAND, --command COMMAND
                           List of commands, comma separated, to run on the log
-                          file. See-l to get a full list of them.
+                          file. See -l to get a full list of them.
     -f FILTER, --filter FILTER
                           List of filters to apply on the log file. Passed as
                           comma separated and parameters within square brackets,
@@ -68,8 +68,9 @@ The current ``--help`` looks like this::
 Commands
 --------
 
-The idea here is that you can issue any number of these commands (see the
-command-line interface section above) to the haproxy log file being analyzed.
+Commands are small purpose specific programs in itself that report specific
+statistics about the log file being analyzed. See the ``--help`` (or the
+section above) to know how to run them.
 
 ``counter``
   Reports who many log lines could be parsed.
@@ -124,6 +125,29 @@ command-line interface section above) to the haproxy log file being analyzed.
   with ``-s`` and ``-d`` command line arguments, as the output can be huge.
 
 
+Filters
+-------
+
+Filters, contrary to commands, are a way to reduce the amount of log lines
+to be processed.
+
+This helps when looking for specific traces, like a certain IP, a path...
+
+``ip``
+  Filters log lines by the given IP.
+
+``ip_range``
+  Filters log lines by the given IP range (all IPs that begin with the same
+  prefix).
+
+``path``
+  Filters log lines by the given string.
+
+``ssl``
+  Filters log lines that are from SSL connections. See
+  :meth:`.HaproxyLogLine.is_https` for its limitations.
+
+
 Installation
 ------------
 
@@ -137,14 +161,10 @@ TODO
 
 - add more commands: *(help appreciated)*
 
-  - reports on slow connections
   - reports on servers connection time
   - reports on termination state
   - reports around connections (active, frontend, backend, server)
   - *your ideas here*
-
-- add a way to chain commands (paths of slow requests, status codes and IPs,
-  ...)
 
 - think of a way to show the commands output in a meaningful way
 
