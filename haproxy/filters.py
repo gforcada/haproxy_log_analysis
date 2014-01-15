@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+from datetime import timedelta
+from haproxy import DELTA_REGEX
+from haproxy import START_REGEX
 
 
 def filter_ip(ip):
@@ -76,3 +80,41 @@ def filter_slow_requests(slowness):
         return slowness_int <= log_line.time_wait_response
 
     return filter_func
+
+
+def _date_str_to_datetime(date):
+    matches = START_REGEX.match(date)
+
+    raw_date_input = '{0}/{1}/{2}'.format(
+        matches.group('day'),
+        matches.group('month'),
+        matches.group('year')
+    )
+    date_format = '%d/%b/%Y'
+    if matches.group('hour'):
+        date_format += ':%H'
+        raw_date_input += ':{0}'.format(matches.group('hour'))
+    if matches.group('minute'):
+        date_format += ':%M'
+        raw_date_input += ':{0}'.format(matches.group('minute'))
+    if matches.group('second'):
+        date_format += ':%S'
+        raw_date_input += ':{0}'.format(matches.group('second'))
+
+    return datetime.strptime(raw_date_input, date_format)
+
+
+def _delta_str_to_timedelta(delta):
+    matches = DELTA_REGEX.match(delta)
+
+    value = int(matches.group('value'))
+    time_unit = matches.group('time_unit')
+
+    if time_unit == 's':
+        return timedelta(seconds=value)
+    elif time_unit == 'm':
+        return timedelta(minutes=value)
+    elif time_unit == 'h':
+        return timedelta(hours=value)
+    if time_unit == 'd':
+        return timedelta(days=value)

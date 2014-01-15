@@ -2,6 +2,8 @@
 from datetime import datetime
 from datetime import timedelta
 from haproxy.haproxy_logfile import HaproxyLogFile
+from haproxy import DELTA_REGEX
+from haproxy import START_REGEX
 from haproxy import filters
 
 import argparse
@@ -95,10 +97,12 @@ def parse_arguments(args):
         return data
 
     if args.start is not None:
-        data['start'] = _parse_arg_date(args.start)
+        _validate_arg_date(args.start)
+        data['start'] = args.start
 
     if args.delta is not None:
-        data['delta'] = _parse_arg_delta(args.delta)
+        _validate_arg_delta(args.delta)
+        data['delta'] = args.delta
 
     if args.command is not None:
         data['commands'] = _parse_arg_commands(args.command)
@@ -113,51 +117,16 @@ def parse_arguments(args):
     return data
 
 
-def _parse_arg_date(start):
-    start_regex = re.compile(
-        r'(?P<day>\d+)/(?P<month>\w+)/(?P<year>\d+)'
-        r'(:(?P<hour>\d+)|)(:(?P<minute>\d+)|)(:(?P<second>\d+)|)'
-    )
-    matches = start_regex.match(start)
+def _validate_arg_date(start):
+    matches = START_REGEX.match(start)
     if not matches:
         raise ValueError('--start argument is not valid')
 
-    raw_date_input = '{0}/{1}/{2}'.format(
-        matches.group('day'),
-        matches.group('month'),
-        matches.group('year')
-    )
-    date_format = '%d/%b/%Y'
-    if matches.group('hour'):
-        date_format += ':%H'
-        raw_date_input += ':{0}'.format(matches.group('hour'))
-    if matches.group('minute'):
-        date_format += ':%M'
-        raw_date_input += ':{0}'.format(matches.group('minute'))
-    if matches.group('second'):
-        date_format += ':%S'
-        raw_date_input += ':{0}'.format(matches.group('second'))
 
-    return datetime.strptime(raw_date_input, date_format)
-
-
-def _parse_arg_delta(delta):
-    delta_regex = re.compile(r'\A(?P<value>\d+)(?P<time_unit>[smhd])\Z')
-    matches = delta_regex.match(delta)
+def _validate_arg_delta(delta):
+    matches = DELTA_REGEX.match(delta)
     if not matches:
         raise ValueError('--delta argument is not valid')
-
-    value = int(matches.group('value'))
-    time_unit = matches.group('time_unit')
-
-    if time_unit == 's':
-        return timedelta(seconds=value)
-    elif time_unit == 'm':
-        return timedelta(minutes=value)
-    elif time_unit == 'h':
-        return timedelta(hours=value)
-    if time_unit == 'd':
-        return timedelta(days=value)
 
 
 def _parse_arg_commands(commands):
