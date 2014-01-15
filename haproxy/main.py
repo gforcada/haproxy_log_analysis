@@ -45,7 +45,7 @@ def create_parser():
     parser.add_argument(
         '-c',
         '--command',
-        help='List of commands, comma separated, to run on the log file. See'
+        help='List of commands, comma separated, to run on the log file. See '
              '-l to get a full list of them.',
     )
 
