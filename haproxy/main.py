@@ -107,7 +107,7 @@ def parse_arguments(args):
         data['filters'] = _parse_arg_filters(args.filter)
 
     if args.log is not None:
-        _parse_arg_logfile(args.log)
+        _validate_arg_logfile(args.log)
         data['log'] = args.log
 
     return data
@@ -197,7 +197,7 @@ def _parse_arg_filters(filters_arg):
     return return_data
 
 
-def _parse_arg_logfile(filename):
+def _validate_arg_logfile(filename):
     filepath = os.path.join(os.getcwd(), filename)
     if not os.path.exists(filepath):
         raise ValueError('filename {0} does not exist'.format(filepath))
