@@ -71,3 +71,16 @@ class FiltersTest(HaproxyLogLineTest):
 
         self.assertEqual(results, [True, False, True, ])
 
+    def test_filter_slow_requests(self):
+        """Check that filter_slow_requests filter works as expected."""
+        filter_func = filters.filter_slow_requests('10000')
+
+        results = []
+        for response_time in (45, 13000, 4566):
+            self.tr = response_time
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [False, True, False, ])

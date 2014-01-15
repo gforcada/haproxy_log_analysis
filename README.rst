@@ -147,6 +147,10 @@ This helps when looking for specific traces, like a certain IP, a path...
   Filters log lines that are from SSL connections. See
   :meth:`.HaproxyLogLine.is_https` for its limitations.
 
+``slow_requests``
+  Filters log lines that take at least the given time to get answered (in
+  milliseconds).
+
 
 Installation
 ------------
