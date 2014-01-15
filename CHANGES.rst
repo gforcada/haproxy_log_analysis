@@ -5,7 +5,31 @@ CHANGES
 0.0.1 (unreleased)
 ------------------
 
-- Generate an api doc for ``HaproxyLogLine`` and ``HaproxyLogFile``.
+- Add ``--list-filters`` argument on the command line interface.
+  [GF]
+
+- Add ``--filter`` argument on the command line interface, inspired by
+  Bogdan's early design.
+  [bogdangi] [GF]
+
+- Create a new module :mod:`haproxy.filters` that holds all available filters.
+  [GF]
+
+- Improve :meth:`.HaproxyLogFile.cmd_queue_peaks` output to not only show
+  peaks but also when requests started to queue and when they finsihed and
+  the amount of requests that had been queued.
+  [GF]
+
+- Show help when no argument is given.
+  [GF]
+
+- Polish documentation and docstrings here and there.
+  [GF]
+
+- Add a ``--list-commands`` argument on the command line interface.
+  [GF]
+
+- Generate an API doc for ``HaproxyLogLine`` and ``HaproxyLogFile``.
   [bogdangi]
 
 - Create a ``console_script`` `haproxy_log_analysis` for ease of use.
