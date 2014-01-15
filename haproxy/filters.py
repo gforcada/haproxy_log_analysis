@@ -22,8 +22,8 @@ def filter_ip_range(ip_range):
     range is ``192.168.1`` whereas *192.168.2.103* is not valid (note the
     *.2.*).
 
-    :param ip: IP range that you want to filter to.
-    :type ip: string
+    :param ip_range: IP range that you want to filter to.
+    :type ip_range: string
     :returns: a function that filters by the provided IP range.
     :rtype: function
     """
