@@ -13,6 +13,11 @@ import unittest
 
 
 class RedirectStdout(object):
+    """Context manager class that redirects standard output to a file.
+
+    This helps analyzing standard output (print() function output) on tests
+    without having to do any change on the code, just on tests.
+    """
 
     def __init__(self, stdout=None):
         self._stdout = stdout or sys.stdout
