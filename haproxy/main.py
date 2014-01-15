@@ -234,8 +234,6 @@ def main(args):
     # create a HaproxyLogFile instance and parse the log file
     log_file = HaproxyLogFile(
         logfile=args['log'],
-        start=args['start'],
-        delta=args['delta'],
     )
     log_file.parse_file()
 
