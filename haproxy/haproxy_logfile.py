@@ -209,7 +209,7 @@ class HaproxyLogFile(object):
                 peaks.append({'peak': current_peak,
                               'span': current_span,
                               'first': first_on_queue,
-                              'last': line.accept_date,})
+                              'last': line.accept_date, })
                 current_peak = 0
                 current_span = 0
                 first_on_queue = None
@@ -222,7 +222,7 @@ class HaproxyLogFile(object):
             peaks.append({'peak': current_peak,
                           'span': current_span,
                           'first': first_on_queue,
-                          'last': line.accept_date,})
+                          'last': line.accept_date, })
 
         return peaks
 
