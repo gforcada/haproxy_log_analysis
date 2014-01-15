@@ -212,8 +212,8 @@ class ArgumentParsingTest(unittest.TestCase):
 
     def test_arg_parser_help_output_only_log_file(self):
         """Test that when no arguments are given the help is shown."""
-        arguments = ['-l', 'haproxy/tests/files/huge.log', ]
-        data = parse_arguments(self.parser.parse_args([]))
+        arguments = ['-l', 'haproxy/tests/files/queue.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
         with RedirectStdout(stdout=test_output):

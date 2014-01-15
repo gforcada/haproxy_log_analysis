@@ -235,7 +235,7 @@ def show_help(data):
     # make sure that if no arguments are passed the help is shown
     show = True
     for key in data:
-        if data[key] is not None and key != 'filename':
+        if data[key] is not None and key != 'log':
             show = False
             break
 
