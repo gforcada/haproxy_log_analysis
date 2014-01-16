@@ -1,6 +1,4 @@
 # -*- encoding: utf-8 -*-
-from datetime import datetime
-from datetime import timedelta
 from haproxy.haproxy_logfile import HaproxyLogFile
 from haproxy import DELTA_REGEX
 from haproxy import START_REGEX

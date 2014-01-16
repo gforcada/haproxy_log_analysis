@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-from datetime import timedelta
 from haproxy import filters
 from haproxy.main import create_parser
 from haproxy.main import main
