@@ -156,6 +156,9 @@ This helps when looking for specific traces, like a certain IP, a path...
   ``--delta`` are used. Do not type this filter on the command line, use
   ``--start`` and ``--delta``.
 
+``status_code``
+  Filters log lines that match the given HTTP status code (i.e. 404, 200...).
+
 
 Installation
 ------------

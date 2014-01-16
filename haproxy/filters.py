@@ -121,6 +121,21 @@ def filter_time_frame(start, delta):
     return filter_func
 
 
+def filter_status_code(http_status):
+    """Filter :class:`.HaproxyLogLine` objects by their HTTP status code.
+
+    :param http_status: HTTP status code (200, 404, 502...) to filter lines
+      with.
+    :type http_status: string
+    :returns: a function that filters by HTTP status code.
+    :rtype: function
+    """
+    def filter_func(log_line):
+        return log_line.status_code == http_status
+
+    return filter_func
+
+
 def _date_str_to_datetime(date):
     matches = START_REGEX.match(date)
 

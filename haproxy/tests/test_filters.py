@@ -169,3 +169,17 @@ class FiltersTest(HaproxyLogLineTest):
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [False, False, True, ])
+
+    def test_filter_status_code(self):
+        """Test that the status_code filter works as expected."""
+        filter_func = filters.filter_status_code('404')
+
+        self.status = '404'
+        raw_line = self._build_test_string()
+        log_line = HaproxyLogLine(raw_line)
+        self.assertTrue(filter_func(log_line))
+
+        self.status = '200'
+        raw_line = self._build_test_string()
+        log_line = HaproxyLogLine(raw_line)
+        self.assertFalse(filter_func(log_line))
