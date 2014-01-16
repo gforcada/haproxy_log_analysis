@@ -41,27 +41,6 @@ class ArgumentParsingTest(unittest.TestCase):
             '-c', 'counter', '-l', 'haproxy/tests/files/huge.log',
         ]
 
-    def test_arg_parser_start_valid(self):
-        """Check that 'start' argument is validated as a datetime object."""
-        arguments = ['-s', '11/Dec/2013', ] + self.default_arguments
-        data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual(datetime(2013, 12, 11), data['start'])
-
-        arguments = ['-s', '11/Dec/2013:13', ] + self.default_arguments
-        data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual(datetime(2013, 12, 11, hour=13),
-                         data['start'])
-
-        arguments = ['-s', '11/Dec/2013:14:15', ] + self.default_arguments
-        data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual(datetime(2013, 12, 11, hour=14, minute=15),
-                         data['start'])
-
-        arguments = ['-s', '11/Dec/2013:14:15:16', ] + self.default_arguments
-        data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual(datetime(2013, 12, 11, hour=14, minute=15, second=16),
-                         data['start'])
-
     def test_arg_parser_start_invalid(self):
         """Check that if a 'start' argument is not valid an exception is
         raised.
@@ -70,25 +49,12 @@ class ArgumentParsingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
 
-    def test_arg_parser_delta_valid_deltas(self):
-        """Check that deltas are correctly checked and processed as timedelta
-        values.
-        """
-        arguments = ['-d', '45s', ] + self.default_arguments
+    def test_arg_parser_start_valid(self):
+        """Check that if a 'start' argument is valid is stored."""
+        start = '12/Dec/2013:14:15:16'
+        arguments = ['-s', start, ] + self.default_arguments
         data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual(timedelta(seconds=45), data['delta'])
-
-        arguments = ['-d', '2m', ] + self.default_arguments
-        data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual(timedelta(minutes=2), data['delta'])
-
-        arguments = ['-d', '13h', ] + self.default_arguments
-        data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual(timedelta(hours=13), data['delta'])
-
-        arguments = ['-d', '1d', ] + self.default_arguments
-        data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual(timedelta(days=1), data['delta'])
+        self.assertTrue(start, data['start'])
 
     def test_arg_parser_delta_invalid(self):
         """Check that if an invalid delta argument is passed an exception is
@@ -97,6 +63,13 @@ class ArgumentParsingTest(unittest.TestCase):
         arguments = ['-d', 'invalid', ] + self.default_arguments
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
+
+    def test_arg_parser_delta_valid(self):
+        """Check that if a 'delta' argument is valid is stored."""
+        delta = '4d'
+        arguments = ['-d', delta, ] + self.default_arguments
+        data = parse_arguments(self.parser.parse_args(arguments))
+        self.assertTrue(delta, data['delta'])
 
     def test_arg_parser_log_file_valid(self):
         """Check that any log file passed does exist before handling it
@@ -246,6 +219,45 @@ class ArgumentParsingTest(unittest.TestCase):
         """Check that the filter logic on haproxy.main.main works as expected.
         """
         arguments = ['-f', 'ssl,ip[1.2.3.4]',
+                     '-c', 'counter',
+                     '-l', 'haproxy/tests/files/filters.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('2', output_text)
+
+    def test_arg_parser_filters_start(self):
+        """Check that the filter_time is applied on the log file if a start
+        argument is given.
+        """
+        arguments = ['-s', '12/Dec/2015',
+                     '-c', 'counter',
+                     '-l', 'haproxy/tests/files/filters.log', ]
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('4', output_text)
+
+    def test_arg_parser_filters_start_and_delta(self):
+        """Check that the filter_time is applied on the log file if a start
+        and delta arguments are given.
+        """
+        arguments = ['-s', '11/Dec/2015:11',
+                     '-d', '3h',
                      '-c', 'counter',
                      '-l', 'haproxy/tests/files/filters.log', ]
         data = parse_arguments(self.parser.parse_args(arguments))

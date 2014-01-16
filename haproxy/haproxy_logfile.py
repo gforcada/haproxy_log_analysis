@@ -6,14 +6,8 @@ from haproxy.haproxy_logline import HaproxyLogLine
 
 class HaproxyLogFile(object):
 
-    def __init__(self, logfile=None, start=None, delta=None):
+    def __init__(self, logfile=None):
         self.logfile = logfile
-        self.start_time = start
-        self.delta = delta
-
-        self.end_time = None
-        if self.start_time is not None and self.delta is not None:
-            self.end_time = start + delta
 
         self.total_lines = 0
 
@@ -30,10 +24,10 @@ class HaproxyLogFile(object):
                 stripped_line = line.strip()
                 parsed_line = HaproxyLogLine(stripped_line)
 
-                if not parsed_line.valid:
-                    self._invalid_lines.append(stripped_line)
-                elif self._is_in_time_range(parsed_line):
+                if parsed_line.valid:
                     self._valid_lines.append(parsed_line)
+                else:
+                    self._invalid_lines.append(stripped_line)
 
         self._sort_lines()
 
@@ -58,10 +52,6 @@ class HaproxyLogFile(object):
         """
         new_log_file = HaproxyLogFile()
         new_log_file.logfile = self.logfile
-        new_log_file.start_time = self.start_time
-        new_log_file.delta = self.delta
-
-        new_log_file.end_time = self.end_time
 
         new_log_file.total_lines = 0
 
@@ -293,22 +283,6 @@ class HaproxyLogFile(object):
             )
 
         return requests
-
-    def _is_in_time_range(self, log_line):
-        """'log_line' is in time range if there is a time range to begin with
-        and the 'log_line' time is within 'start_time' and 'end_time'.
-        """
-        if self.start_time is None:
-            return True
-        elif self.start_time > log_line.accept_date:
-            return False
-
-        if self.end_time is None:
-            return True
-        elif self.end_time < log_line.accept_date:
-            return False
-
-        return True
 
     def _sort_lines(self):
         """Haproxy writes its logs after having gathered all information

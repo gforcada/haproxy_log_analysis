@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+from datetime import timedelta
 from haproxy import filters
 from haproxy.haproxy_logline import HaproxyLogLine
 from haproxy.tests.test_haproxy_log_line import HaproxyLogLineTest
@@ -84,3 +86,86 @@ class FiltersTest(HaproxyLogLineTest):
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [False, True, False, ])
+
+    def test_str_to_timedelta(self):
+        """Check that deltas are converted to timedelta objects."""
+        data = filters._delta_str_to_timedelta('45s')
+        self.assertEqual(timedelta(seconds=45), data)
+
+        data = filters._delta_str_to_timedelta('2m')
+        self.assertEqual(timedelta(minutes=2), data)
+
+        data = filters._delta_str_to_timedelta('13h')
+        self.assertEqual(timedelta(hours=13), data)
+
+        data = filters._delta_str_to_timedelta('1d')
+        self.assertEqual(timedelta(days=1), data)
+
+    def test_str_to_datetime(self):
+        """Check that start are converted to datetime objects."""
+        data = filters._date_str_to_datetime('11/Dec/2013')
+        self.assertEqual(datetime(2013, 12, 11), data)
+
+        data = filters._date_str_to_datetime('11/Dec/2013:13')
+        self.assertEqual(datetime(2013, 12, 11, hour=13), data)
+
+        data = filters._date_str_to_datetime('11/Dec/2013:14:15')
+        self.assertEqual(datetime(2013, 12, 11, hour=14, minute=15), data)
+
+        data = filters._date_str_to_datetime('11/Dec/2013:14:15:16')
+        self.assertEqual(datetime(2013, 12, 11, hour=14, minute=15, second=16),
+                         data)
+
+    def test_filter_time_frame_no_limit(self):
+        """Test that if empty strings are passed to filter_time_frame all log
+        lines are accepted.
+        """
+        filter_func = filters.filter_time_frame('', '')
+
+        results = []
+        for accept_date in ('09/Dec/2013:10:53:42.33',
+                            '19/Jan/2014:12:39:16.63',
+                            '29/Jun/2012:15:27:23.66'):
+            self.accept_date = accept_date
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [True, True, True, ])
+
+    def test_filter_time_frame_only_start(self):
+        """Test that if empty strings are passed to filter_time_frame all log
+        lines are accepted.
+        """
+        filter_func = filters.filter_time_frame('3/Oct/2013', '')
+
+        results = []
+        for accept_date in ('09/Dec/2013:10:53:42.33',
+                            '19/Jan/2014:12:39:16.63',
+                            '29/Jun/2012:15:27:23.66'):
+            self.accept_date = accept_date
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [True, True, False, ])
+
+    def test_filter_time_frame_start_and_delta(self):
+        """Test that if empty strings are passed to filter_time_frame all log
+        lines are accepted.
+        """
+        filter_func = filters.filter_time_frame('29/Jun/2012:15', '30m')
+
+        results = []
+        for accept_date in ('09/Dec/2013:10:53:42.33',
+                            '19/Jan/2014:12:39:16.63',
+                            '29/Jun/2012:15:27:23.66'):
+            self.accept_date = accept_date
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [False, False, True, ])

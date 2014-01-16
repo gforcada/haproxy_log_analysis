@@ -151,6 +151,11 @@ This helps when looking for specific traces, like a certain IP, a path...
   Filters log lines that take at least the given time to get answered (in
   milliseconds).
 
+``time_frame``
+  This is an implicit filter that is used when ``--start``, and optionally,
+  ``--delta`` are used. Do not type this filter on the command line, use
+  ``--start`` and ``--delta``.
+
 
 Installation
 ------------
