@@ -169,6 +169,21 @@ def filter_http_method(http_method):
     return filter_func
 
 
+def filter_backend(backend_name):
+    """Filter :class:`.HaproxyLogLine` objects by the HAProxy backend name
+    they were processed with.
+
+    :param backend_name: Name of the HAProxy backend section to investigate.
+    :type backend_name: string
+    :returns: a function that filters by the given backend name.
+    :rtype: function
+    """
+    def filter_func(log_line):
+        return log_line.backend_name == backend_name
+
+    return filter_func
+
+
 def _date_str_to_datetime(date):
     matches = START_REGEX.match(date)
 

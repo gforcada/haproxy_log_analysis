@@ -166,6 +166,9 @@ This helps when looking for specific traces, like a certain IP, a path...
 ``http_method``
   Filters log lines by the HTTP method used (GET, POST...).
 
+``backend``
+  Filters log lines by the HAProxy backend the connection was handled with.
+
 
 Installation
 ------------

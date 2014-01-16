@@ -209,3 +209,16 @@ class FiltersTest(HaproxyLogLineTest):
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [True, False, False, True, ])
+
+    def test_filter_backend(self):
+        """Test that the backend filter works as expected."""
+        filter_func = filters.filter_backend('default')
+
+        results = []
+        for backend_name in ('default', 'anonymous', 'registered', ):
+            self.backend_name = backend_name
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [True, False, False, ])
