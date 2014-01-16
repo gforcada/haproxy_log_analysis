@@ -136,6 +136,22 @@ def filter_status_code(http_status):
     return filter_func
 
 
+def filter_status_code_family(family_number):
+    """Filter :class:`.HaproxyLogLine` objects by their family of HTTP status
+    code, i.e. 2xx, 3xx, 4xx
+
+    :param family_number: First digit of the HTTP status code family, i.e. 2
+      to get all the 2xx status codes, 4 for the client errors and so on.
+    :type http_status: string
+    :returns: a function that filters by HTTP status code family.
+    :rtype: function
+    """
+    def filter_func(log_line):
+        return log_line.status_code.startswith(family_number)
+
+    return filter_func
+
+
 def _date_str_to_datetime(date):
     matches = START_REGEX.match(date)
 

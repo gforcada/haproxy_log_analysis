@@ -159,6 +159,10 @@ This helps when looking for specific traces, like a certain IP, a path...
 ``status_code``
   Filters log lines that match the given HTTP status code (i.e. 404, 200...).
 
+``status_code_family``
+  Filters log lines that match the given HTTP status code family (i.e. 4 for
+  all 4xx status codes, 5 for 5xx status codes...).
+
 
 Installation
 ------------

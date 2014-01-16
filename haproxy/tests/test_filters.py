@@ -183,3 +183,16 @@ class FiltersTest(HaproxyLogLineTest):
         raw_line = self._build_test_string()
         log_line = HaproxyLogLine(raw_line)
         self.assertFalse(filter_func(log_line))
+
+    def test_filter_status_code_family(self):
+        """Test that the status_code_family filter works as expected."""
+        filter_func = filters.filter_status_code_family('4')
+
+        results = []
+        for status in ('404', '503', '401', ):
+            self.status = status
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [True, False, True, ])
