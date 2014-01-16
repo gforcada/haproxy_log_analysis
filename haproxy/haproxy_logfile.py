@@ -251,7 +251,7 @@ class HaproxyLogFile(object):
 
         .. note::
           Try to combine it with time constrains (``-s`` and ``-d``) as this
-          command output can be huge if not.
+          command output can be huge otherwise.
         """
         if len(self._valid_lines) == 0:
             return
