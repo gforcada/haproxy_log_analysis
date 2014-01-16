@@ -154,6 +154,21 @@ def filter_status_code_family(family_number):
     return filter_func
 
 
+def filter_http_method(http_method):
+    """Filter :class:`.HaproxyLogLine` objects by their HTTP method used (i.e.
+    GET, POST...).
+
+    :param http_method: HTTP method (POST, GET...).
+    :type http_method: string
+    :returns: a function that filters by the given HTTP method.
+    :rtype: function
+    """
+    def filter_func(log_line):
+        return log_line.http_request_method == http_method
+
+    return filter_func
+
+
 def _date_str_to_datetime(date):
     matches = START_REGEX.match(date)
 

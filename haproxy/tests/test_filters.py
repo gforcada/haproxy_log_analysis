@@ -196,3 +196,16 @@ class FiltersTest(HaproxyLogLineTest):
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [True, False, True, ])
+
+    def test_filter_http_method(self):
+        """Test that the http_method filter works as expected."""
+        filter_func = filters.filter_http_method('GET')
+
+        results = []
+        for http_method in ('GET', 'POST', 'PUT', 'GET', ):
+            self.http_request = '{0} /something HTTP/1.1'.format(http_method)
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [True, False, False, True, ])

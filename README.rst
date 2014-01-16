@@ -163,6 +163,9 @@ This helps when looking for specific traces, like a certain IP, a path...
   Filters log lines that match the given HTTP status code family (i.e. 4 for
   all 4xx status codes, 5 for 5xx status codes...).
 
+``http_method``
+  Filters log lines by the HTTP method used (GET, POST...).
+
 
 Installation
 ------------
