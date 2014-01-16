@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from haproxy import filters
+from haproxy.main import VALID_FILTERS
 from haproxy.main import create_parser
 from haproxy.main import main
 from haproxy.main import parse_arguments
@@ -208,9 +209,7 @@ class ArgumentParsingTest(unittest.TestCase):
         with open(test_output.name, 'r') as output_file:
             output_text = output_file.read()
 
-            filters_list = [f for f in dir(filters) if f.startswith('filter_')]
-
-            for filter_name in filters_list:
+            for filter_name in VALID_FILTERS:
                 self.assertIn(filter_name[7:], output_text)
 
     def test_arg_parser_filters(self):
@@ -269,3 +268,12 @@ class ArgumentParsingTest(unittest.TestCase):
 
             self.assertIn('counter', output_text)
             self.assertIn('2', output_text)
+
+    def test_valid_filters(self):
+        """Ensure that all but time_frame filters are available."""
+        methods = dir(filters)
+        for valid_filter in VALID_FILTERS:
+            filter_name = 'filter_{0}'.format(valid_filter)
+            self.assertTrue(filter_name in methods)
+
+        self.assertFalse('time_frame' in VALID_FILTERS)

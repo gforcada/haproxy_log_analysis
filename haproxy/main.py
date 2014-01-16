@@ -9,7 +9,9 @@ import os
 import re
 
 
-VALID_FILTERS = [f[7:] for f in dir(filters) if f.startswith('filter_')]
+VALID_FILTERS = [
+    f[7:] for f in dir(filters) if f.startswith('filter_')
+    and not f.endswith('time_frame')]
 
 
 def create_parser():
