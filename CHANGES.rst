@@ -5,6 +5,10 @@ CHANGES
 0.0.1 (unreleased)
 ------------------
 
+- Add :meth:`.HaproxyLogFile.parse_data` method to get data from data stream.
+  It allows you use it as a library.
+  [bogdangi]
+
 - Add ``--list-filters`` argument on the command line interface.
   [GF]
 
