@@ -19,15 +19,24 @@ class HaproxyLogFile(object):
             raise ValueError('No log file is configured yet!')
 
         with open(self.logfile) as logfile:
-            for line in logfile:
-                self.total_lines += 1
-                stripped_line = line.strip()
-                parsed_line = HaproxyLogLine(stripped_line)
+            self.parse_data(logfile)
 
-                if parsed_line.valid:
-                    self._valid_lines.append(parsed_line)
-                else:
-                    self._invalid_lines.append(stripped_line)
+    def parse_data(self, logfile):
+        """Parse data from data stream and replace object lines.
+
+        :param logfile: [required] Log file data stream.
+        :type data stream: str
+        """
+
+        for line in logfile:
+            self.total_lines += 1
+            stripped_line = line.strip()
+            parsed_line = HaproxyLogLine(stripped_line)
+
+            if parsed_line.valid:
+                self._valid_lines.append(parsed_line)
+            else:
+                self._invalid_lines.append(stripped_line)
 
         self._sort_lines()
 
