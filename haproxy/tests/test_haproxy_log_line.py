@@ -201,3 +201,14 @@ class HaproxyLogLineTest(unittest.TestCase):
 
         self.assertTrue(log_line.valid)
         self.assertFalse(log_line.is_https())
+
+    def test_haproxy_log_line_request_is_front_page(self):
+        """Check that if a request is for the front page the request path is
+        correctly stored.
+        """
+        self.http_request = 'GET / HTTP/1.1'
+        raw_line = self._build_test_string()
+        log_line = HaproxyLogLine(raw_line)
+
+        self.assertTrue(log_line.valid)
+        self.assertEqual('/', log_line.http_request_path)
