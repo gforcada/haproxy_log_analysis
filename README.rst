@@ -175,6 +175,9 @@ This helps when looking for specific traces, like a certain IP, a path...
 ``server``
   Filters log lines by the downstream server that handled the connection.
 
+``response_size``
+  Filters log lines by the response size (in bytes). Specially useful when
+  looking for big file downloads.
 
 Installation
 ------------

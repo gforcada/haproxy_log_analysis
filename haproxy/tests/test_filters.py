@@ -248,3 +248,22 @@ class FiltersTest(HaproxyLogLineTest):
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [False, False, True, ])
+
+    def test_filter_response_size(self):
+        """Test that the size filter works as expected."""
+        # does not matter if the filter parameter has a leading sign plus
+        # or not, it should return the same results.
+        filter_func_1 = filters.filter_response_size('400')
+        filter_func_2 = filters.filter_response_size('+400')
+
+        results_1 = []
+        results_2 = []
+        for size in ('300', '+399', '+598', '401', ):
+            self.bytes = size
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+            results_1.append(filter_func_1(log_line))
+            results_2.append(filter_func_2(log_line))
+
+        self.assertEqual(results_1, [False, False, True, True, ])
+        self.assertEqual(results_1, results_2)
