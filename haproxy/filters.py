@@ -144,7 +144,7 @@ def filter_status_code_family(family_number):
 
     :param family_number: First digit of the HTTP status code family, i.e. 2
       to get all the 2xx status codes, 4 for the client errors and so on.
-    :type http_status: string
+    :type family_number: string
     :returns: a function that filters by HTTP status code family.
     :rtype: function
     """
