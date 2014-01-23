@@ -222,3 +222,16 @@ class FiltersTest(HaproxyLogLineTest):
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [True, False, False, ])
+
+    def test_filter_frontend(self):
+        """Test that the frontend filter works as expected."""
+        filter_func = filters.filter_frontend('loadbalancer')
+
+        results = []
+        for frontend_name in ('loadbalancer', 'other', 'loadbalancer', ):
+            self.frontend_name = frontend_name
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [True, False, True, ])

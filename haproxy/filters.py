@@ -184,6 +184,21 @@ def filter_backend(backend_name):
     return filter_func
 
 
+def filter_frontend(frontend_name):
+    """Filter :class:`.HaproxyLogLine` objects by the HAProxy frontend name
+    the connection arrived from.
+
+    :param frontend_name: Name of the HAProxy frontend section to investigate.
+    :type frontend_name: string
+    :returns: a function that filters by the given frontend name.
+    :rtype: function
+    """
+    def filter_func(log_line):
+        return log_line.frontend_name == frontend_name
+
+    return filter_func
+
+
 def _date_str_to_datetime(date):
     matches = START_REGEX.match(date)
 

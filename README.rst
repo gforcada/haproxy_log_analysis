@@ -169,6 +169,9 @@ This helps when looking for specific traces, like a certain IP, a path...
 ``backend``
   Filters log lines by the HAProxy backend the connection was handled with.
 
+``frontend``
+  Filters log lines by the HAProxy frontend the connection arrived from.
+
 
 Installation
 ------------
