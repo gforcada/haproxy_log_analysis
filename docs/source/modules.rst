@@ -1,10 +1,9 @@
 Haproxy Modules
 ===============
 
-.. automodule:: haproxy.haproxy_logline
 
-.. autoclass:: HaproxyLogLine
-    :members:
+HaproxyLogfile
+--------------
 
 .. automodule:: haproxy.haproxy_logfile
 
@@ -12,5 +11,11 @@ Haproxy Modules
    :members:
    :private-members:
 
-.. automodule:: haproxy.filters
-   :members:
+
+HaproxyLogline
+--------------
+
+.. automodule:: haproxy.haproxy_logline
+
+.. autoclass:: HaproxyLogLine
+    :members:
