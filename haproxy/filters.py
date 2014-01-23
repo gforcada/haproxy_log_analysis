@@ -199,6 +199,21 @@ def filter_frontend(frontend_name):
     return filter_func
 
 
+def filter_server(server_name):
+    """Filter :class:`.HaproxyLogLine` objects by the downstream server that
+    handled the connection.
+
+    :param server_name: Name of the server HAProxy send the connection to.
+    :type server_name: string
+    :returns: a function that filters by the given server name.
+    :rtype: function
+    """
+    def filter_func(log_line):
+        return log_line.server_name == server_name
+
+    return filter_func
+
+
 def _date_str_to_datetime(date):
     matches = START_REGEX.match(date)
 

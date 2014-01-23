@@ -172,6 +172,9 @@ This helps when looking for specific traces, like a certain IP, a path...
 ``frontend``
   Filters log lines by the HAProxy frontend the connection arrived from.
 
+``server``
+  Filters log lines by the downstream server that handled the connection.
+
 
 Installation
 ------------

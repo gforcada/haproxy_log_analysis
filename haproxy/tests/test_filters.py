@@ -235,3 +235,16 @@ class FiltersTest(HaproxyLogLineTest):
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [True, False, True, ])
+
+    def test_filter_server(self):
+        """Test that the server filter works as expected."""
+        filter_func = filters.filter_server('instance8')
+
+        results = []
+        for server_name in ('instance7', 'instance', 'instance8' ):
+            self.server_name = server_name
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [False, False, True, ])
