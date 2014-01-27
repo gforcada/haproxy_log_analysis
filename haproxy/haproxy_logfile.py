@@ -40,7 +40,7 @@ class HaproxyLogFile(object):
 
         self._sort_lines()
 
-    def filter(self, filter_func):
+    def filter(self, filter_func, reverse=False):
         """Filter current log lines by a given filter function.
 
         This allows to drill down data out of the log file by filtering the
@@ -52,6 +52,9 @@ class HaproxyLogFile(object):
         :param filter_func: [required] Filter method, see filters.py for all
           available filters.
         :type filter_func: function
+        :param reverse: negate the filter (so accept all log lines that return
+          ``False``).
+        :type reverse: boolean
         :returns: a new instance of HaproxyLogFile containing only log lines
           that passed the filter function.
         :rtype: :class:`HaproxyLogFile`
@@ -67,10 +70,18 @@ class HaproxyLogFile(object):
         new_log_file._valid_lines = []
         new_log_file._invalid_lines = self._invalid_lines[:]
 
-        for i in self._valid_lines:
-            if filter_func(i):
-                new_log_file.total_lines += 1
-                new_log_file._valid_lines.append(i)
+        # add the reverse conditional outside the loop to keep the loop as
+        # straightforward as possible
+        if not reverse:
+            for i in self._valid_lines:
+                if filter_func(i):
+                    new_log_file.total_lines += 1
+                    new_log_file._valid_lines.append(i)
+        else:
+            for i in self._valid_lines:
+                if not filter_func(i):
+                    new_log_file.total_lines += 1
+                    new_log_file._valid_lines.append(i)
 
         return new_log_file
 

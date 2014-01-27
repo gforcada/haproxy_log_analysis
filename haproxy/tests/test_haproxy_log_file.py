@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from haproxy import filters
 from haproxy.haproxy_logfile import HaproxyLogFile
 from haproxy.main import main
 
@@ -15,6 +16,7 @@ class HaproxyLogFileTest(unittest.TestCase):
             'delta': None,
             'log': log_path,
             'commands': ['counter', ],
+            'negate_filter': None,
             'filters': None,
             'list_commands': False,
             'list_filters': False,
@@ -347,3 +349,29 @@ class HaproxyLogFileTest(unittest.TestCase):
         requests = log_file.cmd_requests_per_minute()
 
         self.assertEqual(None, requests)
+
+    def test_haproxy_log_file_negate_filter(self):
+        """Check that reversing a filter output works as expected.
+        """
+        filter_func = filters.filter_ssl()
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/connection.log',
+        )
+        log_file.parse_file()
+
+        # total number of log lines
+        self.assertEqual(log_file.cmd_counter(), 12)
+
+        # only SSL lines
+        only_ssl = log_file.filter(filter_func)
+        self.assertEqual(only_ssl.cmd_counter(), 7)
+
+        # non SSL lines
+        non_ssl = log_file.filter(filter_func, reverse=True)
+        self.assertEqual(non_ssl.cmd_counter(), 5)
+
+        # we did get all lines?
+        self.assertEqual(
+            log_file.cmd_counter(),
+            only_ssl.cmd_counter() + non_ssl.cmd_counter()
+        )
