@@ -241,7 +241,7 @@ class FiltersTest(HaproxyLogLineTest):
         filter_func = filters.filter_server('instance8')
 
         results = []
-        for server_name in ('instance7', 'instance', 'instance8' ):
+        for server_name in ('instance7', 'instance', 'instance8', ):
             self.server_name = server_name
             raw_line = self._build_test_string()
             log_line = HaproxyLogLine(raw_line)
