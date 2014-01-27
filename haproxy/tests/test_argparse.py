@@ -53,7 +53,7 @@ class ArgumentParsingTest(unittest.TestCase):
         start = '12/Dec/2013:14:15:16'
         arguments = ['-s', start, ] + self.default_arguments
         data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertTrue(start, data['start'])
+        self.assertEqual(start, data['start'])
 
     def test_arg_parser_delta_invalid(self):
         """Check that if an invalid delta argument is passed an exception is
@@ -68,7 +68,7 @@ class ArgumentParsingTest(unittest.TestCase):
         delta = '4d'
         arguments = ['-d', delta, ] + self.default_arguments
         data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertTrue(delta, data['delta'])
+        self.assertEqual(delta, data['delta'])
 
     def test_arg_parser_log_file_valid(self):
         """Check that any log file passed does exist before handling it
@@ -123,23 +123,23 @@ class ArgumentParsingTest(unittest.TestCase):
         """Test that trying to input non existing filters raises an
         exception.
         """
+        arguments = ['--filter', 'non_existing_filter',
+                     '-l', 'haproxy/tests/files/huge.log', ]
         with self.assertRaises(ValueError):
-            arguments = ['--filter', 'non_existing_filter',
-                         '-l', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_filters_invalid_argument(self):
         """Test that trying to input an invalid filter expression fails."""
+        arguments = ['--filter', 'ip_with_error],ssl',
+                     '-l', 'haproxy/tests/files/huge.log', ]
         with self.assertRaises(ValueError):
-            arguments = ['--filter', 'ip_with_error],ssl',
-                         '-l', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_filters_without_closing_bracket(self):
         """Test that trying to input an invalid filter expression fails."""
+        arguments = ['--filter', 'ip],ssl',
+                     '-l', 'haproxy/tests/files/huge.log', ]
         with self.assertRaises(ValueError):
-            arguments = ['--filter', 'ip],ssl',
-                         '-l', 'haproxy/tests/files/huge.log', ]
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_list_commands(self):
