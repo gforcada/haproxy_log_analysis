@@ -61,6 +61,16 @@ def create_parser():
     )
 
     parser.add_argument(
+        '-n',
+        '--negate-filter',
+        help='Make filters passed with -f work the other way around, i.e. if'
+             'the ``ssl`` filter is passed instead of showing only ssl '
+             'requests it will show non-ssl traffic. If the ``ip`` filter is'
+             'used, then all but that ip passed to the filter will be used.',
+        action='store_true',
+    )
+
+    parser.add_argument(
         '--list-commands',
         action='store_true',
         help='Lists all commands available.',
@@ -81,6 +91,7 @@ def parse_arguments(args):
         'delta': None,
         'commands': None,
         'filters': None,
+        'negate_filter': None,
         'log': None,
         'list_commands': None,
         'list_filters': None,
@@ -95,6 +106,9 @@ def parse_arguments(args):
         data['list_filters'] = True
         # no need to further process any other input parameter
         return data
+
+    if args.negate_filter:
+        data['negate_filter'] = True
 
     if args.start is not None:
         _validate_arg_date(args.start)

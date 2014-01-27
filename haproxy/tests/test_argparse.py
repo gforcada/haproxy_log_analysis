@@ -277,3 +277,18 @@ class ArgumentParsingTest(unittest.TestCase):
             self.assertTrue(filter_name in methods)
 
         self.assertFalse('time_frame' in VALID_FILTERS)
+
+    def test_arg_parser_negate_filter_parsed(self):
+        """Check that if the negate filter argument is set, is parsed
+        correctly.
+        """
+        arguments = ['-n', ] + self.default_arguments
+        data = parse_arguments(self.parser.parse_args(arguments))
+        self.assertTrue(data['negate_filter'])
+
+    def test_arg_parser_negate_filter_not_set(self):
+        """Check that if the negate filter argument is not set, the default
+        value is kept.
+        """
+        data = parse_arguments(self.parser.parse_args(self.default_arguments))
+        self.assertFalse(data['negate_filter'])
