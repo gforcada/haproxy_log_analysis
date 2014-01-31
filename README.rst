@@ -130,6 +130,10 @@ section above) to know how to run them.
   Reports on how many requests were made per minute. It works best when used
   with ``-s`` and ``-d`` command line arguments, as the output can be huge.
 
+``print``
+  Prints the raw lines. This can be useful to trim down a file (with ``-s`` and
+  ``-d`` for example) so that later runs are faster.
+
 
 Filters
 -------

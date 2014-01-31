@@ -304,6 +304,15 @@ class HaproxyLogFile(object):
 
         return requests
 
+    def cmd_print(self):
+        """Returns the raw lines to be printed."""
+        data = ''
+        for line in self._valid_lines:
+            data += line.raw_line
+            data += '\n'
+
+        return data
+
     def _sort_lines(self):
         """Haproxy writes its logs after having gathered all information
         related to each specific connection. A simple request can be

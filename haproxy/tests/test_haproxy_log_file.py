@@ -375,3 +375,27 @@ class HaproxyLogFileTest(unittest.TestCase):
             log_file.cmd_counter(),
             only_ssl.cmd_counter() + non_ssl.cmd_counter()
         )
+
+    def test_haproxy_log_file_cmd_print_empty(self):
+        """Check that the print command prints an empty string if the log file
+        is empty.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/empty.log',
+        )
+        log_file.parse_file()
+        data = log_file.cmd_print()
+        self.assertEqual('', data)
+
+    def test_haproxy_log_file_cmd_print(self):
+        """Check that the print command prints the valid lines.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/2_ok_1_invalid.log',
+        )
+        log_file.parse_file()
+        data = log_file.cmd_print()
+        self.assertNotEqual('', data)
+
+        lines = data.split('\n')
+        self.assertEqual(len(lines), 3)
