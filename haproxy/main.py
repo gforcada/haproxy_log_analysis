@@ -271,7 +271,8 @@ def main(args):
 
             filter_func = eval(filter_string.format(filter_data[0], arg))
 
-            log_file = log_file.filter(filter_func)
+            log_file = log_file.filter(filter_func,
+                                       reverse=args['negate_filter'])
 
     # run all commands
     command_string = 'log_file.cmd_{0}()'

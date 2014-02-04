@@ -292,3 +292,53 @@ class ArgumentParsingTest(unittest.TestCase):
         """
         data = parse_arguments(self.parser.parse_args(self.default_arguments))
         self.assertFalse(data['negate_filter'])
+
+    def test_arg_parser_negate_filter_output(self):
+        """Check that if the negate filter argument is set, is actually used.
+        """
+        arguments = ['-c', 'counter',
+                     '-l', 'haproxy/tests/files/small.log',
+                     '-f', 'server[instance3]',
+                     '-n', ]
+
+        # with the negate argument set, there should be all but instance3 lines
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('7', output_text)
+
+        # remove the negate argument, now only 2 lines should match
+        arguments.pop()
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('2', output_text)
+
+        # finally remove the filter, 9 lines should match
+        arguments.pop()
+        arguments.pop()  # this second pop() is because of the argument
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        with open(test_output.name, 'r') as output_file:
+            output_text = output_file.read()
+
+            self.assertIn('counter', output_text)
+            self.assertIn('9', output_text)
