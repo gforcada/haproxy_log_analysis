@@ -178,6 +178,17 @@ class HaproxyLogFile(object):
                 slow_requests.append(response_time)
         return slow_requests
 
+    def cmd_counter_slow_requests(self):
+        """Counts all requests that took a certain amount of time to be
+        processed.
+
+        .. warning::
+           By now hardcoded to 1 second (1000 milliseconds), improve the
+           command line interface to allow to send parameters to each command
+           or globally.
+        """
+        return len(self.cmd_slow_requests())
+
     def cmd_server_load(self):
         """Generate statistics regarding how many requests were processed by
         each downstream server.

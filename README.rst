@@ -111,6 +111,10 @@ section above) to know how to run them.
   Reports a list of requests that downstream servers took more than 1 second
   to response.
 
+``counter_slow_requests``
+  Reports the amount of requests that downstream servers took more than 1
+  second to response.
+
 ``server_load``
   Reports a breakdown of how many requests were processed by each downstream
   server. Note that currently it does not take into account the backend the

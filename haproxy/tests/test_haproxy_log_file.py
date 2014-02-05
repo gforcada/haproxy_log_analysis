@@ -143,6 +143,17 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(slow_requests,
                          [1293, 2936, 2942, 20095, 29408, ])
 
+    def test_haproxy_log_file_cmd_counter_slow_requests(self):
+        """Check that the slow requests counter command reports as expected.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/small.log',
+        )
+        log_file.parse_file()
+        slow_requests = log_file.cmd_counter_slow_requests()
+
+        self.assertEqual(slow_requests, 5)
+
     def test_haproxy_log_file_cmd_server_load(self):
         """Check that the server load counter command reports as expected."""
         log_file = HaproxyLogFile(
