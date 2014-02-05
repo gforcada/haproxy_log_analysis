@@ -131,9 +131,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(path_counter['/freitag'], 1)
 
     def test_haproxy_log_file_cmd_slow_requests(self):
-        """Check that the slow requests counter command reports as
-        expected.
-        """
+        """Check that the slow requests command reports as expected."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/small.log',
         )
