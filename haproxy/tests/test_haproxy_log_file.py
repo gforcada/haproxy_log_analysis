@@ -32,7 +32,7 @@ class HaproxyLogFileTest(unittest.TestCase):
             log_file.parse_file()
 
     def test_haproxy_log_file_parsed(self):
-        """Check that log files are parsed"""
+        """Check that log files are parsed."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/small.log'
         )
@@ -360,8 +360,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual(None, requests)
 
     def test_haproxy_log_file_negate_filter(self):
-        """Check that reversing a filter output works as expected.
-        """
+        """Check that reversing a filter output works as expected."""
         filter_func = filters.filter_ssl()
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/connection.log',
@@ -397,8 +396,7 @@ class HaproxyLogFileTest(unittest.TestCase):
         self.assertEqual('', data)
 
     def test_haproxy_log_file_cmd_print(self):
-        """Check that the print command prints the valid lines.
-        """
+        """Check that the print command prints the valid lines."""
         log_file = HaproxyLogFile(
             logfile='haproxy/tests/files/2_ok_1_invalid.log',
         )
