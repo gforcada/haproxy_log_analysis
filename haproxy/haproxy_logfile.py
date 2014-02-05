@@ -171,11 +171,8 @@ class HaproxyLogFile(object):
            command line interface to allow to send parameters to each command
            or globally.
         """
-        slow_requests = []
-        for line in self._valid_lines:
-            response_time = line.time_wait_response
-            if response_time > 1000:
-                slow_requests.append(response_time)
+        slow_requests = [line.time_wait_response for line in self._valid_lines
+                         if line.time_wait_response > 1000]
         return slow_requests
 
     def cmd_average_response_time(self):
