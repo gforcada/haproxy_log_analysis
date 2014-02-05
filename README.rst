@@ -115,6 +115,10 @@ section above) to know how to run them.
   Reports the amount of requests that downstream servers took more than 1
   second to response.
 
+``average_response_time``
+  Reports the average time (in milliseconds) servers spend to answer requests.
+  .. note:: Aborted requests are not considered.
+
 ``server_load``
   Reports a breakdown of how many requests were processed by each downstream
   server. Note that currently it does not take into account the backend the

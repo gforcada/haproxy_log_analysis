@@ -406,3 +406,23 @@ class HaproxyLogFileTest(unittest.TestCase):
 
         lines = data.split('\n')
         self.assertEqual(len(lines), 3)
+
+    def test_haproxy_log_file_cmd_average_response_time(self):
+        """Check that the average response time returns the expected output."""
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/average_response.log',
+        )
+        log_file.parse_file()
+        data = log_file.cmd_average_response_time()
+        self.assertEqual(data, 105)
+
+    def test_haproxy_log_file_cmd_average_response_time_aborted(self):
+        """Check that the average response time returns the expected output
+        when there are aborted connections.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/average_response_aborted.log',
+        )
+        log_file.parse_file()
+        data = log_file.cmd_average_response_time()
+        self.assertEqual(data, 110)

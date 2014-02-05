@@ -178,6 +178,13 @@ class HaproxyLogFile(object):
                 slow_requests.append(response_time)
         return slow_requests
 
+    def cmd_average_response_time(self):
+        """Returns the average response time of all, non aborted, requests."""
+        average = [line.time_wait_response for line in self._valid_lines
+                   if line.time_wait_response > 0]
+
+        return sum(average) / len(average)
+
     def cmd_counter_slow_requests(self):
         """Counts all requests that took a certain amount of time to be
         processed.
