@@ -119,6 +119,10 @@ section above) to know how to run them.
   Reports the average time (in milliseconds) servers spend to answer requests.
   .. note:: Aborted requests are not considered.
 
+``average_waiting_time``
+  Reports the average time (in milliseconds) requests spend waiting on the
+  various HAProxy queues.
+
 ``server_load``
   Reports a breakdown of how many requests were processed by each downstream
   server. Note that currently it does not take into account the backend the
