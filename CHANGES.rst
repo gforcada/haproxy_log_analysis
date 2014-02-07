@@ -5,6 +5,9 @@ CHANGES
 0.0.1 (unreleased)
 ------------------
 
+- Pickle :class:`.HaproxyLogFile` data for faster performance.
+  [GF]
+
 - Add a way to negate the filters, so that instead of being able to filter by
   IP, it can output all but that IP information.
   [GF]

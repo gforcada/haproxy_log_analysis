@@ -7,6 +7,7 @@ from haproxy.main import parse_arguments
 from haproxy.haproxy_logfile import HaproxyLogFile
 from tempfile import NamedTemporaryFile
 
+import os
 import sys
 import unittest
 
@@ -39,6 +40,15 @@ class ArgumentParsingTest(unittest.TestCase):
         self.default_arguments = [
             '-c', 'counter', '-l', 'haproxy/tests/files/huge.log',
         ]
+
+    def tearDown(self):
+        """Be sure to remove all pickle files so to not keep stale files
+        around.
+        """
+        path = 'haproxy/tests/files'
+        for filename in os.listdir(path):
+            if filename.endswith('.pickle'):
+                os.remove('{0}/{1}'.format(path, filename))
 
     def test_arg_parser_start_invalid(self):
         """Check that if a 'start' argument is not valid an exception is

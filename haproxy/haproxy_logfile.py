@@ -3,11 +3,24 @@ from collections import defaultdict
 from datetime import timedelta
 from haproxy.haproxy_logline import HaproxyLogLine
 
+import os
+
+# compatibility code for python 2 and python 3 differences
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+
 
 class HaproxyLogFile(object):
 
     def __init__(self, logfile=None):
         self.logfile = logfile
+        self._pickle_file = '{0}.pickle'.format(logfile)
+        # only this attributes will be pickled
+        self._pickle_attributes = ['_valid_lines',
+                                   '_invalid_lines',
+                                   'total_lines', ]
 
         self.total_lines = 0
 
@@ -18,9 +31,48 @@ class HaproxyLogFile(object):
         if self.logfile is None:
             raise ValueError('No log file is configured yet!')
 
-        with open(self.logfile) as logfile:
-            self.parse_data(logfile)
-            self._sort_lines()
+        if self._is_pickle_valid():
+            self._load()
+        else:
+            with open(self.logfile) as logfile:
+                self.parse_data(logfile)
+                self._sort_lines()
+                self._save()
+
+    def _is_pickle_valid(self):
+        """Logic to decide if the file should be processed or just needs to
+        be loaded from its pickle data.
+        """
+        if not os.path.exists(self._pickle_file):
+            return False
+        else:
+            file_mtime = os.path.getmtime(self.logfile)
+            pickle_mtime = os.path.getmtime(self._pickle_file)
+            if file_mtime > pickle_mtime:
+                return False
+        return True
+
+    def _load(self):
+        """Load data from a pickle file. """
+        with open(self._pickle_file, 'rb') as source:
+            pickler = pickle.Unpickler(source)
+
+            for attribute in self._pickle_attributes:
+                pickle_data = pickler.load()
+                setattr(self, attribute, pickle_data)
+
+    def _save(self):
+        """Save the attributes defined on _pickle_attributes in a pickle file.
+
+        This improves a lot the nth run as the log file does not need to be
+        processed every time.
+        """
+        with open(self._pickle_file, 'wb') as source:
+            pickler = pickle.Pickler(source, pickle.HIGHEST_PROTOCOL)
+
+            for attribute in self._pickle_attributes:
+                attr = getattr(self, attribute, None)
+                pickler.dump(attr)
 
     def parse_data(self, logfile):
         """Parse data from data stream and replace object lines.

@@ -1,4 +1,5 @@
 *.py[cod]
+*.pickle
 
 # C extensions
 *.so
