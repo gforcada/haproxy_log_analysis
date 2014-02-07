@@ -228,9 +228,6 @@ TODO
   requests for example) output the given fields for each log line (i.e.
   acceptance date, path, downstream server, load at that time...)
 
-- add support for pickling log lines so that using the tool two times only on
-  the first one the file is parsed
-
 - *your ideas*
 
 
