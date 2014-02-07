@@ -5,10 +5,20 @@ from haproxy.haproxy_logfile import HaproxyLogFile
 from haproxy.main import main
 from time import sleep
 
+import os
 import unittest
 
 
 class HaproxyLogFileTest(unittest.TestCase):
+
+    def tearDown(self):
+        """Be sure to remove all pickle files so to not keep stale files
+        around.
+        """
+        path = 'haproxy/tests/files'
+        for filename in os.listdir(path):
+            if filename.endswith('.pickle'):
+                os.remove('{0}/{1}'.format(path, filename))
 
     def test_haproxy_log_file_from_main(self):
         log_path = 'haproxy/tests/files/small.log'
