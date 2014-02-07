@@ -20,6 +20,7 @@ class HaproxyLogFile(object):
 
         with open(self.logfile) as logfile:
             self.parse_data(logfile)
+            self._sort_lines()
 
     def parse_data(self, logfile):
         """Parse data from data stream and replace object lines.
@@ -37,8 +38,6 @@ class HaproxyLogFile(object):
                 self._valid_lines.append(parsed_line)
             else:
                 self._invalid_lines.append(stripped_line)
-
-        self._sort_lines()
 
     def filter(self, filter_func, reverse=False):
         """Filter current log lines by a given filter function.
