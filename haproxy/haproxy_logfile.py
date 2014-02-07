@@ -25,7 +25,7 @@ class HaproxyLogFile(object):
         """Parse data from data stream and replace object lines.
 
         :param logfile: [required] Log file data stream.
-        :type data stream: str
+        :type logfile: str
         """
 
         for line in logfile:
