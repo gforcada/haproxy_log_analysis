@@ -50,60 +50,94 @@ HTTP_REQUEST_REGEX = re.compile(
 
 
 class HaproxyLogLine(object):
+    """For a precise and more detailed description of every field see:
+    http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
+    """
+    #: IP of the upstream server that made the connection to HAProxy.
+    client_ip = None
+    #: Port used by the upstream server that made the connection to HAProxy.
+    client_port = None
+
+    # raw string from log line and its python datetime version
+    raw_accept_date = None
+    #: datetime object with the exact date when the connection to HAProxy was
+    #: made.
+    accept_date = None
+
+    #: HAProxy frontend that received the connection.
+    frontend_name = None
+    #: HAProxy backend that the connection was sent to.
+    backend_name = None
+    #: Downstream server that HAProxy send the connection to.
+    server_name = None
+
+    #: Time in milliseconds waiting the client to send the full HTTP request
+    #: (``Tq`` in HAProxy documentation).
+    time_wait_request = None
+    #: Time in milliseconds that the request spend on HAProxy queues
+    #: (``Tw`` in HAProxy documentation).
+    time_wait_queues = None
+    #: Time in milliseconds to connect to the final server
+    #: (``Tc`` in HAProxy documentation).
+    time_connect_server = None
+    #: Time in milliseconds waiting the downstream server to send the full
+    #: HTTP response (``Tr`` in HAProxy documentation).
+    time_wait_response = None
+    #: Total time in milliseconds between accepting the HTTP request and
+    #: sending back the HTTP response (``Tt`` in HAProxy documentation).
+    total_time = None
+
+    #: HTTP status code returned to the client.
+    status_code = None
+    #: Total number of bytes send back to the client.
+    bytes_read = None
+
+    # not used by now
+    captured_request_cookie = None
+    captured_response_cookie = None
+
+    # not used by now
+    termination_state = None
+
+    #: Total number of concurrent connections on the process when the
+    #: session was logged (``actconn`` in HAProxy documentation).
+    connections_active = None
+    #: Total number of concurrent connections on the frontend when the
+    #: session was logged (``feconn`` in HAProxy documentation).
+    connections_frontend = None
+    #: Total number of concurrent connections handled by the backend when
+    #: the session was logged (``beconn`` in HAProxy documentation).
+    connections_backend = None
+    #: Total number of concurrent connections still active on the server
+    #: when the session was logged (``srv_conn`` in HAProxy documentation).
+    connections_server = None
+    #: Number of connection retries experienced by this session when
+    # trying to connect to the server.
+    retries = None
+
+    #: Total number of requests which were processed before this one in
+    #: the server queue (``srv_queue`` in HAProxy documentation).
+    queue_server = None
+    #: Total number of requests which were processed before this one in
+    #: the backend's global queue (``backend_queue`` in HAProxy documentation).
+    queue_backend = None
+
+    # List of headers captured in the request.
+    captured_request_headers = None
+    # List of headers captured in the response.
+    captured_response_headers = None
+
+    raw_http_request = None
+    #: HTTP method (GET, POST...) used on this request.
+    http_request_method = None
+    #: Requested HTTP path.
+    http_request_path = None
+    #: HTTP version used on this request.
+    http_request_protocol = None
+
+    raw_line = None
 
     def __init__(self, line):
-        """For a description of every field see:
-        http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
-
-        The declarations here follow the syntax of the log file, thus
-        backend_name is found after fronted_name and before server_name.
-
-        This helps keeping an eye on where a specific field is stored.
-        """
-        self.client_ip = None
-        self.client_port = None
-
-        # raw string from log line and its python datetime version
-        self.raw_accept_date = None
-        self.accept_date = None
-
-        self.frontend_name = None
-        self.backend_name = None
-        self.server_name = None
-
-        self.time_wait_request = None
-        self.time_wait_queues = None
-        self.time_connect_server = None
-        self.time_wait_response = None
-        self.total_time = None
-
-        self.status_code = None
-        self.bytes_read = None
-
-        # not used by now
-        self.captured_request_cookie = None
-        self.captured_response_cookie = None
-
-        # not used by now
-        self.termination_state = None
-
-        self.connections_active = None
-        self.connections_frontend = None
-        self.connections_backend = None
-        self.connections_server = None
-        self.retries = None
-
-        self.queue_server = None
-        self.queue_backend = None
-
-        self.captured_request_headers = None
-        self.captured_response_headers = None
-
-        self.raw_http_request = None
-        self.http_request_method = None
-        self.http_request_path = None
-        self.http_request_protocol = None
-
         self.raw_line = line
 
         self.valid = self._parse_line(line)
