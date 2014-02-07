@@ -3,6 +3,7 @@ from datetime import datetime
 from haproxy import filters
 from haproxy.haproxy_logfile import HaproxyLogFile
 from haproxy.main import main
+from time import sleep
 
 import unittest
 
@@ -448,3 +449,52 @@ class HaproxyLogFileTest(unittest.TestCase):
         log_file.parse_file()
         data = log_file.cmd_average_waiting_time()
         self.assertEqual(data, 110)
+
+    def test_haproxy_log_file_pickle_exists(self):
+        """Check that a pickle file is created after the first run."""
+        filename = 'haproxy/tests/files/average_waiting_aborted.log'
+        pickle_file = '{0}.pickle'.format(filename)
+
+        # pickle files does not exist
+        self.assertFalse(os.path.exists(pickle_file))
+
+        log_file = HaproxyLogFile(
+            logfile=filename,
+        )
+        log_file.parse_file()
+        # it does exist after parsing the file
+        self.assertTrue(os.path.exists(pickle_file))
+
+    def test_haproxy_log_file_pickle_is_recreated(self):
+        """Check that a pickle file is recreated if the log file is newer
+        than the pickle file."""
+        filename = 'haproxy/tests/files/average_waiting_aborted.log'
+        pickle_file = '{0}.pickle'.format(filename)
+
+        # create the pickle file and get its modified time
+        log_file = HaproxyLogFile(
+            logfile=filename,
+        )
+        log_file.parse_file()
+        old_pickle_time = os.path.getmtime(pickle_file)
+
+        # any second or nth run will not change the modified time
+        log_file = HaproxyLogFile(
+            logfile=filename,
+        )
+        log_file.parse_file()
+        second_old_pickle_time = os.path.getmtime(pickle_file)
+        self.assertEqual(old_pickle_time, second_old_pickle_time)
+
+        # 'update' the original log file
+        sleep(1)  # os.path.getmtime has a resolution up to seconds
+        os.utime(filename, None)
+
+        # the existing pickle file is discarded and a newer one will be created
+        log_file = HaproxyLogFile(
+            logfile=filename,
+        )
+        log_file.parse_file()
+        new_pickle_time = os.path.getmtime(pickle_file)
+
+        self.assertTrue(new_pickle_time > old_pickle_time)
