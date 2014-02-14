@@ -352,8 +352,7 @@ class HaproxyLogFile(object):
             minute_formatted = date - seconds_and_micro
             append_to.append((minute_formatted, counter))
 
-        # note that _valid_lines is kept sorted by date
-        for line in self._valid_lines:
+        for line in sorted(self._valid_lines, key=lambda x:x.accept_date):
             line_date = line.accept_date
             if line_date - current_minute < one_minute and \
                     line_date.minute == current_minute.minute:
