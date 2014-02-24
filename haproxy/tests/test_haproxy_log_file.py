@@ -438,6 +438,17 @@ class HaproxyLogFileTest(unittest.TestCase):
         data = log_file.cmd_average_response_time()
         self.assertEqual(data, 110)
 
+    def test_haproxy_log_file_cmd_average_response_time_no_wait(self):
+        """Check that the average response time returns the expected output
+        when there are connections that did not take any millisecond to reply.
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/average_response_no_wait.log',
+        )
+        log_file.parse_file()
+        data = log_file.cmd_average_response_time()
+        self.assertEqual(data, 74)
+
     def test_haproxy_log_file_cmd_average_waiting_time(self):
         """Check that the average time waiting on queues returns the expected
         output.
@@ -459,6 +470,18 @@ class HaproxyLogFileTest(unittest.TestCase):
         log_file.parse_file()
         data = log_file.cmd_average_waiting_time()
         self.assertEqual(data, 110)
+
+    def test_haproxy_log_file_cmd_average_waiting_time_no_wait(self):
+        """Check that the average time waiting on queues returns the expected
+        output when there are requests that did not wait at all (i.e.
+        time_wait_queues is 0).
+        """
+        log_file = HaproxyLogFile(
+            logfile='haproxy/tests/files/average_waiting_no_wait.log',
+        )
+        log_file.parse_file()
+        data = log_file.cmd_average_waiting_time()
+        self.assertEqual(data, 52.5)
 
     def test_haproxy_log_file_pickle_exists(self):
         """Check that a pickle file is created after the first run."""

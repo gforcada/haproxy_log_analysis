@@ -229,14 +229,14 @@ class HaproxyLogFile(object):
     def cmd_average_response_time(self):
         """Returns the average response time of all, non aborted, requests."""
         average = [line.time_wait_response for line in self._valid_lines
-                   if line.time_wait_response > 0]
+                   if line.time_wait_response >= 0]
 
         return sum(average) / len(average)
 
     def cmd_average_waiting_time(self):
         """Returns the average queue time of all, non aborted, requests."""
         average = [line.time_wait_queues for line in self._valid_lines
-                   if line.time_wait_queues > 0]
+                   if line.time_wait_queues >= 0]
 
         return sum(average) / len(average)
 
