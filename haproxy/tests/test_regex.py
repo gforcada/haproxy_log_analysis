@@ -416,3 +416,10 @@ class HttpRequestRegexTest(unittest.TestCase):
         matches = HTTP_REQUEST_REGEX.match(line)
 
         self.assertEqual(matches.group('path'), self.path)
+
+    def test_http_request_regex_with_caret_symbol(self):
+        self.path = '/georg`von^grote/\\'
+        line = self._build_test_request()
+        matches = HTTP_REQUEST_REGEX.match(line)
+
+        self.assertEqual(matches.group('path'), self.path)
