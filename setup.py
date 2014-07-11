@@ -3,23 +3,16 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '0.0.1'
+version = '0.0.3'
 
 description = 'Haproxy log analyzer that tries to gives an insight of ' \
               'what\'s going on'
 
 long_description = """{0}
 {1}
-
-
-LICENSE
-=======
-
-{2}
 """.format(
     open('README.rst').read(),
     open('CHANGES.rst').read(),
-    open('LICENSE').read(),
 )
 
 setup(

@@ -1,11 +1,22 @@
 CHANGES
 =======
 
-
-0.0.1 (unreleased)
+0.0.3 (2014-07-09)
 ------------------
 
-- Pickle :class:`.HaproxyLogFile` data for faster performance.
+- Fix release on PyPI (again).
+  [GF]
+
+0.0.2 (2014-07-09)
+------------------
+
+- Fix release on PyPI.
+  [GF]
+
+0.0.1 (2014-07-09)
+------------------
+
+- Pickle :class::`.HaproxyLogFile` data for faster performance.
   [GF]
 
 - Add a way to negate the filters, so that instead of being able to filter by
@@ -16,7 +27,7 @@ CHANGES
   and so on. See ``--list-filters`` for a complete list of them.
   [GF]
 
-- Add :meth:`.HaproxyLogFile.parse_data` method to get data from data stream.
+- Add :method::`.HaproxyLogFile.parse_data` method to get data from data stream.
   It allows you use it as a library.
   [bogdangi]
 
@@ -27,10 +38,10 @@ CHANGES
   Bogdan's early design.
   [bogdangi] [GF]
 
-- Create a new module :mod:`haproxy.filters` that holds all available filters.
+- Create a new module :module::`haproxy.filters` that holds all available filters.
   [GF]
 
-- Improve :meth:`.HaproxyLogFile.cmd_queue_peaks` output to not only show
+- Improve :method::`.HaproxyLogFile.cmd_queue_peaks` output to not only show
   peaks but also when requests started to queue and when they finsihed and
   the amount of requests that had been queued.
   [GF]
