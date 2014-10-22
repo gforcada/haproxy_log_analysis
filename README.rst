@@ -79,10 +79,10 @@ statistics about the log file being analyzed. See the ``--help`` (or the
 section above) to know how to run them.
 
 ``counter``
-  Reports who many log lines could be parsed.
+  Reports how many log lines could be parsed.
 
 ``counter_invalid``
-  Reports who many log lines could *not* be parsed.
+  Reports how many log lines could *not* be parsed.
 
 ``http_methods``
   Reports a breakdown of how many requests have been made per HTTP method
