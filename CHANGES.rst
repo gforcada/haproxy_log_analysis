@@ -1,6 +1,14 @@
 CHANGES
 =======
 
+0.0.3.post (2015-01-04)
+-----------------------
+
+- Fix release on PyPI.
+  Solves GitHub issue #7.
+  https://github.com/gforcada/haproxy_log_analysis/issues/7
+  [GF]
+
 0.0.3 (2014-07-09)
 ------------------
 
