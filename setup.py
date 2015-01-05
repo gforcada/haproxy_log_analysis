@@ -36,7 +36,6 @@ setup(
     url='https://github.com/gforcada/haproxy_log_analysis',
     license='GPL v3',
     packages=find_packages(exclude=['ez_setup']),
-    namespace_packages=['haproxy', ],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
