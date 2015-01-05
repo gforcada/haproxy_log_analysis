@@ -1,6 +1,14 @@
 CHANGES
 =======
 
+0.0.3.post2 (2015-01-05)
+------------------------
+
+- Finally really fixed issue #7.
+  ``namespace_packages`` was not meant to be on setup.py at all.
+  Silly copy&paste mistake.
+  [GF]
+
 0.0.3.post (2015-01-04)
 -----------------------
 
