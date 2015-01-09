@@ -15,7 +15,7 @@ HAPROXY_LINE_REGEX = re.compile(
     # Dec  9 13:01:26
     r'\A\w+\s+\d+\s+\d+:\d+:\d+\s+'  # syslog date, ignored
     # localhost haproxy[28029]:
-    r'\w+\s+\w+\[\d+\]:\s+'  # haproxy process name and pid, ignored
+    r'.*\s+\w+\[\d+\]:\s+'  # haproxy process name and pid, ignored
     # 127.0.0.1:39759
     r'(?P<client_ip>(\d+\.){3}\d+):(?P<client_port>\d+)\s+'
     # [09/Dec/2013:12:59:46.633]
