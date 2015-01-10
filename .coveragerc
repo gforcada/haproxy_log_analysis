@@ -6,3 +6,4 @@ omit =
 
 exclude_lines =
     def console_script()
+    except ImportError 
