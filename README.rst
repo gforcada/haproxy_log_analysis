@@ -20,6 +20,23 @@ No project is trustworthy if does not have tests and a decent coverage!
     :target: https://coveralls.io/r/gforcada/haproxy_log_analysis
 
 
+.. image:: https://pypip.in/d/haproxy_log_analysis/badge.png
+    :target: https://pypi.python.org/pypi/haproxy_log_analysis/
+    :alt: Downloads
+
+.. image:: https://pypip.in/v/haproxy_log_analysis/badge.png
+    :target: https://pypi.python.org/pypi/haproxy_log_analysis/
+    :alt: Latest Version
+
+.. image:: https://pypip.in/egg/haproxy_log_analysis/badge.png
+    :target: https://pypi.python.org/pypi/haproxy_log_analysis/
+    :alt: Egg Status
+
+.. image:: https://pypip.in/license/haproxy_log_analysis/badge.png
+    :target: https://pypi.python.org/pypi/haproxy_log_analysis/
+    :alt: License
+
+
 Documentation
 -------------
 
