@@ -1,6 +1,15 @@
 CHANGES
 =======
 
+1.0 (2015-03-24)
+----------------
+
+- Fix issue #9.
+  log line on the syslog part was too strict,
+  it was expecting the hostname to be a string and was
+  failing if it was an IP.
+  [GF]
+
 0.0.3.post2 (2015-01-05)
 ------------------------
 

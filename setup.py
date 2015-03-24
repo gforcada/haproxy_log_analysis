@@ -3,7 +3,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '0.0.3.post2'
+version = '1.0'
 
 description = 'Haproxy log analyzer that tries to gives an insight of ' \
               'what\'s going on'
@@ -23,7 +23,7 @@ setup(
     # Get more strings from
     # http://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: System Administrators',
         'Programming Language :: Python :: 2.7',
