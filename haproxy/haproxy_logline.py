@@ -12,10 +12,8 @@ import re
 # 0/51536/1/48082/99627 200 83285 - - ---- 87/87/87/1/0 0/67
 # {77.24.148.74} "GET /path/to/image HTTP/1.1"
 HAPROXY_LINE_REGEX = re.compile(
-    # Dec  9 13:01:26
-    r'\A\w+\s+\d+\s+\d+:\d+:\d+\s+'  # syslog date, ignored
-    # localhost haproxy[28029]:
-    r'\w+\s+\w+\[\d+\]:\s+'  # haproxy process name and pid, ignored
+    # Dec  9 13:01:26 localhost haproxy[28029]:
+    r'\A.*?:\s+'  # syslog data, ignored
     # 127.0.0.1:39759
     r'(?P<client_ip>(\d+\.){3}\d+):(?P<client_port>\d+)\s+'
     # [09/Dec/2013:12:59:46.633]
