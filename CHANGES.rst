@@ -1,6 +1,13 @@
 CHANGES
 =======
 
+1.1 (unreleased)
+----------------
+
+- Make syslog optional.
+  Fixes issue https://github.com/gforcada/haproxy_log_analysis/issues/10.
+  [GF]
+
 1.0 (2015-03-24)
 ----------------
 

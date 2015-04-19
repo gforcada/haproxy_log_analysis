@@ -11,11 +11,27 @@ import re
 # [09/Dec/2013:12:59:46.633] loadbalancer default/instance8
 # 0/51536/1/48082/99627 200 83285 - - ---- 87/87/87/1/0 0/67
 # {77.24.148.74} "GET /path/to/image HTTP/1.1"
+
+# From the above log line the first part
+# `Dec  9 13:01:26 localhost haproxy[28029]:`
+# is coming from syslog.
+# The following regular expression takes care of finding it.
+# With it, this syslog slug can be removed to make processing regular
+# haproxy log lines possible.
+SYSLOG_REGEX = re.compile(
+    # Dec  9
+    r'\A\w+\s+\d+\s+'
+    # 13:01:26
+    r'\d+:\d+:\d+\s+'
+    # localhost haproxy[28029]:
+    # note that can be either localhost or an IP
+    r'(\w+|(\d+\.){3}\d+)\s+\w+\[\d+\]:\s+',
+
+)
+
 HAPROXY_LINE_REGEX = re.compile(
-    # Dec  9 13:01:26 localhost haproxy[28029]:
-    r'\A.*?:\s+'  # syslog data, ignored
     # 127.0.0.1:39759
-    r'(?P<client_ip>(\d+\.){3}\d+):(?P<client_port>\d+)\s+'
+    r'\A(?P<client_ip>(\d+\.){3}\d+):(?P<client_port>\d+)\s+'
     # [09/Dec/2013:12:59:46.633]
     r'\[(?P<accept_date>.*)\..*\]\s+'
     # loadbalancer default/instance8
@@ -154,6 +170,8 @@ class HaproxyLogLine(object):
         return None
 
     def _parse_line(self, line):
+        # remove syslog slug if found
+        line = SYSLOG_REGEX.sub('', line)
         matches = HAPROXY_LINE_REGEX.match(line)
         if matches is None:
             return False

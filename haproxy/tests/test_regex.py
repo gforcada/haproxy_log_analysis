@@ -6,14 +6,12 @@ from haproxy.haproxy_logline import HTTP_REQUEST_REGEX
 import unittest
 
 
-LINE = '{0} {1} {2} [{3}] {4} {5} {6} - - ---- {7} {8} {9} "{10}"'
+LINE = '{0} [{1}] {2} {3} {4} - - ---- {5} {6} {7} "{8}"'
 
 
 class HaproxyLogLineRegexTest(unittest.TestCase):
 
     def setUp(self):
-        self.syslog_date = 'Dec  9 13:01:26'
-        self.process_name_and_pid = 'localhost haproxy[28029]:'
         self.client_ip_and_port = '127.0.0.1:39759'
         self.accept_date = '09/Dec/2013:12:59:46.633'
         self.server_names = 'loadbalancer default/instance8'
@@ -26,8 +24,6 @@ class HaproxyLogLineRegexTest(unittest.TestCase):
 
     def _build_test_string(self):
         log_line = LINE.format(
-            self.syslog_date,
-            self.process_name_and_pid,
             self.client_ip_and_port,
             self.accept_date,
             self.server_names,
