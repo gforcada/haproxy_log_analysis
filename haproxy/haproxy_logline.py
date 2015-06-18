@@ -24,8 +24,8 @@ SYSLOG_REGEX = re.compile(
     # 13:01:26
     r'\d+:\d+:\d+\s+'
     # localhost haproxy[28029]:
-    # note that can be either localhost or an IP
-    r'(\w+|(\d+\.){3}\d+)\s+\w+\[\d+\]:\s+',
+    # note that can be either localhost or an IP or a hostname
+    r'(\w+|(\d+\.){3}\d+|[a-zA-Z0-9_-]+)\s+\w+\[\d+\]:\s+',
 
 )
 
