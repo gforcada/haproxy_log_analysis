@@ -212,3 +212,14 @@ class HaproxyLogLineTest(unittest.TestCase):
 
         self.assertTrue(log_line.valid)
         self.assertEqual('/', log_line.http_request_path)
+
+    def test_haproxy_log_line_strip_syslog_valid_hostname_slug(self):
+        """Checks that if the hostname added to syslog slug is still valid
+        line
+        """
+        self.http_request = 'GET / HTTP/1.1'
+        self.process_name_and_pid = 'ip-192-168-1-1 haproxy[28029]:'
+        raw_line = self._build_test_string()
+        log_line = HaproxyLogLine(raw_line)
+
+        self.assertTrue(log_line.valid)
