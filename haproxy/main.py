@@ -63,9 +63,9 @@ def create_parser():
     parser.add_argument(
         '-n',
         '--negate-filter',
-        help='Make filters passed with -f work the other way around, i.e. if'
+        help='Make filters passed with -f work the other way around, i.e. if '
              'the ``ssl`` filter is passed instead of showing only ssl '
-             'requests it will show non-ssl traffic. If the ``ip`` filter is'
+             'requests it will show non-ssl traffic. If the ``ip`` filter is '
              'used, then all but that ip passed to the filter will be used.',
         action='store_true',
     )
