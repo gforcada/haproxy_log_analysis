@@ -13,26 +13,25 @@ Tests and coverage
 
 No project is trustworthy if does not have tests and a decent coverage!
 
-.. image:: https://travis-ci.org/gforcada/haproxy_log_analysis.png?branch=master
-    :target: https://travis-ci.org/gforcada/haproxy_log_analysis
+.. image:: https://secure.travis-ci.org/gforcada/haproxy_log_analysis.png?branch=master
+    :target: http://travis-ci.org/gforcada/haproxy_log_analysis
 
 .. image:: https://coveralls.io/repos/gforcada/haproxy_log_analysis/badge.png?branch=master
     :target: https://coveralls.io/r/gforcada/haproxy_log_analysis
 
-
-.. image:: https://pypip.in/d/haproxy_log_analysis/badge.png
+.. image:: https://img.shields.io/pypi/dm/haproxy_log_analysis.svg
     :target: https://pypi.python.org/pypi/haproxy_log_analysis/
     :alt: Downloads
 
-.. image:: https://pypip.in/v/haproxy_log_analysis/badge.png
+.. image:: https://img.shields.io/pypi/v/haproxy_log_analysis.svg
     :target: https://pypi.python.org/pypi/haproxy_log_analysis/
     :alt: Latest Version
 
-.. image:: https://pypip.in/egg/haproxy_log_analysis/badge.png
+.. image:: https://img.shields.io/pypi/status/haproxy_log_analysis.svg
     :target: https://pypi.python.org/pypi/haproxy_log_analysis/
     :alt: Egg Status
 
-.. image:: https://pypip.in/license/haproxy_log_analysis/badge.png
+.. image:: https://img.shields.io/pypi/l/haproxy_log_analysis.svg
     :target: https://pypi.python.org/pypi/haproxy_log_analysis/
     :alt: License
 
