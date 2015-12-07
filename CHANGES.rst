@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+1.2 (unreleased)
+----------------
+
+- Allow a hostname on the syslog part (not only IPs)
+  [danny crasto]
+
 1.1 (2015-04-19)
 ----------------
 
