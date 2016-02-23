@@ -40,7 +40,7 @@ HAPROXY_LINE_REGEX = re.compile(
     r'(?P<tq>-?\d+)/(?P<tw>-?\d+)/(?P<tc>-?\d+)/'
     r'(?P<tr>-?\d+)/(?P<tt>\+?\d+)\s+'
     # 200 83285
-    r'(?P<status_code>\d+)\s+(?P<bytes_read>\+?\d+)\s+'
+    r'(?P<status_code>-?\d+)\s+(?P<bytes_read>\+?\d+)\s+'
     # - - ----
     r'.*\s+'  # ignored by now, should capture cookies and termination state
     # 87/87/87/1/0
