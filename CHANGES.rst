@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-1.3 (unreleased)
-----------------
+1.2.1 (2016-02-23)
+------------------
 
 - Support -1 as a status_code
   [Christopher Baines]
