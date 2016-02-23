@@ -132,6 +132,17 @@ class HaproxyLogLineRegexTest(unittest.TestCase):
         self.assertEqual(matches.group('status_code'), status)
         self.assertEqual(matches.group('bytes_read'), bytes_read)
 
+    def test_line_regex_status_and_bytes_for_terminated_request(self):
+        status = '-1'
+        bytes_read = '0'
+        self.status_and_bytes = '{0} {1}'.format(status, bytes_read)
+
+        log_line = self._build_test_string()
+        matches = HAPROXY_LINE_REGEX.match(log_line)
+
+        self.assertEqual(matches.group('status_code'), status)
+        self.assertEqual(matches.group('bytes_read'), bytes_read)
+
     def test_line_regex_connections_and_retries(self):
         act = '40'
         fe = '10'
