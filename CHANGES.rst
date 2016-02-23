@@ -4,7 +4,8 @@ CHANGES
 1.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Support -1 as a status_code
+  [Christopher Baines]
 
 
 1.2 (2015-12-07)
