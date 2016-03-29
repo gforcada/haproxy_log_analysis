@@ -8,6 +8,12 @@ CHANGES
   Get all requests that waited at maximum X amount of milliseconds on HAProxy queues.
   [gforcada]
 
+- Code/docs cleanups and add code analysis.
+  [gforcada]
+
+- Avoid using eval.
+  [gforcada]
+
 1.2.1 (2016-02-23)
 ------------------
 
