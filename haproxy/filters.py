@@ -53,9 +53,12 @@ def filter_path(path):
     return filter_func
 
 
-def filter_ssl():
+def filter_ssl(ignore=True):
     """Filter :class:`.HaproxyLogLine` objects that from SSL connections.
 
+    :param ignore: parameter to be ignored just to conform to the rule that all
+      filters need a parameter
+    :type ignore: bool
     :returns: a function that filters SSL log lines.
     :rtype: function
     """

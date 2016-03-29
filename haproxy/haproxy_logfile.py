@@ -5,6 +5,7 @@ from haproxy.haproxy_logline import HaproxyLogLine
 
 import os
 
+
 # compatibility code for python 2 and python 3 differences
 try:
     import cPickle as pickle

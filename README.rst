@@ -1,50 +1,47 @@
+.. -*- coding: utf-8 -*-
+
 HAProxy log analyzer
 ====================
-
-This Python package is a `HAProxy`_ log parser that allows you to analyze
-your HAProxy log files in multiple ways (see commands section below).
+This Python package is a `HAProxy`_ log parser.
+It analyzes HAProxy log files in multiple ways (see commands section below).
 
 .. note::
    Currently only the `HTTP log format`_ is supported.
 
-
 Tests and coverage
 ------------------
-
 No project is trustworthy if does not have tests and a decent coverage!
 
-.. image:: https://secure.travis-ci.org/gforcada/haproxy_log_analysis.png?branch=master
-    :target: http://travis-ci.org/gforcada/haproxy_log_analysis
+.. image:: https://travis-ci.org/gforcada/haproxy_log_analysis.svg?branch=master
+   :target: https://travis-ci.org/gforcada/haproxy_log_analysis
+   :alt: Tests
 
-.. image:: https://coveralls.io/repos/gforcada/haproxy_log_analysis/badge.png?branch=master
-    :target: https://coveralls.io/r/gforcada/haproxy_log_analysis
+.. image:: https://coveralls.io/repos/gforcada/haproxy_log_analysis/badge.svg?branch=master
+   :target: https://coveralls.io/github/gforcada/haproxy_log_analysis
+   :alt: Coverage
 
 .. image:: https://img.shields.io/pypi/dm/haproxy_log_analysis.svg
-    :target: https://pypi.python.org/pypi/haproxy_log_analysis/
-    :alt: Downloads
+   :target: https://pypi.python.org/pypi/haproxy_log_analysis/
+   :alt: Downloads
 
 .. image:: https://img.shields.io/pypi/v/haproxy_log_analysis.svg
-    :target: https://pypi.python.org/pypi/haproxy_log_analysis/
-    :alt: Latest Version
+   :target: https://pypi.python.org/pypi/haproxy_log_analysis/
+   :alt: Latest Version
 
 .. image:: https://img.shields.io/pypi/status/haproxy_log_analysis.svg
-    :target: https://pypi.python.org/pypi/haproxy_log_analysis/
-    :alt: Egg Status
+   :target: https://pypi.python.org/pypi/haproxy_log_analysis/
+   :alt: Egg Status
 
 .. image:: https://img.shields.io/pypi/l/haproxy_log_analysis.svg
-    :target: https://pypi.python.org/pypi/haproxy_log_analysis/
-    :alt: License
-
+   :target: https://pypi.python.org/pypi/haproxy_log_analysis/
+   :alt: License
 
 Documentation
 -------------
-
 See the `documentation and API`_ at ReadTheDocs_.
-
 
 Command-line interface
 ----------------------
-
 The current ``--help`` looks like this::
 
   usage: haproxy_log_analysis [-h] [-l LOG] [-s START] [-d DELTA] [-c COMMAND]
@@ -90,9 +87,8 @@ The current ``--help`` looks like this::
 Commands
 --------
 
-Commands are small purpose specific programs in itself that report specific
-statistics about the log file being analyzed. See the ``--help`` (or the
-section above) to know how to run them.
+Commands are small purpose specific programs in themselves that report specific statistics about the log file being analyzed.
+See the ``--help`` (or the section above) to know how to run them.
 
 ``counter``
   Reports how many log lines could be parsed.
@@ -102,20 +98,21 @@ section above) to know how to run them.
 
 ``http_methods``
   Reports a breakdown of how many requests have been made per HTTP method
-  (GET, POST...)
+  (GET, POST...).
 
 ``ip_counter``
-  Reports a breakdown of how many requests have been made per IP. Note that
-  for this to work you need to configure HAProxy to capture the header that
-  has the ip on it (usually the X-Forwarded-For header). Something like:
+  Reports a breakdown of how many requests have been made per IP.
+  Note that for this to work you need to configure HAProxy to capture the header that has the IP on it
+  (usually the X-Forwarded-For header).
+  Something like:
   ``capture request header X-Forwarded-For len 20``
 
 ``top_ips``
   Reports the 10 IPs with most requests (and the amount of requests).
 
 ``status_codes_counter``
-  Reports a breakdown of how many requests per HTTP status code (404, 500,
-  200, 301..) are on the log file.
+  Reports a breakdown of how many requests per HTTP status code
+  (404, 500, 200, 301..) are on the log file.
 
 ``request_path_counter``
   Reports a breakdown of how many requests per path (/rss, /, /another/path).
@@ -124,85 +121,77 @@ section above) to know how to run them.
   Reports the 10 paths with most requests.
 
 ``slow_requests``
-  Reports a list of requests that downstream servers took more than 1 second
-  to response.
+  Reports a list of requests that downstream servers took more than 1 second to response.
 
 ``counter_slow_requests``
-  Reports the amount of requests that downstream servers took more than 1
-  second to response.
+  Reports the amount of requests that downstream servers took more than 1 second to response.
 
 ``average_response_time``
   Reports the average time (in milliseconds) servers spend to answer requests.
   .. note:: Aborted requests are not considered.
 
 ``average_waiting_time``
-  Reports the average time (in milliseconds) requests spend waiting on the
-  various HAProxy queues.
+  Reports the average time (in milliseconds) requests spend waiting on the various HAProxy queues.
 
 ``server_load``
-  Reports a breakdown of how many requests were processed by each downstream
-  server. Note that currently it does not take into account the backend the
-  server is configured on.
+  Reports a breakdown of how many requests were processed by each downstream server.
+  Note that currently it does not take into account the backend the server is configured on.
 
 ``queue_peaks``
-  Reports a list of queue peaks. A queue peak is defined by the biggest
-  value on the backend queue on a series of log lines that are between log
-  lines without being queued.
+  Reports a list of queue peaks.
+  A queue peak is defined by the biggest value on the backend queue on a series of log lines that are between log lines without being queued.
 
 ``connection_type``
   Reports on how many requests were made on SSL and how many on plain HTTP.
-  This command only works if the default port for SSL (443) appears on the
-  path.
+  This command only works if the default port for SSL (443) appears on the path.
 
 ``requests_per_minute``
-  Reports on how many requests were made per minute. It works best when used
-  with ``-s`` and ``-d`` command line arguments, as the output can be huge.
+  Reports on how many requests were made per minute.
+  It works best when used with ``-s`` and ``-d`` command line arguments,
+  as the output can be huge.
 
 ``print``
-  Prints the raw lines. This can be useful to trim down a file (with ``-s`` and
-  ``-d`` for example) so that later runs are faster.
-
+  Prints the raw lines.
+  This can be useful to trim down a file (with ``-s`` and ``-d`` for example) so that later runs are faster.
 
 Filters
 -------
-
-Filters, contrary to commands, are a way to reduce the amount of log lines
-to be processed.
+Filters, contrary to commands,
+are a way to reduce the amount of log lines to be processed.
 
 .. note::
    The ``-n`` command line argument allows to reverse filters output.
 
-This helps when looking for specific traces, like a certain IP, a path...
+   This helps when looking for specific traces, like a certain IP, a path...
 
 ``ip``
   Filters log lines by the given IP.
 
 ``ip_range``
-  Filters log lines by the given IP range (all IPs that begin with the same
-  prefix).
+  Filters log lines by the given IP range
+  (all IPs that begin with the same prefix).
 
 ``path``
   Filters log lines by the given string.
 
 ``ssl``
-  Filters log lines that are from SSL connections. See
-  :method::`.HaproxyLogLine.is_https` for its limitations.
+  Filters log lines that are from SSL connections.
+  See :method::`.HaproxyLogLine.is_https` for its limitations.
 
 ``slow_requests``
-  Filters log lines that take at least the given time to get answered (in
-  milliseconds).
+  Filters log lines that take at least the given time to get answered
+  (in milliseconds).
 
 ``time_frame``
-  This is an implicit filter that is used when ``--start``, and optionally,
-  ``--delta`` are used. Do not type this filter on the command line, use
-  ``--start`` and ``--delta``.
+  This is an implicit filter that is used when ``--start``, and optionally, ``--delta`` are used.
+  Do not use this filter on the command line, use ``--start`` and ``--delta`` instead.
 
 ``status_code``
   Filters log lines that match the given HTTP status code (i.e. 404, 200...).
 
 ``status_code_family``
-  Filters log lines that match the given HTTP status code family (i.e. 4 for
-  all 4xx status codes, 5 for 5xx status codes...).
+  Filters log lines that match the given HTTP status code family
+  (i.e. 4 for all 4xx status codes, 5 for 5xx status codes...).
 
 ``http_method``
   Filters log lines by the HTTP method used (GET, POST...).
@@ -217,8 +206,8 @@ This helps when looking for specific traces, like a certain IP, a path...
   Filters log lines by the downstream server that handled the connection.
 
 ``response_size``
-  Filters log lines by the response size (in bytes). Specially useful when
-  looking for big file downloads.
+  Filters log lines by the response size (in bytes).
+  Specially useful when looking for big file downloads.
 
 ``wait_on_queues``
   Filters log lines by the amount of time the request had to wait on HAProxy queues.
@@ -226,15 +215,12 @@ This helps when looking for specific traces, like a certain IP, a path...
 
 Installation
 ------------
-
 After installation you will have a console script `haproxy_log_analysis`::
 
     $ python setup.py install
 
-
 TODO
 ----
-
 - add more commands: *(help appreciated)*
 
   - reports on servers connection time
@@ -249,7 +235,6 @@ TODO
   acceptance date, path, downstream server, load at that time...)
 
 - *your ideas*
-
 
 .. _HAProxy: http://haproxy.1wt.eu/
 .. _HTTP log format: http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
