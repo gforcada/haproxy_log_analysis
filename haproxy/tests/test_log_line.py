@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from haproxy.haproxy_logline import HaproxyLogLine
+from haproxy.line import Line
 
 import unittest
 
@@ -82,7 +82,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
     def test_haproxy_log_line_default_values(self):
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertEqual(raw_line, log_line.raw_line)
         self.assertEqual(self.client_ip, log_line.client_ip)
@@ -122,7 +122,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
     def test_haproxy_log_line_unused_values(self):
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertEqual(log_line.captured_request_cookie, None)
         self.assertEqual(log_line.captured_response_cookie, None)
@@ -130,7 +130,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
     def test_haproxy_log_line_datetime_value(self):
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertTrue(isinstance(log_line.accept_date, datetime))
 
@@ -140,7 +140,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         protocol = 'HTTP/1.1'
         self.http_request = '{0} {1} {2}'.format(method, path, protocol)
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertEqual(log_line.http_request_method, method)
         self.assertEqual(log_line.http_request_path, path)
@@ -152,7 +152,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         """
         self.bytes = 'wrooooong'
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertFalse(log_line.valid)
 
@@ -162,7 +162,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         """
         self.headers = ''
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertTrue(log_line.valid)
 
@@ -174,7 +174,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         response_headers = '{something_else}'
         self.headers = ' {0} {1}'.format(request_headers, response_headers)
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertTrue(log_line.valid)
         self.assertEqual(log_line.captured_request_headers, request_headers)
@@ -186,7 +186,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         """
         self.http_request = 'GET /domain:443/to/image HTTP/1.1'
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertTrue(log_line.valid)
         self.assertTrue(log_line.is_https())
@@ -197,7 +197,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         """
         self.http_request = 'GET /domain:80/to/image HTTP/1.1'
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertTrue(log_line.valid)
         self.assertFalse(log_line.is_https())
@@ -208,7 +208,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         """
         self.http_request = 'GET / HTTP/1.1'
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertTrue(log_line.valid)
         self.assertEqual('/', log_line.http_request_path)
@@ -220,6 +220,6 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.http_request = 'GET / HTTP/1.1'
         self.process_name_and_pid = 'ip-192-168-1-1 haproxy[28029]:'
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         self.assertTrue(log_line.valid)

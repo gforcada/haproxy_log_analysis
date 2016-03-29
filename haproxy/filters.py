@@ -6,7 +6,7 @@ from haproxy import START_REGEX
 
 
 def filter_ip(ip):
-    """Filter :class:`.HaproxyLogLine` objects by IP.
+    """Filter :class:`.Line` objects by IP.
 
     :param ip: IP that you want to filter to.
     :type ip: string
@@ -20,7 +20,7 @@ def filter_ip(ip):
 
 
 def filter_ip_range(ip_range):
-    """Filter :class:`.HaproxyLogLine` objects by IP range.
+    """Filter :class:`.Line` objects by IP range.
 
     Both *192.168.1.203* and *192.168.1.10* are valid if the provided ip
     range is ``192.168.1`` whereas *192.168.2.103* is not valid (note the
@@ -40,7 +40,7 @@ def filter_ip_range(ip_range):
 
 
 def filter_path(path):
-    """Filter :class:`.HaproxyLogLine` objects by their request path.
+    """Filter :class:`.Line` objects by their request path.
 
     :param path: part of a path that needs to be on the request path.
     :type path: string
@@ -54,7 +54,7 @@ def filter_path(path):
 
 
 def filter_ssl(ignore=True):
-    """Filter :class:`.HaproxyLogLine` objects that from SSL connections.
+    """Filter :class:`.Line` objects that from SSL connections.
 
     :param ignore: parameter to be ignored just to conform to the rule that all
       filters need a parameter
@@ -69,7 +69,7 @@ def filter_ssl(ignore=True):
 
 
 def filter_slow_requests(slowness):
-    """Filter :class:`.HaproxyLogLine` objects by their response time.
+    """Filter :class:`.Line` objects by their response time.
 
     :param slowness: minimum time, in milliseconds, a server needs to answer
       a request. If the server takes more time than that the log line is
@@ -86,7 +86,7 @@ def filter_slow_requests(slowness):
 
 
 def filter_wait_on_queues(max_waiting):
-    """Filter :class:`.HaproxyLogLine` objects by their queueing time in
+    """Filter :class:`.Line` objects by their queueing time in
     HAProxy.
 
     :param max_waiting: maximum time, in milliseconds, a request is waiting on
@@ -104,7 +104,7 @@ def filter_wait_on_queues(max_waiting):
 
 
 def filter_time_frame(start, delta):
-    """Filter :class:`.HaproxyLogLine` objects by their connection time.
+    """Filter :class:`.Line` objects by their connection time.
 
     :param start: a time expression (see -s argument on --help for its format)
       to filter log lines that are before this time.
@@ -145,7 +145,7 @@ def filter_time_frame(start, delta):
 
 
 def filter_status_code(http_status):
-    """Filter :class:`.HaproxyLogLine` objects by their HTTP status code.
+    """Filter :class:`.Line` objects by their HTTP status code.
 
     :param http_status: HTTP status code (200, 404, 502...) to filter lines
       with.
@@ -160,7 +160,7 @@ def filter_status_code(http_status):
 
 
 def filter_status_code_family(family_number):
-    """Filter :class:`.HaproxyLogLine` objects by their family of HTTP status
+    """Filter :class:`.Line` objects by their family of HTTP status
     code, i.e. 2xx, 3xx, 4xx
 
     :param family_number: First digit of the HTTP status code family, i.e. 2
@@ -176,7 +176,7 @@ def filter_status_code_family(family_number):
 
 
 def filter_http_method(http_method):
-    """Filter :class:`.HaproxyLogLine` objects by their HTTP method used (i.e.
+    """Filter :class:`.Line` objects by their HTTP method used (i.e.
     GET, POST...).
 
     :param http_method: HTTP method (POST, GET...).
@@ -191,7 +191,7 @@ def filter_http_method(http_method):
 
 
 def filter_backend(backend_name):
-    """Filter :class:`.HaproxyLogLine` objects by the HAProxy backend name
+    """Filter :class:`.Line` objects by the HAProxy backend name
     they were processed with.
 
     :param backend_name: Name of the HAProxy backend section to investigate.
@@ -206,7 +206,7 @@ def filter_backend(backend_name):
 
 
 def filter_frontend(frontend_name):
-    """Filter :class:`.HaproxyLogLine` objects by the HAProxy frontend name
+    """Filter :class:`.Line` objects by the HAProxy frontend name
     the connection arrived from.
 
     :param frontend_name: Name of the HAProxy frontend section to investigate.
@@ -221,7 +221,7 @@ def filter_frontend(frontend_name):
 
 
 def filter_server(server_name):
-    """Filter :class:`.HaproxyLogLine` objects by the downstream server that
+    """Filter :class:`.Line` objects by the downstream server that
     handled the connection.
 
     :param server_name: Name of the server HAProxy send the connection to.
@@ -236,7 +236,7 @@ def filter_server(server_name):
 
 
 def filter_response_size(size):
-    """Filter :class:`.HaproxyLogLine` objects by the response size (in bytes).
+    """Filter :class:`.Line` objects by the response size (in bytes).
 
     Specially useful when looking for big file downloads.
 

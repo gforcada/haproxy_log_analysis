@@ -2,20 +2,20 @@ Haproxy Modules
 ===============
 
 
-HaproxyLogfile
---------------
+Log
+---
 
-.. automodule:: haproxy.haproxy_logfile
+.. automodule:: haproxy.logfile
 
-.. autoclass:: HaproxyLogFile
+.. autoclass:: Log
    :members:
    :private-members:
 
 
-HaproxyLogline
---------------
+Line
+----
 
-.. automodule:: haproxy.haproxy_logline
+.. automodule:: haproxy.line
 
-.. autoclass:: HaproxyLogLine
+.. autoclass:: Line
     :members:

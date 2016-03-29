@@ -63,7 +63,7 @@ HTTP_REQUEST_REGEX = re.compile(
 )
 
 
-class HaproxyLogLine(object):
+class Line(object):
     """For a precise and more detailed description of every field see:
     http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
     """

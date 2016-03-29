@@ -2,7 +2,7 @@
 from haproxy import DELTA_REGEX
 from haproxy import filters
 from haproxy import START_REGEX
-from haproxy.haproxy_logfile import HaproxyLogFile
+from haproxy.logfile import Log
 
 import argparse
 import os
@@ -147,7 +147,7 @@ def _validate_arg_delta(delta):
 
 def _parse_arg_commands(commands):
     input_commands = commands.split(',')
-    available_commands = HaproxyLogFile.commands()
+    available_commands = Log.commands()
     for cmd in input_commands:
         if cmd not in available_commands:
             msg = 'command "{0}" is not available. Use --list-commands to ' \
@@ -189,11 +189,11 @@ def _validate_arg_logfile(filename):
 
 
 def print_commands():
-    """Prints all commands available from HaproxyLogFile with their
+    """Prints all commands available from Log with their
     description.
     """
-    dummy_log_file = HaproxyLogFile()
-    commands = HaproxyLogFile.commands()
+    dummy_log_file = Log()
+    commands = Log.commands()
     commands.sort()
 
     for cmd in commands:
@@ -249,11 +249,10 @@ def main(args):
         # no need to process further
         return
 
-    # create a HaproxyLogFile instance and parse the log file
-    log_file = HaproxyLogFile(
+    # create a Log instance and parse the log file
+    log_file = Log(
         logfile=args['log'],
     )
-    log_file.parse_file()
 
     # apply the time frame filter
     if args['start'] or args['delta']:

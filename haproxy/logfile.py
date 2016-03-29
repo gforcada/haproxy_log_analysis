@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
 from datetime import timedelta
-from haproxy.haproxy_logline import HaproxyLogLine
+from haproxy.line import Line
 
 import os
 
@@ -13,7 +13,7 @@ except ImportError:
     import pickle
 
 
-class HaproxyLogFile(object):
+class Log(object):
 
     def __init__(self, logfile=None):
         self.logfile = logfile
@@ -27,11 +27,10 @@ class HaproxyLogFile(object):
 
         self._valid_lines = []
         self._invalid_lines = []
+        if self.logfile:
+            self.parse_file()
 
     def parse_file(self):
-        if self.logfile is None:
-            raise ValueError('No log file is configured yet!')
-
         if self._is_pickle_valid():
             self._load()
         else:
@@ -85,7 +84,7 @@ class HaproxyLogFile(object):
         for line in logfile:
             self.total_lines += 1
             stripped_line = line.strip()
-            parsed_line = HaproxyLogLine(stripped_line)
+            parsed_line = Line(stripped_line)
 
             if parsed_line.valid:
                 self._valid_lines.append(parsed_line)
@@ -107,14 +106,14 @@ class HaproxyLogFile(object):
         :param reverse: negate the filter (so accept all log lines that return
           ``False``).
         :type reverse: boolean
-        :returns: a new instance of HaproxyLogFile containing only log lines
+        :returns: a new instance of Log containing only log lines
           that passed the filter function.
-        :rtype: :class:`HaproxyLogFile`
+        :rtype: :class:`Log`
 
         TODO:
             Deep copy implementation.
         """
-        new_log_file = HaproxyLogFile()
+        new_log_file = Log()
         new_log_file.logfile = self.logfile
 
         new_log_file.total_lines = 0
@@ -179,7 +178,7 @@ class HaproxyLogFile(object):
         """Returns the top most frequent IPs.
 
         .. note::
-          See :meth:`.HaproxyLogFile._sort_and_trim` for its current
+          See :meth:`.Log._sort_and_trim` for its current
           limitations.
         """
         return self._sort_and_trim(
@@ -206,7 +205,7 @@ class HaproxyLogFile(object):
         """Returns the top most frequent paths.
 
         .. note::
-          See :meth:`.HaproxyLogFile._sort_and_trim` for its current
+          See :meth:`.Log._sort_and_trim` for its current
           limitations.
         """
         return self._sort_and_trim(

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from haproxy import filters
-from haproxy.haproxy_logfile import HaproxyLogFile
+from haproxy.logfile import Log
 from haproxy.main import create_parser
 from haproxy.main import main
 from haproxy.main import parse_arguments
@@ -175,7 +175,7 @@ class ArgumentParsingTest(unittest.TestCase):
         with open(test_output.name, 'r') as output_file:
             output_text = output_file.read()
 
-            for cmd in HaproxyLogFile.commands():
+            for cmd in Log.commands():
                 self.assertIn(cmd, output_text)
 
     def test_arg_parser_help_output(self):

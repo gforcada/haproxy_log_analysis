@@ -2,8 +2,8 @@
 from datetime import datetime
 from datetime import timedelta
 from haproxy import filters
-from haproxy.haproxy_logline import HaproxyLogLine
-from haproxy.tests.test_haproxy_log_line import HaproxyLogLineTest
+from haproxy.line import Line
+from haproxy.tests.test_log_line import HaproxyLogLineTest
 
 
 class FiltersTest(HaproxyLogLineTest):
@@ -14,7 +14,7 @@ class FiltersTest(HaproxyLogLineTest):
         ip_two = '2.3.4.5'
         self.headers = ' {{{0}}} '.format(ip_one)
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
 
         filter_func_ip_one = filters.filter_ip(ip_one)
         filter_func_ip_two = filters.filter_ip(ip_two)
@@ -31,7 +31,7 @@ class FiltersTest(HaproxyLogLineTest):
         for ip in ips:
             self.headers = ' {{{0}}} '.format(ip)
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
 
             results.append(filter_func(log_line))
 
@@ -48,7 +48,7 @@ class FiltersTest(HaproxyLogLineTest):
         for path in paths:
             self.http_request = '{0} {1} {2}'.format(method, path, protocol)
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
 
             results.append(filter_func(log_line))
 
@@ -67,7 +67,7 @@ class FiltersTest(HaproxyLogLineTest):
         for path in paths:
             self.http_request = '{0} {1} {2}'.format(method, path, protocol)
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
 
             results.append(filter_func(log_line))
 
@@ -81,7 +81,7 @@ class FiltersTest(HaproxyLogLineTest):
         for response_time in (45, 13000, 4566):
             self.tr = response_time
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
 
             results.append(filter_func(log_line))
 
@@ -95,7 +95,7 @@ class FiltersTest(HaproxyLogLineTest):
         for waiting_time in (45, 13000, 4566):
             self.tw = waiting_time
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
 
             results.append(filter_func(log_line))
 
@@ -142,7 +142,7 @@ class FiltersTest(HaproxyLogLineTest):
                             '29/Jun/2012:15:27:23.66'):
             self.accept_date = accept_date
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
 
             results.append(filter_func(log_line))
 
@@ -160,7 +160,7 @@ class FiltersTest(HaproxyLogLineTest):
                             '29/Jun/2012:15:27:23.66'):
             self.accept_date = accept_date
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
 
             results.append(filter_func(log_line))
 
@@ -178,7 +178,7 @@ class FiltersTest(HaproxyLogLineTest):
                             '29/Jun/2012:15:27:23.66'):
             self.accept_date = accept_date
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
 
             results.append(filter_func(log_line))
 
@@ -190,12 +190,12 @@ class FiltersTest(HaproxyLogLineTest):
 
         self.status = '404'
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
         self.assertTrue(filter_func(log_line))
 
         self.status = '200'
         raw_line = self._build_test_string()
-        log_line = HaproxyLogLine(raw_line)
+        log_line = Line(raw_line)
         self.assertFalse(filter_func(log_line))
 
     def test_filter_status_code_family(self):
@@ -206,7 +206,7 @@ class FiltersTest(HaproxyLogLineTest):
         for status in ('404', '503', '401', ):
             self.status = status
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [True, False, True, ])
@@ -219,7 +219,7 @@ class FiltersTest(HaproxyLogLineTest):
         for http_method in ('GET', 'POST', 'PUT', 'GET', ):
             self.http_request = '{0} /something HTTP/1.1'.format(http_method)
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [True, False, False, True, ])
@@ -232,7 +232,7 @@ class FiltersTest(HaproxyLogLineTest):
         for backend_name in ('default', 'anonymous', 'registered', ):
             self.backend_name = backend_name
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [True, False, False, ])
@@ -245,7 +245,7 @@ class FiltersTest(HaproxyLogLineTest):
         for frontend_name in ('loadbalancer', 'other', 'loadbalancer', ):
             self.frontend_name = frontend_name
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [True, False, True, ])
@@ -258,7 +258,7 @@ class FiltersTest(HaproxyLogLineTest):
         for server_name in ('instance7', 'instance', 'instance8', ):
             self.server_name = server_name
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
             results.append(filter_func(log_line))
 
         self.assertEqual(results, [False, False, True, ])
@@ -275,7 +275,7 @@ class FiltersTest(HaproxyLogLineTest):
         for size in ('300', '+399', '+598', '401', ):
             self.bytes = size
             raw_line = self._build_test_string()
-            log_line = HaproxyLogLine(raw_line)
+            log_line = Line(raw_line)
             results_1.append(filter_func_1(log_line))
             results_2.append(filter_func_2(log_line))
 
