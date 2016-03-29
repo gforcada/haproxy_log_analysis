@@ -192,11 +192,13 @@ def print_commands():
     """Prints all commands available from HaproxyLogFile with their
     description.
     """
+    dummy_log_file = HaproxyLogFile()
     commands = HaproxyLogFile.commands()
     commands.sort()
 
     for cmd in commands:
-        description = eval('dummy_log_file.cmd_{0}.__doc__'.format(cmd))
+        cmd = getattr(dummy_log_file, 'cmd_{0}'.format(cmd))
+        description = cmd.__doc__
         if description:
             description = re.sub(r'\n\s+', ' ', description)
             description = description.strip()
@@ -207,7 +209,8 @@ def print_commands():
 def print_filters():
     """Prints all filters available with their description."""
     for filter_name in VALID_FILTERS:
-        description = eval('filters.filter_{0}.__doc__'.format(filter_name))
+        filter_func = getattr(filters, 'filter_{0}'.format(filter_name))
+        description = filter_func.__doc__
         if description:
             description = re.sub(r'\n\s+', ' ', description)
             description.strip()
@@ -253,36 +256,29 @@ def main(args):
     log_file.parse_file()
 
     # apply the time frame filter
-    if args['start'] is not None or args['delta'] is not None:
+    if args['start'] or args['delta']:
         start = args['start'] or ''
         delta = args['delta'] or ''
-        filter_string = 'filters.filter_time_frame("{0}", "{1}")'
-        filter_func = eval(filter_string.format(start, delta))
+        filter_func = filters.filter_time_frame(start, delta)
 
         log_file = log_file.filter(filter_func)
 
     # apply all other filters given
-    if args['filters'] is not None:
-        filter_string = 'filters.filter_{0}({1})'
+    if args['filters']:
         for filter_data in args['filters']:
-            arg = ''
-            if filter_data[1] is not None:
-                arg = filter_data[1]
-                arg = "'{0}'".format(arg)
-
-            filter_func = eval(filter_string.format(filter_data[0], arg))
-
-            log_file = log_file.filter(filter_func,
+            arg = filter_data[1] or ''
+            filter_func = getattr(filters, 'filter_{0}'.format(filter_data[0]))
+            log_file = log_file.filter(filter_func(arg),
                                        reverse=args['negate_filter'])
 
     # run all commands
-    command_string = 'log_file.cmd_{0}()'
     for command in args['commands']:
         string = 'command: {0}'.format(command)
         print(string)
         print('=' * len(string))
 
-        result = eval(command_string.format(command))
+        cmd = getattr(log_file, 'cmd_{0}'.format(command))
+        result = cmd()
         print(result)
 
     return log_file  # return the log_file object so that tests can inspect it
