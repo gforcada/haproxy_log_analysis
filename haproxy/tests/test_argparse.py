@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from haproxy import filters
-from haproxy.main import VALID_FILTERS
+from haproxy.haproxy_logfile import HaproxyLogFile
 from haproxy.main import create_parser
 from haproxy.main import main
 from haproxy.main import parse_arguments
-from haproxy.haproxy_logfile import HaproxyLogFile
+from haproxy.main import VALID_FILTERS
 from tempfile import NamedTemporaryFile
 
 import os

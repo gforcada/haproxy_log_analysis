@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
-from haproxy.haproxy_logfile import HaproxyLogFile
 from haproxy import DELTA_REGEX
-from haproxy import START_REGEX
 from haproxy import filters
+from haproxy import START_REGEX
+from haproxy.haproxy_logfile import HaproxyLogFile
 
 import argparse
 import os
@@ -10,8 +10,10 @@ import re
 
 
 VALID_FILTERS = [
-    f[7:] for f in dir(filters) if f.startswith('filter_')
-    and not f.endswith('time_frame')]
+    f[7:]
+    for f in dir(filters)
+    if f.startswith('filter_') and not f.endswith('time_frame')
+]
 
 
 def create_parser():
@@ -190,7 +192,6 @@ def print_commands():
     """Prints all commands available from HaproxyLogFile with their
     description.
     """
-    dummy_log_file = HaproxyLogFile()
     commands = HaproxyLogFile.commands()
     commands.sort()
 
