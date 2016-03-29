@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+2.0a1 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
 2.0a0 (2016-03-29)
 ------------------
 - Major refactoring:

@@ -3,7 +3,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '2.0a0'
+version = '2.0a1.dev0'
 
 description = 'Haproxy log analyzer that tries to gives an insight of ' \
               'what\'s going on'
