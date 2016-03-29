@@ -4,8 +4,9 @@ CHANGES
 1.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- New filter: ``filter_wait_on_queues``.
+  Get all requests that waited at maximum X amount of milliseconds on HAProxy queues.
+  [gforcada]
 
 1.2.1 (2016-02-23)
 ------------------

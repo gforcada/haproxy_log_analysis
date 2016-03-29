@@ -220,6 +220,10 @@ This helps when looking for specific traces, like a certain IP, a path...
   Filters log lines by the response size (in bytes). Specially useful when
   looking for big file downloads.
 
+``wait_on_queues``
+  Filters log lines by the amount of time the request had to wait on HAProxy queues.
+  If a request waited less than the given amount of time is accepted.
+
 Installation
 ------------
 

@@ -87,6 +87,20 @@ class FiltersTest(HaproxyLogLineTest):
 
         self.assertEqual(results, [False, True, False, ])
 
+    def test_filter_wait_on_queues(self):
+        """Check that filter_wait_on_queues filter works as expected"""
+        filter_func = filters.filter_wait_on_queues('50')
+
+        results = []
+        for waiting_time in (45, 13000, 4566):
+            self.tw = waiting_time
+            raw_line = self._build_test_string()
+            log_line = HaproxyLogLine(raw_line)
+
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [True, False, False, ])
+
     def test_str_to_timedelta(self):
         """Check that deltas are converted to timedelta objects."""
         data = filters._delta_str_to_timedelta('45s')
