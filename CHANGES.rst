@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-1.2.2 (unreleased)
-------------------
+1.3 (2016-03-29)
+----------------
 
 - New filter: ``filter_wait_on_queues``.
   Get all requests that waited at maximum X amount of milliseconds on HAProxy queues.
