@@ -3,9 +3,18 @@ CHANGES
 
 1.4 (unreleased)
 ----------------
+- Major refactoring:
 
-- Nothing changed yet.
+  # Rename modules and classes:
 
+    - haproxy_logline -> line
+    - haproxy_logfile -> logfile
+    - HaproxyLogLine -> Line
+    - HaproxyLogFile -> Log
+
+  # Parse the log file on Log() creation (i.e. in its __init__)
+
+  [gforcada]
 
 1.3 (2016-03-29)
 ----------------
