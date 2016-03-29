@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-1.4 (unreleased)
-----------------
+2.0a0 (2016-03-29)
+------------------
 - Major refactoring:
 
   # Rename modules and classes:
