@@ -231,14 +231,20 @@ class Log(object):
         average = [line.time_wait_response for line in self._valid_lines
                    if line.time_wait_response >= 0]
 
-        return sum(average) / float(len(average))
+        divisor = float(len(average))
+        if divisor > 0:
+            return sum(average) / float(len(average))
+        return 0
 
     def cmd_average_waiting_time(self):
         """Returns the average queue time of all, non aborted, requests."""
         average = [line.time_wait_queues for line in self._valid_lines
                    if line.time_wait_queues >= 0]
 
-        return sum(average) / float(len(average))
+        divisor = float(len(average))
+        if divisor > 0:
+            return sum(average) / float(len(average))
+        return 0
 
     def cmd_counter_slow_requests(self):
         """Counts all requests that took a certain amount of time to be

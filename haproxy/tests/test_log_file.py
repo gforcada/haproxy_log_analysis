@@ -418,6 +418,16 @@ class LogFileTest(unittest.TestCase):
         data = log_file.cmd_average_response_time()
         self.assertEqual(data, 74)
 
+    def test_cmd_average_response_time_empty_log(self):
+        """Check that the average response time does not break if no log lines
+        are logged.
+        """
+        log_file = Log(
+            logfile='haproxy/tests/files/empty.log',
+        )
+        data = log_file.cmd_average_response_time()
+        self.assertEqual(data, 0)
+
     def test_cmd_average_waiting_time(self):
         """Check that the average time waiting on queues returns the expected
         output.
@@ -427,6 +437,16 @@ class LogFileTest(unittest.TestCase):
         )
         data = log_file.cmd_average_waiting_time()
         self.assertEqual(data, 105)
+
+    def test_cmd_average_waiting_time_empty_log(self):
+        """Check that the average time waiting on queues does not break if no
+        log lines are logged.
+        """
+        log_file = Log(
+            logfile='haproxy/tests/files/empty.log',
+        )
+        data = log_file.cmd_average_waiting_time()
+        self.assertEqual(data, 0)
 
     def test_cmd_average_waiting_time_aborted(self):
         """Check that the average time waiting on queues returns the expected
