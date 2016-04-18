@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-2.0a1 (unreleased)
+2.0b0 (2016-04-18)
 ------------------
 - Check the divisor before doing a divison to not get ``ZeroDivisionError`` exceptions.
   [gforcada]
