@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+2.0b1 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
 2.0b0 (2016-04-18)
 ------------------
 - Check the divisor before doing a divison to not get ``ZeroDivisionError`` exceptions.
