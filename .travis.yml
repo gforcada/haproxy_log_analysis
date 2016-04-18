@@ -11,4 +11,5 @@ script:
   - bin/code-analysis
   - nosetests --with-coverage --cover-package=haproxy
 after_success:
+  - pip install -q coveralls
   - coveralls
