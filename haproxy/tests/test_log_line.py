@@ -11,7 +11,7 @@ import unittest
 LINE = '{0} {1} {2} [{3}] {4} {5} {6} - - ---- {7} {8}{9} "{10}"'
 
 
-class HaproxyLogLineTest(unittest.TestCase):
+class LogLineTest(unittest.TestCase):
 
     def setUp(self):
         self.syslog_date = 'Dec  9 13:01:26'
@@ -80,7 +80,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         )
         return log_line
 
-    def test_haproxy_log_line_default_values(self):
+    def test_default_values(self):
         raw_line = self._build_test_string()
         log_line = Line(raw_line)
 
@@ -120,7 +120,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
         self.assertTrue(log_line.valid)
 
-    def test_haproxy_log_line_unused_values(self):
+    def test_unused_values(self):
         raw_line = self._build_test_string()
         log_line = Line(raw_line)
 
@@ -128,13 +128,13 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertEqual(log_line.captured_response_cookie, None)
         self.assertEqual(log_line.termination_state, None)
 
-    def test_haproxy_log_line_datetime_value(self):
+    def test_datetime_value(self):
         raw_line = self._build_test_string()
         log_line = Line(raw_line)
 
         self.assertTrue(isinstance(log_line.accept_date, datetime))
 
-    def test_haproxy_log_line_http_request_values(self):
+    def test_http_request_values(self):
         method = 'GET'
         path = '/path/to/image'
         protocol = 'HTTP/1.1'
@@ -146,7 +146,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertEqual(log_line.http_request_path, path)
         self.assertEqual(log_line.http_request_protocol, protocol)
 
-    def test_haproxy_log_line_invalid(self):
+    def test_invalid(self):
         """Check that if a log line can not be parsed with the regular
         expression, 'valid' is False.
         """
@@ -156,7 +156,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
         self.assertFalse(log_line.valid)
 
-    def test_haproxy_log_line_no_captured_headers(self):
+    def test_no_captured_headers(self):
         """Check that if a log line does not have any captured headers, the
         line is still valid.
         """
@@ -166,7 +166,7 @@ class HaproxyLogLineTest(unittest.TestCase):
 
         self.assertTrue(log_line.valid)
 
-    def test_haproxy_log_line_request_and_response_captured_headers(self):
+    def test_request_and_response_captured_headers(self):
         """Check that if a log line does have both request and response headers
         captured, both are parsed correctly.
         """
@@ -180,7 +180,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertEqual(log_line.captured_request_headers, request_headers)
         self.assertEqual(log_line.captured_response_headers, response_headers)
 
-    def test_haproxy_log_line_request_is_https_valid(self):
+    def test_request_is_https_valid(self):
         """Check that if a log line contains the SSL port on it, is reported
         as a https connection.
         """
@@ -191,7 +191,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertTrue(log_line.valid)
         self.assertTrue(log_line.is_https())
 
-    def test_haproxy_log_line_request_is_https_false(self):
+    def test_request_is_https_false(self):
         """Check that if a log line does not contains the SSL port on it, is
         not reported as a https connection.
         """
@@ -202,7 +202,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertTrue(log_line.valid)
         self.assertFalse(log_line.is_https())
 
-    def test_haproxy_log_line_request_is_front_page(self):
+    def test_request_is_front_page(self):
         """Check that if a request is for the front page the request path is
         correctly stored.
         """
@@ -213,7 +213,7 @@ class HaproxyLogLineTest(unittest.TestCase):
         self.assertTrue(log_line.valid)
         self.assertEqual('/', log_line.http_request_path)
 
-    def test_haproxy_log_line_strip_syslog_valid_hostname_slug(self):
+    def test_strip_syslog_valid_hostname_slug(self):
         """Checks that if the hostname added to syslog slug is still valid
         line
         """
