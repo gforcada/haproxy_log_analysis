@@ -223,3 +223,17 @@ class Line(object):
             self.http_request_method = matches.group('method')
             self.http_request_path = matches.group('path')
             self.http_request_protocol = matches.group('protocol')
+        else:
+            self.handle_bad_http_request()
+
+    def handle_bad_http_request(self):
+        self.http_request_method = 'invalid'
+        self.http_request_path = 'invalid'
+        self.http_request_protocol = 'invalid'
+
+        if self.raw_http_request != '<BADREQ>':
+            print(
+                'Could not process HTTP request {0}'.format(
+                    self.raw_http_request
+                )
+            )

@@ -223,3 +223,13 @@ class LogLineTest(unittest.TestCase):
         log_line = Line(raw_line)
 
         self.assertTrue(log_line.valid)
+
+    def test_unparseable_http_request(self):
+        self.http_request = 'XXX'
+
+        raw_line = self._build_test_string()
+        log_line = Line(raw_line)
+
+        self.assertEqual(log_line.http_request_method, 'invalid')
+        self.assertEqual(log_line.http_request_path, 'invalid')
+        self.assertEqual(log_line.http_request_protocol, 'invalid')
