@@ -11,7 +11,7 @@ import unittest
 LINE = '{0} {1} {2} [{3}] {4} {5} {6} - - ---- {7} {8}{9} "{10}"'
 
 
-class LogLineTest(unittest.TestCase):
+class LogLineBaseTest(unittest.TestCase):
 
     def setUp(self):
         self.syslog_date = 'Dec  9 13:01:26'
@@ -79,6 +79,9 @@ class LogLineTest(unittest.TestCase):
             self.http_request,
         )
         return log_line
+
+
+class LogLineTest(LogLineBaseTest):
 
     def test_default_values(self):
         raw_line = self._build_test_string()

@@ -3,10 +3,10 @@ from datetime import datetime
 from datetime import timedelta
 from haproxy import filters
 from haproxy.line import Line
-from haproxy.tests.test_log_line import LogLineTest
+from haproxy.tests.test_log_line import LogLineBaseTest
 
 
-class FiltersTest(LogLineTest):
+class FiltersTest(LogLineBaseTest):
 
     def test_filter_ip(self):
         """Check that filter_ip filter works as expected."""
