@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-2.0b1 (unreleased)
-------------------
+2.0 (2016-07-06)
+----------------
 - Handle unparseable HTTP requests.
   [gforcada]
 
