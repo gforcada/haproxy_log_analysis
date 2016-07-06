@@ -3,9 +3,11 @@ CHANGES
 
 2.0b1 (unreleased)
 ------------------
+- Handle unparseable HTTP requests.
+  [gforcada]
 
-- Nothing changed yet.
-
+- Only test on python 2.7 and 3.5
+  [gforcada]
 
 2.0b0 (2016-04-18)
 ------------------
