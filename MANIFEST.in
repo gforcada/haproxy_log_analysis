@@ -4,6 +4,7 @@ include .coveragerc
 include .travis.yml
 include LICENSE
 include requirements.txt
+exclude pyvenv.cfg
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs Makefile
