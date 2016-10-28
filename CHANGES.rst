@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-2.1 (unreleased)
-----------------
+2.0.1 (2016-10-29)
+------------------
 
 - Allow hostnames to have a dot in it.
   [gforcada]
