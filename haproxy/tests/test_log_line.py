@@ -236,3 +236,11 @@ class LogLineTest(LogLineBaseTest):
         self.assertEqual(log_line.http_request_method, 'invalid')
         self.assertEqual(log_line.http_request_path, 'invalid')
         self.assertEqual(log_line.http_request_protocol, 'invalid')
+
+    def test_dot_on_process_name(self):
+        """Checks that process names can have a dot on it"""
+        self.process_name_and_pid = 'localhost.localdomain haproxy[2345]:'
+        raw_line = self._build_test_string()
+        log_line = Line(raw_line)
+
+        self.assertTrue(log_line.valid)
