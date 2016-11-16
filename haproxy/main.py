@@ -203,7 +203,7 @@ def print_commands():
             description = re.sub(r'\n\s+', ' ', description)
             description = description.strip()
 
-        print('{0}: {1}\n'.format(cmd, description))
+        print('{0}: {1}\n'.format(cmd.__name__, description))
 
 
 def print_filters():
