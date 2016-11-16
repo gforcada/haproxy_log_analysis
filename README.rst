@@ -69,7 +69,7 @@ The current ``--help`` looks like this::
                           time on the first line will be used instead.
     -c COMMAND, --command COMMAND
                           List of commands, comma separated, to run on the log
-                          file. See -l to get a full list of them.
+                          file. See --list-commands to get a full list of them.
     -f FILTER, --filter FILTER
                           List of filters to apply on the log file. Passed as
                           comma separated and parameters within square brackets,
