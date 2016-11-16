@@ -82,7 +82,6 @@ class Log(object):
         """
 
         for line in logfile:
-            self.total_lines += 1
             stripped_line = line.strip()
             parsed_line = Line(stripped_line)
 
@@ -90,6 +89,7 @@ class Log(object):
                 self._valid_lines.append(parsed_line)
             else:
                 self._invalid_lines.append(stripped_line)
+        self.total_lines = len(self._valid_lines) + len(self._invalid_lines)
 
     def filter(self, filter_func, reverse=False):
         """Filter current log lines by a given filter function.
@@ -385,7 +385,9 @@ class Log(object):
 
     def cmd_print(self):
         """Returns the raw lines to be printed."""
-        return '\n'.join([line.raw_line for line in self._valid_lines])
+        if not self._valid_lines:
+            return ''
+        return '\n'.join([line.raw_line for line in self._valid_lines]) + '\n'
 
     def _sort_lines(self):
         """Haproxy writes its logs after having gathered all information
