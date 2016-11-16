@@ -385,12 +385,7 @@ class Log(object):
 
     def cmd_print(self):
         """Returns the raw lines to be printed."""
-        data = ''
-        for line in self._valid_lines:
-            data += line.raw_line
-            data += '\n'
-
-        return data
+        return '\n'.join([line.raw_line for line in self._valid_lines])
 
     def _sort_lines(self):
         """Haproxy writes its logs after having gathered all information
