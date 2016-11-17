@@ -4,8 +4,8 @@ CHANGES
 2.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Improve performance for ``cmd_print``.
+  [kevinjqiu]
 
 2.0.1 (2016-10-29)
 ------------------
