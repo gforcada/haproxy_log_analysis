@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-2.0.2 (unreleased)
+2.0.2 (2016-11-17)
 ------------------
 
 - Improve performance for ``cmd_print``.
