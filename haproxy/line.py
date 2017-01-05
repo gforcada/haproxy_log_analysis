@@ -169,7 +169,7 @@ class Line(object):
         ip = self.get_request_header()
         if ip:
             return ip
-        return None
+        return self.client_ip
 
     def get_request_header(self, pos = 0):
         """Returns the 'pos' captured request header provided on the log line."""

@@ -107,8 +107,16 @@ See the ``--help`` (or the section above) to know how to run them.
   Something like:
   ``capture request header X-Forwarded-For len 20``
 
-``top_ips``
-  Reports the 10 IPs with most requests (and the amount of requests).
+``http_hosts_counter``
+  Reports a breakdown of how many requests have been made per host header.
+  Note that for this to work you need to configure HAProxy to capture the header.
+  This must be the _second_ captured header.
+  Something like:
+  ``capture request header X-Forwarded-For len 20``
+  ``capture request header Host len 30``
+
+``top_http_hosts``
+  Reports the 10 http hosts with most requests (and the amount of requests).
 
 ``status_codes_counter``
   Reports a breakdown of how many requests per HTTP status code
