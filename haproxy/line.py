@@ -165,10 +165,12 @@ class Line(object):
         return False
 
     def get_ip(self):
-        """Returns the IP provided on the log line."""
+        """Returns the IP provided on the log line, or the client_ip if absent/empty."""
         if self.captured_request_headers is not None:
-            return self.captured_request_headers[1:-1]
-        return None
+            ip = self.captured_request_headers[1:-1].split('|')[0]
+            if ip:
+                return ip
+        return self.client_ip
 
     def _parse_line(self, line):
         # remove syslog slug if found
