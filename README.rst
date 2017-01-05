@@ -179,6 +179,9 @@ are a way to reduce the amount of log lines to be processed.
   Filters log lines by the given IP range
   (all IPs that begin with the same prefix).
 
+``host``
+  Filters log lines by the given host header.
+
 ``path``
   Filters log lines by the given string.
 
