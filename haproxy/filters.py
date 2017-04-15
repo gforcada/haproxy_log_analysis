@@ -48,6 +48,8 @@ def filter_path(path):
     :rtype: function
     """
     def filter_func(log_line):
+        if log_line.http_request_path is None:
+            return False
         return path in log_line.http_request_path
 
     return filter_func

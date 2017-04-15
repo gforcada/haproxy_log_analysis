@@ -43,7 +43,13 @@ class FiltersTest(LogLineBaseTest):
         method = 'GET'
         protocol = 'HTTP/1.1'
 
-        paths = ('/path/to/image', '/something/else', '/another/image/here', )
+        paths = (
+            '/path/to/image',
+            '/something/else',
+            '/another/image/here',
+            '/',
+            )
+
         results = []
         for path in paths:
             self.http_request = '{0} {1} {2}'.format(method, path, protocol)
@@ -52,7 +58,7 @@ class FiltersTest(LogLineBaseTest):
 
             results.append(filter_func(log_line))
 
-        self.assertEqual(results, [True, False, True, ])
+        self.assertEqual(results, [True, False, True, False, ])
 
     def test_filter_ssl(self):
         """Check that filter_path filter works as expected."""
