@@ -39,7 +39,7 @@ class LogFileTest(unittest.TestCase):
     def test_parsed(self):
         """Check that log files are parsed."""
         log_file = Log(
-            logfile='haproxy/tests/files/small.log'
+            logfile='haproxy/tests/files/small.log',
         )
         self.assertTrue(log_file.cmd_counter() > 0)
 
@@ -48,7 +48,7 @@ class LogFileTest(unittest.TestCase):
         all of them.
         """
         log_file = Log(
-            logfile='haproxy/tests/files/2_ok_1_invalid.log'
+            logfile='haproxy/tests/files/2_ok_1_invalid.log',
         )
         self.assertEqual(log_file.total_lines, 3)
 
@@ -57,7 +57,7 @@ class LogFileTest(unittest.TestCase):
         correctly reported.
         """
         log_file = Log(
-            logfile='haproxy/tests/files/2_ok_1_invalid.log'
+            logfile='haproxy/tests/files/2_ok_1_invalid.log',
         )
         self.assertEqual(log_file.cmd_counter(), 2)
         self.assertEqual(log_file.cmd_counter_invalid(), 1)
@@ -135,8 +135,10 @@ class LogFileTest(unittest.TestCase):
 
         self.assertEqual(len(slow_requests), 5)
         slow_requests.sort()  # sort them as the log analyzer sorts by dates
-        self.assertEqual(slow_requests,
-                         [1293, 2936, 2942, 20095, 29408, ])
+        self.assertEqual(
+            slow_requests,
+            [1293, 2936, 2942, 20095, 29408, ],
+        )
 
     def test_cmd_counter_slow_requests(self):
         """Check that the slow requests counter command reports as expected.
@@ -315,23 +317,23 @@ class LogFileTest(unittest.TestCase):
 
         self.assertEqual(
             requests[0],
-            (datetime(2013, 12, 11, 11, 2), 8)
+            (datetime(2013, 12, 11, 11, 2), 8),
         )
         self.assertEqual(
             requests[1],
-            (datetime(2013, 12, 11, 11, 3), 3)
+            (datetime(2013, 12, 11, 11, 3), 3),
         )
         self.assertEqual(
             requests[2],
-            (datetime(2013, 12, 11, 11, 13), 5)
+            (datetime(2013, 12, 11, 11, 13), 5),
         )
         self.assertEqual(
             requests[3],
-            (datetime(2013, 12, 11, 11, 52), 7)
+            (datetime(2013, 12, 11, 11, 52), 7),
         )
         self.assertEqual(
             requests[4],
-            (datetime(2013, 12, 11, 12, 2), 9)
+            (datetime(2013, 12, 11, 12, 2), 9),
         )
 
     def test_cmd_requests_per_minute_empty(self):
@@ -366,7 +368,7 @@ class LogFileTest(unittest.TestCase):
         # we did get all lines?
         self.assertEqual(
             log_file.cmd_counter(),
-            only_ssl.cmd_counter() + non_ssl.cmd_counter()
+            only_ssl.cmd_counter() + non_ssl.cmd_counter(),
         )
 
     def test_cmd_print_empty(self):

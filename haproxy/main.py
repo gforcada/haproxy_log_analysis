@@ -33,7 +33,7 @@ def create_parser():
              'format (e.g. 11/Dec/2013 or 11/Dec/2013:19:31:41). '
              'At least provide the day/month/year. Values not specified will '
              'use their base value (e.g. 00 for hour). Use in conjunction '
-             'with -d to limit the number of entries to process.'
+             'with -d to limit the number of entries to process.',
     )
 
     parser.add_argument(
@@ -43,7 +43,7 @@ def create_parser():
              'as a number and a time unit, e.g.: 1s, 10m, 3h or 4d (for 1 '
              'second, 10 minutes, 3 hours or 4 days). Use in conjunction with '
              '-s to only analyze certain time delta. If no start time is '
-             'given, the time on the first line will be used instead.'
+             'given, the time on the first line will be used instead.',
     )
 
     parser.add_argument(
@@ -267,8 +267,10 @@ def main(args):
         for filter_data in args['filters']:
             arg = filter_data[1] or ''
             filter_func = getattr(filters, 'filter_{0}'.format(filter_data[0]))
-            log_file = log_file.filter(filter_func(arg),
-                                       reverse=args['negate_filter'])
+            log_file = log_file.filter(
+                filter_func(arg),
+                reverse=args['negate_filter'],
+            )
 
     # run all commands
     for command in args['commands']:
