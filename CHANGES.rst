@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-2.0.3 (unreleased)
-------------------
+2.1 (2017-07-06)
+----------------
 - Enforce QA checks (flake8) on code.
   All code has been updated to follow it.
   [gforcada]
