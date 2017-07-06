@@ -3,9 +3,15 @@ CHANGES
 
 2.0.3 (unreleased)
 ------------------
+- Enforce QA checks (flake8) on code.
+  All code has been updated to follow it.
+  [gforcada]
 
-- Nothing changed yet.
+- Support Python 3.6.
+  [gforcada]
 
+- Support different syslog timestamps (at least NixOS).
+  [gforcada]
 
 2.0.2 (2016-11-17)
 ------------------
