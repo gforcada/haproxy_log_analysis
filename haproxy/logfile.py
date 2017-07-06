@@ -19,9 +19,11 @@ class Log(object):
         self.logfile = logfile
         self._pickle_file = '{0}.pickle'.format(logfile)
         # only this attributes will be pickled
-        self._pickle_attributes = ['_valid_lines',
-                                   '_invalid_lines',
-                                   'total_lines', ]
+        self._pickle_attributes = [
+            '_valid_lines',
+            '_invalid_lines',
+            'total_lines',
+        ]
 
         self.total_lines = 0
 
@@ -109,9 +111,6 @@ class Log(object):
         :returns: a new instance of Log containing only log lines
           that passed the filter function.
         :rtype: :class:`Log`
-
-        TODO:
-            Deep copy implementation.
         """
         new_log_file = Log()
         new_log_file.logfile = self.logfile
@@ -183,7 +182,7 @@ class Log(object):
         """
         return self._sort_and_trim(
             self.cmd_ip_counter(),
-            reverse=True
+            reverse=True,
         )
 
     def cmd_status_codes_counter(self):
@@ -210,7 +209,7 @@ class Log(object):
         """
         return self._sort_and_trim(
             self.cmd_request_path_counter(),
-            reverse=True
+            reverse=True,
         )
 
     def cmd_slow_requests(self):
@@ -222,14 +221,20 @@ class Log(object):
            command line interface to allow to send parameters to each command
            or globally.
         """
-        slow_requests = [line.time_wait_response for line in self._valid_lines
-                         if line.time_wait_response > 1000]
+        slow_requests = [
+            line.time_wait_response
+            for line in self._valid_lines
+            if line.time_wait_response > 1000
+        ]
         return slow_requests
 
     def cmd_average_response_time(self):
         """Returns the average response time of all, non aborted, requests."""
-        average = [line.time_wait_response for line in self._valid_lines
-                   if line.time_wait_response >= 0]
+        average = [
+            line.time_wait_response
+            for line in self._valid_lines
+            if line.time_wait_response >= 0
+        ]
 
         divisor = float(len(average))
         if divisor > 0:
@@ -238,8 +243,11 @@ class Log(object):
 
     def cmd_average_waiting_time(self):
         """Returns the average queue time of all, non aborted, requests."""
-        average = [line.time_wait_queues for line in self._valid_lines
-                   if line.time_wait_queues >= 0]
+        average = [
+            line.time_wait_queues
+            for line in self._valid_lines
+            if line.time_wait_queues >= 0
+        ]
 
         divisor = float(len(average))
         if divisor > 0:
@@ -295,10 +303,13 @@ class Log(object):
                     first_on_queue = line.accept_date
 
             if current_queue == 0 and current_peak > threshold:
-                peaks.append({'peak': current_peak,
-                              'span': current_span,
-                              'first': first_on_queue,
-                              'last': line.accept_date, })
+                data = {
+                    'peak': current_peak,
+                    'span': current_span,
+                    'first': first_on_queue,
+                    'last': line.accept_date,
+                }
+                peaks.append(data)
                 current_peak = 0
                 current_span = 0
                 first_on_queue = None
@@ -308,10 +319,13 @@ class Log(object):
 
         # case of a series that does not end
         if current_queue > 0 and current_peak > threshold:
-            peaks.append({'peak': current_peak,
-                          'span': current_span,
-                          'first': first_on_queue,
-                          'last': line.accept_date, })
+            data = {
+                'peak': current_peak,
+                'span': current_span,
+                'first': first_on_queue,
+                'last': line.accept_date,
+            }
+            peaks.append(data)
 
         return peaks
 
@@ -353,7 +367,7 @@ class Log(object):
         def format_and_append(append_to, date, counter):
             seconds_and_micro = timedelta(
                 seconds=date.second,
-                microseconds=date.microsecond
+                microseconds=date.microsecond,
             )
             minute_formatted = date - seconds_and_micro
             append_to.append((minute_formatted, counter))
@@ -369,7 +383,7 @@ class Log(object):
                 format_and_append(
                     requests,
                     current_minute,
-                    current_minute_counter
+                    current_minute_counter,
                 )
                 current_minute_counter = 1
                 current_minute = line_date
@@ -378,7 +392,7 @@ class Log(object):
             format_and_append(
                 requests,
                 current_minute,
-                current_minute_counter
+                current_minute_counter,
             )
 
         return requests
@@ -399,8 +413,10 @@ class Log(object):
         This method sorts all valid log lines by their acceptance date,
         providing the real order in which connections where made to the server.
         """
-        self._valid_lines = sorted(self._valid_lines,
-                                   key=lambda line: line.accept_date)
+        self._valid_lines = sorted(
+            self._valid_lines,
+            key=lambda line: line.accept_date,
+        )
 
     @staticmethod
     def _sort_and_trim(data, reverse=False):
@@ -413,7 +429,9 @@ class Log(object):
         """
         threshold = 10
         data_list = data.items()
-        data_list = sorted(data_list,
-                           key=lambda data_info: data_info[1],
-                           reverse=reverse)
+        data_list = sorted(
+            data_list,
+            key=lambda data_info: data_info[1],
+            reverse=reverse,
+        )
         return data_list[:threshold]

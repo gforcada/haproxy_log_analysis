@@ -268,7 +268,7 @@ def _date_str_to_datetime(date):
     raw_date_input = '{0}/{1}/{2}'.format(
         matches.group('day'),
         matches.group('month'),
-        matches.group('year')
+        matches.group('year'),
     )
     date_format = '%d/%b/%Y'
     if matches.group('hour'):

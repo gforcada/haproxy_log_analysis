@@ -66,7 +66,9 @@ class HaproxyLogLineRegexTest(unittest.TestCase):
         backend_name = 'Another1'
         server_name = 'Cloud9'
         self.server_names = '{0} {1}/{2}'.format(
-            frontend_name, backend_name, server_name
+            frontend_name,
+            backend_name,
+            server_name,
         )
 
         log_line = self._build_test_string()

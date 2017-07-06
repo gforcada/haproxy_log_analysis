@@ -84,8 +84,10 @@ class ArgumentParsingTest(unittest.TestCase):
         """Check that any log file passed does exist before handling it
         further.
         """
-        arguments = ['-c', 'counter',
-                     '-l', 'haproxy/tests/test_argparse.py', ]
+        arguments = [
+            '-c', 'counter',
+            '-l', 'haproxy/tests/test_argparse.py',
+        ]
         data = parse_arguments(self.parser.parse_args(arguments))
         self.assertEqual('haproxy/tests/test_argparse.py', data['log'])
 
@@ -93,15 +95,19 @@ class ArgumentParsingTest(unittest.TestCase):
         """Check that if the log file passed does not exist an exception is
         raised.
         """
-        arguments = ['-c', 'counter',
-                     '-l', 'non_existing.log', ]
+        arguments = [
+            '-c', 'counter',
+            '-l', 'non_existing.log',
+        ]
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_commands_valid(self):
         """Test that valid commands are correctly parsed."""
-        arguments = ['-c', 'http_methods',
-                     '-l', 'haproxy/tests/files/huge.log', ]
+        arguments = [
+            '-c', 'http_methods',
+            '-l', 'haproxy/tests/files/huge.log',
+        ]
         data = parse_arguments(self.parser.parse_args(arguments))
         self.assertEqual(['http_methods', ], data['commands'])
 
@@ -110,45 +116,59 @@ class ArgumentParsingTest(unittest.TestCase):
         exception.
         """
         with self.assertRaises(ValueError):
-            arguments = ['-c', 'non_existing_method',
-                         '-l', 'haproxy/tests/files/huge.log', ]
+            arguments = [
+                '-c', 'non_existing_method',
+                '-l', 'haproxy/tests/files/huge.log',
+            ]
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_filters_valid(self):
         """Test that valid filters are correctly parsed."""
-        arguments = ['-f', 'ssl',
-                     '-l', 'haproxy/tests/files/huge.log', ]
+        arguments = [
+            '-f', 'ssl',
+            '-l', 'haproxy/tests/files/huge.log',
+        ]
         data = parse_arguments(self.parser.parse_args(arguments))
         self.assertEqual([('ssl', None)], data['filters'])
 
     def test_arg_parser_filters_valid_with_argument(self):
         """Test that valid filters with arguments are correctly parsed."""
-        arguments = ['-f', 'ip[something],ssl',
-                     '-l', 'haproxy/tests/files/huge.log', ]
+        arguments = [
+            '-f', 'ip[something],ssl',
+            '-l', 'haproxy/tests/files/huge.log',
+        ]
         data = parse_arguments(self.parser.parse_args(arguments))
-        self.assertEqual([('ip', 'something'), ('ssl', None)],
-                         data['filters'])
+        self.assertEqual(
+            [('ip', 'something'), ('ssl', None)],
+            data['filters'],
+        )
 
     def test_arg_parser_filters_invalid(self):
         """Test that trying to input non existing filters raises an
         exception.
         """
-        arguments = ['--filter', 'non_existing_filter',
-                     '-l', 'haproxy/tests/files/huge.log', ]
+        arguments = [
+            '--filter', 'non_existing_filter',
+            '-l', 'haproxy/tests/files/huge.log',
+        ]
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_filters_invalid_argument(self):
         """Test that trying to input an invalid filter expression fails."""
-        arguments = ['--filter', 'ip_with_error],ssl',
-                     '-l', 'haproxy/tests/files/huge.log', ]
+        arguments = [
+            '--filter', 'ip_with_error],ssl',
+            '-l', 'haproxy/tests/files/huge.log',
+        ]
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
 
     def test_arg_parser_filters_without_closing_bracket(self):
         """Test that trying to input an invalid filter expression fails."""
-        arguments = ['--filter', 'ip],ssl',
-                     '-l', 'haproxy/tests/files/huge.log', ]
+        arguments = [
+            '--filter', 'ip],ssl',
+            '-l', 'haproxy/tests/files/huge.log',
+        ]
         with self.assertRaises(ValueError):
             parse_arguments(self.parser.parse_args(arguments))
 
@@ -225,9 +245,11 @@ class ArgumentParsingTest(unittest.TestCase):
     def test_arg_parser_filters(self):
         """Check that the filter logic on haproxy.main.main works as expected.
         """
-        arguments = ['-f', 'ssl,ip[1.2.3.4]',
-                     '-c', 'counter',
-                     '-l', 'haproxy/tests/files/filters.log', ]
+        arguments = [
+            '-f', 'ssl,ip[1.2.3.4]',
+            '-c', 'counter',
+            '-l', 'haproxy/tests/files/filters.log',
+        ]
         data = parse_arguments(self.parser.parse_args(arguments))
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
@@ -244,9 +266,11 @@ class ArgumentParsingTest(unittest.TestCase):
         """Check that the filter_time is applied on the log file if a start
         argument is given.
         """
-        arguments = ['-s', '12/Dec/2015',
-                     '-c', 'counter',
-                     '-l', 'haproxy/tests/files/filters.log', ]
+        arguments = [
+            '-s', '12/Dec/2015',
+            '-c', 'counter',
+            '-l', 'haproxy/tests/files/filters.log',
+        ]
         data = parse_arguments(self.parser.parse_args(arguments))
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
@@ -263,10 +287,12 @@ class ArgumentParsingTest(unittest.TestCase):
         """Check that the filter_time is applied on the log file if a start
         and delta arguments are given.
         """
-        arguments = ['-s', '11/Dec/2015:11',
-                     '-d', '3h',
-                     '-c', 'counter',
-                     '-l', 'haproxy/tests/files/filters.log', ]
+        arguments = [
+            '-s', '11/Dec/2015:11',
+            '-d', '3h',
+            '-c', 'counter',
+            '-l', 'haproxy/tests/files/filters.log',
+        ]
         data = parse_arguments(self.parser.parse_args(arguments))
         test_output = NamedTemporaryFile(mode='w', delete=False)
 
@@ -306,10 +332,12 @@ class ArgumentParsingTest(unittest.TestCase):
     def test_arg_parser_negate_filter_output(self):
         """Check that if the negate filter argument is set, is actually used.
         """
-        arguments = ['-c', 'counter',
-                     '-l', 'haproxy/tests/files/small.log',
-                     '-f', 'server[instance3]',
-                     '-n', ]
+        arguments = [
+            '-c', 'counter',
+            '-l', 'haproxy/tests/files/small.log',
+            '-f', 'server[instance3]',
+            '-n',
+        ]
 
         # with the negate argument set, there should be all but instance3 lines
         data = parse_arguments(self.parser.parse_args(arguments))

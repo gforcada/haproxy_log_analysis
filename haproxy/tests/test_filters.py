@@ -127,8 +127,10 @@ class FiltersTest(LogLineBaseTest):
         self.assertEqual(datetime(2013, 12, 11, hour=14, minute=15), data)
 
         data = filters._date_str_to_datetime('11/Dec/2013:14:15:16')
-        self.assertEqual(datetime(2013, 12, 11, hour=14, minute=15, second=16),
-                         data)
+        self.assertEqual(
+            datetime(2013, 12, 11, hour=14, minute=15, second=16),
+            data,
+        )
 
     def test_filter_time_frame_no_limit(self):
         """Test that if empty strings are passed to filter_time_frame all log

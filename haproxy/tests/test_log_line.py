@@ -47,22 +47,30 @@ class LogLineBaseTest(unittest.TestCase):
         self.http_request = 'GET /path/to/image HTTP/1.1'
 
     def _build_test_string(self):
-        client_ip_and_port = '{0}:{1}'.format(self.client_ip,
-                                              self.client_port)
-        server_names = '{0} {1}/{2}'.format(self.frontend_name,
-                                            self.backend_name,
-                                            self.server_name)
-        timers = '{0}/{1}/{2}/{3}/{4}'.format(self.tq,
-                                              self.tw,
-                                              self.tc,
-                                              self.tr,
-                                              self.tt)
+        client_ip_and_port = '{0}:{1}'.format(
+            self.client_ip,
+            self.client_port,
+        )
+        server_names = '{0} {1}/{2}'.format(
+            self.frontend_name,
+            self.backend_name,
+            self.server_name,
+        )
+        timers = '{0}/{1}/{2}/{3}/{4}'.format(
+            self.tq,
+            self.tw,
+            self.tc,
+            self.tr,
+            self.tt,
+        )
         status_and_bytes = '{0} {1}'.format(self.status, self.bytes)
-        connections_and_retries = '{0}/{1}/{2}/{3}/{4}'.format(self.act,
-                                                               self.fe,
-                                                               self.be,
-                                                               self.srv,
-                                                               self.retries)
+        connections_and_retries = '{0}/{1}/{2}/{3}/{4}'.format(
+            self.act,
+            self.fe,
+            self.be,
+            self.srv,
+            self.retries,
+        )
         queues = '{0}/{1}'.format(self.queue_server, self.queue_backend)
 
         log_line = LINE.format(
@@ -115,8 +123,10 @@ class LogLineTest(LogLineBaseTest):
         self.assertEqual(self.queue_server, log_line.queue_server)
         self.assertEqual(self.queue_backend, log_line.queue_backend)
 
-        self.assertEqual(self.headers.strip(),
-                         log_line.captured_request_headers)
+        self.assertEqual(
+            self.headers.strip(),
+            log_line.captured_request_headers,
+        )
         self.assertEqual(None, log_line.captured_response_headers)
 
         self.assertEqual(self.http_request, log_line.raw_http_request)
@@ -228,7 +238,7 @@ class LogLineTest(LogLineBaseTest):
         self.assertTrue(log_line.valid)
 
     def test_unparseable_http_request(self):
-        self.http_request = 'XXX'
+        self.http_request = 'something'
 
         raw_line = self._build_test_string()
         log_line = Line(raw_line)
