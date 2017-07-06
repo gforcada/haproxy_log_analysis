@@ -18,16 +18,30 @@ import re
 # The following regular expression takes care of finding it.
 # With it, this syslog slug can be removed to make processing regular
 # haproxy log lines possible.
+# Note though, that some systems (at least NixOS) use a different format,
+# see below after this regex.
+# Due to that there are three regexes to take care of it:
+# - two to handle the different date format
+# - one to handle the host and process
 SYSLOG_REGEX = re.compile(
     # Dec  9
     r'\A\w+\s+\d+\s+'
     # 13:01:26
-    r'\d+:\d+:\d+\s+'
+    r'\d+:\d+:\d+\s+',
+)
+SYSLOG_NIXOS_REGEX = re.compile(
+    # 2017-05-15
+    r'\A(\d+-){2}\d+'
+    # T23:45:55
+    r'T(\d+:){2}\d+'
+    # +02:00
+    r'\+\d+:\d+\s+',
+)
+SYSLOG_HOST_AND_PROCESS_REGEX = re.compile(
     # localhost haproxy[28029]:
     # note that can be either localhost or an IP or a hostname
     # and can also contain a dot in it
     r'(\w+|(\d+\.){3}\d+|[.a-zA-Z0-9_-]+)\s+\w+\[\d+\]:\s+',
-
 )
 
 HAPROXY_LINE_REGEX = re.compile(
@@ -173,6 +187,8 @@ class Line(object):
     def _parse_line(self, line):
         # remove syslog slug if found
         line = SYSLOG_REGEX.sub('', line)
+        line = SYSLOG_NIXOS_REGEX.sub('', line)
+        line = SYSLOG_HOST_AND_PROCESS_REGEX.sub('', line)
         matches = HAPROXY_LINE_REGEX.match(line)
         if matches is None:
             return False

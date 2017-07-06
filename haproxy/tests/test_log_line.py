@@ -254,3 +254,12 @@ class LogLineTest(LogLineBaseTest):
         log_line = Line(raw_line)
 
         self.assertTrue(log_line.valid)
+
+    def test_nixos_syslog(self):
+        """Check that the NixOS timestamp at the beginning can also be parsed
+        """
+        self.syslog_date = '2017-07-06T14:29:39+02:00'
+        raw_line = self._build_test_string()
+        log_line = Line(raw_line)
+
+        self.assertTrue(log_line.valid)
