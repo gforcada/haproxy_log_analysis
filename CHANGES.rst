@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+2.2 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 2.1 (2017-07-06)
 ----------------
 - Enforce QA checks (flake8) on code.
