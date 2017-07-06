@@ -3,7 +3,7 @@ include *.cfg
 include .coveragerc
 include .travis.yml
 include LICENSE
-include requirements.txt
+include *.txt
 exclude pyvenv.cfg
 recursive-include docs *.py
 recursive-include docs *.rst

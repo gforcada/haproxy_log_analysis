@@ -4,10 +4,11 @@ python:
   - "3.5"
 install:
   - pip install -r requirements.txt
-  - pip install zc.buildout
+  - pip install -r requirements-dev.txt
   - buildout -c qa.cfg
 script:
   - bin/code-analysis
+  - flake8 *.py haproxy/*.py haproxy/*/*.py
   - nosetests --with-coverage --cover-package=haproxy
 after_success:
   - pip install -q coveralls
