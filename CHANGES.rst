@@ -41,7 +41,7 @@ CHANGES
 
 2.0b0 (2016-04-18)
 ------------------
-- Check the divisor before doing a divison to not get ``ZeroDivisionError`` exceptions.
+- Check the divisor before doing a division to not get ``ZeroDivisionError`` exceptions.
   [gforcada]
 
 2.0a0 (2016-03-29)
