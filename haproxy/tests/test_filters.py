@@ -37,6 +37,25 @@ class FiltersTest(LogLineBaseTest):
 
         self.assertEqual(results, [True, False, True, ])
 
+    def test_filter_host(self):
+        """Check that filter_host filter works as expected."""
+        filter_func = filters.filter_host('myhost')
+        method = 'GET'
+        protocol = 'HTTP/1.1'
+        path = '/'
+
+        hosts = ('myhost', 'yourhost', 'myhost2', )
+        results = []
+        for host in hosts:
+            self.headers = ' {{|{0}}} '.format(host)
+            self.http_request = '{0} {1} {2}'.format(method, path, protocol)
+            raw_line = self._build_test_string()
+            log_line = Line(raw_line)
+
+            results.append(filter_func(log_line))
+
+        self.assertEqual(results, [True, False, False, ])
+
     def test_filter_path(self):
         """Check that filter_path filter works as expected."""
         filter_func = filters.filter_path('/image')

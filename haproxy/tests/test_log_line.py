@@ -43,7 +43,7 @@ class LogLineBaseTest(unittest.TestCase):
 
         self.queue_server = 2
         self.queue_backend = 67
-        self.headers = ' {77.24.148.74}'
+        self.headers = ' {77.24.148.74|myhost}'
         self.http_request = 'GET /path/to/image HTTP/1.1'
 
     def _build_test_string(self):
@@ -128,6 +128,9 @@ class LogLineTest(LogLineBaseTest):
             log_line.captured_request_headers,
         )
         self.assertEqual(None, log_line.captured_response_headers)
+
+        self.assertEqual(self.headers.strip()[1:-1].split('|')[1],
+                         log_line.get_request_header(1))
 
         self.assertEqual(self.http_request, log_line.raw_http_request)
 

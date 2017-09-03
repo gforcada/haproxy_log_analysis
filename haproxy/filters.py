@@ -38,6 +38,19 @@ def filter_ip_range(ip_range):
 
     return filter_func
 
+def filter_host(host):
+    """Filter :class:`.Line` objects by their request http host.
+
+    :param host: http host header.
+    :type host: string
+    :returns: a function that filters by the provided host.
+    :rtype: function
+    """
+    def filter_func(log_line):
+        return log_line.get_request_header(1) == host
+
+    return filter_func
+
 
 def filter_path(path):
     """Filter :class:`.Line` objects by their request path.

@@ -163,7 +163,7 @@ class Log(object):
 
         .. note::
           To enable this command requests need to provide a header with the
-          forwarded IP (usually X-Forwarded-For) and be it the only header
+          forwarded IP (usually X-Forwarded-For) and be it the first header
           being captured.
         """
         ip_counter = defaultdict(int)
@@ -184,6 +184,33 @@ class Log(object):
             self.cmd_ip_counter(),
             reverse=True,
         )
+
+    def cmd_http_hosts_counter(self):
+        """Reports a breakdown of how many requests have been made per http_host header.
+
+        .. note::
+          To enable this command requests need to provide the http host as 
+          the second header being captured.
+        """
+        host_counter = defaultdict(int)
+        for line in self._valid_lines:
+            host = line.get_request_header(1)
+            if host is not None:
+                host_counter[host] += 1
+        return host_counter
+
+    def cmd_top_http_hosts(self):
+        """Returns the top most frequent http hosts.
+
+        .. note::
+          See :meth:`.Log._sort_and_trim` for its current
+          limitations.
+        """
+        return self._sort_and_trim(
+            self.cmd_http_hosts_counter(),
+            reverse=True
+        )
+
 
     def cmd_status_codes_counter(self):
         """Generate statistics about HTTP status codes. 404, 500 and so on.

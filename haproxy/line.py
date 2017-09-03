@@ -180,8 +180,17 @@ class Line(object):
 
     def get_ip(self):
         """Returns the IP provided on the log line."""
+        ip = self.get_request_header()
+        if ip:
+            return ip
+        return self.client_ip
+
+    def get_request_header(self, pos = 0):
+        """Returns the 'pos' captured request header provided on the log line."""
         if self.captured_request_headers is not None:
-            return self.captured_request_headers[1:-1]
+            headers = self.captured_request_headers[1:-1].split('|')
+            if len(headers) > pos and headers[pos]:
+                return headers[pos]
         return None
 
     def _parse_line(self, line):

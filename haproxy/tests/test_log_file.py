@@ -94,11 +94,23 @@ class LogFileTest(unittest.TestCase):
         )
         ip_counter = log_file.cmd_ip_counter()
 
-        self.assertEqual(len(ip_counter), 4)
+        self.assertEqual(len(ip_counter), 5)
+        self.assertEqual(ip_counter['127.0.0.1'], 1)
         self.assertEqual(ip_counter['123.123.123.123'], 4)
         self.assertEqual(ip_counter['123.123.124.124'], 2)
         self.assertEqual(ip_counter['123.123.124.123'], 1)
         self.assertEqual(ip_counter['123.123.123.124'], 1)
+
+    def test_cmd_http_hosts_counter(self):
+        """Check that the http hosts counter command reports as expected."""
+        log_file = Log(
+            logfile='haproxy/tests/files/small.log',
+        )
+        hosts_counter = log_file.cmd_http_hosts_counter()
+
+        self.assertEqual(len(hosts_counter), 2)
+        self.assertEqual(hosts_counter['myhost'], 1)
+        self.assertEqual(hosts_counter['myhost'], 1)
 
     def test_cmd_status_codes(self):
         """Check that the status codes command reports as expected."""
@@ -252,6 +264,44 @@ class LogFileTest(unittest.TestCase):
                     break
 
         self.assertEqual(other_ips, [])
+
+    def test_cmd_top_http_hosts(self):
+        """Check that the top http hosts command reports as expected."""
+        log_file = Log(
+            logfile='haproxy/tests/files/top_ips.log',
+        )
+        top_hosts = log_file.cmd_top_http_hosts()
+
+        self.assertEqual(len(top_hosts), 10)
+        self.assertEqual(top_hosts[0], ('myhost', 5))
+        self.assertEqual(top_hosts[1], ('myhost2', 3))
+
+        # as the 3rd and 4th have the same repetitions their order is unknown
+        self.assertEqual(top_hosts[2][1], 3)
+        self.assertEqual(top_hosts[3][1], 2)
+        self.assertTrue(top_hosts[2][0] in ('myhost', 'myhost6'))
+        self.assertTrue(top_hosts[3][0] in ('myhost2', 'myhost3'))
+
+        # the same as above for all the others
+        other_hosts = [
+            'myhost4',
+            'myhost5',
+            'myhost7',
+            'myhost8',
+            'myhost9',
+            'myhost10',
+        ]
+        for host_info in top_hosts[4:]:
+            self.assertEqual(host_info[1], 1)
+            self.assertTrue(host_info[0] in other_hosts)
+
+            # remove the other_ips to ensure all ips are there
+            for position, current in enumerate(other_hosts):
+                if current == host_info[0]:
+                    del other_hosts[position]
+                    break
+
+        self.assertEqual(other_hosts, [])
 
     def test_cmd_top_request_paths(self):
         """Check that the top request paths command reports as expected."""
