@@ -13,6 +13,7 @@ def filter_ip(ip):
     :returns: a function that filters by the provided IP.
     :rtype: function
     """
+
     def filter_func(log_line):
         return log_line.get_ip() == ip
 
@@ -31,6 +32,7 @@ def filter_ip_range(ip_range):
     :returns: a function that filters by the provided IP range.
     :rtype: function
     """
+
     def filter_func(log_line):
         ip = log_line.get_ip()
         if ip:
@@ -47,6 +49,7 @@ def filter_path(path):
     :returns: a function that filters by the provided path.
     :rtype: function
     """
+
     def filter_func(log_line):
         return path in log_line.http_request_path
 
@@ -62,6 +65,7 @@ def filter_ssl(ignore=True):
     :returns: a function that filters SSL log lines.
     :rtype: function
     """
+
     def filter_func(log_line):
         return log_line.is_https()
 
@@ -78,6 +82,7 @@ def filter_slow_requests(slowness):
     :returns: a function that filters by the server response time.
     :rtype: function
     """
+
     def filter_func(log_line):
         slowness_int = int(slowness)
         return slowness_int <= log_line.time_wait_response
@@ -96,6 +101,7 @@ def filter_wait_on_queues(max_waiting):
     :returns: a function that filters by HAProxy queueing time.
     :rtype: function
     """
+
     def filter_func(log_line):
         waiting = int(max_waiting)
         return waiting >= log_line.time_wait_queues
@@ -153,6 +159,7 @@ def filter_status_code(http_status):
     :returns: a function that filters by HTTP status code.
     :rtype: function
     """
+
     def filter_func(log_line):
         return log_line.status_code == http_status
 
@@ -169,6 +176,7 @@ def filter_status_code_family(family_number):
     :returns: a function that filters by HTTP status code family.
     :rtype: function
     """
+
     def filter_func(log_line):
         return log_line.status_code.startswith(family_number)
 
@@ -184,6 +192,7 @@ def filter_http_method(http_method):
     :returns: a function that filters by the given HTTP method.
     :rtype: function
     """
+
     def filter_func(log_line):
         return log_line.http_request_method == http_method
 
@@ -199,6 +208,7 @@ def filter_backend(backend_name):
     :returns: a function that filters by the given backend name.
     :rtype: function
     """
+
     def filter_func(log_line):
         return log_line.backend_name == backend_name
 
@@ -214,6 +224,7 @@ def filter_frontend(frontend_name):
     :returns: a function that filters by the given frontend name.
     :rtype: function
     """
+
     def filter_func(log_line):
         return log_line.frontend_name == frontend_name
 
@@ -229,6 +240,7 @@ def filter_server(server_name):
     :returns: a function that filters by the given server name.
     :rtype: function
     """
+
     def filter_func(log_line):
         return log_line.server_name == server_name
 
@@ -266,9 +278,7 @@ def _date_str_to_datetime(date):
     matches = START_REGEX.match(date)
 
     raw_date_input = '{0}/{1}/{2}'.format(
-        matches.group('day'),
-        matches.group('month'),
-        matches.group('year'),
+        matches.group('day'), matches.group('month'), matches.group('year')
     )
     date_format = '%d/%b/%Y'
     if matches.group('hour'):

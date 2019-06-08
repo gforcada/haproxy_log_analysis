@@ -10,7 +10,6 @@ LINE = '{0} [{1}] {2} {3} {4} - - ---- {5} {6} {7} "{8}"'
 
 
 class HaproxyLogLineRegexTest(unittest.TestCase):
-
     def setUp(self):
         self.client_ip_and_port = '127.0.0.1:39759'
         self.accept_date = '09/Dec/2013:12:59:46.633'
@@ -66,9 +65,7 @@ class HaproxyLogLineRegexTest(unittest.TestCase):
         backend_name = 'Another1'
         server_name = 'Cloud9'
         self.server_names = '{0} {1}/{2}'.format(
-            frontend_name,
-            backend_name,
-            server_name,
+            frontend_name, backend_name, server_name
         )
 
         log_line = self._build_test_string()
@@ -152,7 +149,7 @@ class HaproxyLogLineRegexTest(unittest.TestCase):
         srv = '12'
         retries = '14'
         self.connections_and_retries = '{0}/{1}/{2}/{3}/{4}'.format(
-            act, fe, be, srv, retries,
+            act, fe, be, srv, retries
         )
 
         log_line = self._build_test_string()
@@ -171,7 +168,7 @@ class HaproxyLogLineRegexTest(unittest.TestCase):
         srv = '412'
         retries = '+314'
         self.connections_and_retries = '{0}/{1}/{2}/{3}/{4}'.format(
-            act, fe, be, srv, retries,
+            act, fe, be, srv, retries
         )
 
         log_line = self._build_test_string()
@@ -236,18 +233,13 @@ class HaproxyLogLineRegexTest(unittest.TestCase):
 
 
 class HttpRequestRegexTest(unittest.TestCase):
-
     def setUp(self):
         self.method = 'GET'
         self.path = '/path/to/image'
         self.protocol = 'HTTP/1.1'
 
     def _build_test_request(self):
-        log_line = '{0} {1} {2}'.format(
-            self.method,
-            self.path,
-            self.protocol,
-        )
+        log_line = '{0} {1} {2}'.format(self.method, self.path, self.protocol)
         return log_line
 
     def test_http_request_regex(self):

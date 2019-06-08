@@ -14,16 +14,11 @@ except ImportError:
 
 
 class Log(object):
-
     def __init__(self, logfile=None):
         self.logfile = logfile
         self._pickle_file = '{0}.pickle'.format(logfile)
         # only this attributes will be pickled
-        self._pickle_attributes = [
-            '_valid_lines',
-            '_invalid_lines',
-            'total_lines',
-        ]
+        self._pickle_attributes = ['_valid_lines', '_invalid_lines', 'total_lines']
 
         self.total_lines = 0
 
@@ -173,10 +168,7 @@ class Log(object):
           See :meth:`.Log._sort_and_trim` for its current
           limitations.
         """
-        return self._sort_and_trim(
-            self.cmd_ip_counter(),
-            reverse=True,
-        )
+        return self._sort_and_trim(self.cmd_ip_counter(), reverse=True)
 
     def cmd_status_codes_counter(self):
         """Generate statistics about HTTP status codes. 404, 500 and so on.
@@ -200,10 +192,7 @@ class Log(object):
           See :meth:`.Log._sort_and_trim` for its current
           limitations.
         """
-        return self._sort_and_trim(
-            self.cmd_request_path_counter(),
-            reverse=True,
-        )
+        return self._sort_and_trim(self.cmd_request_path_counter(), reverse=True)
 
     def cmd_slow_requests(self):
         """List all requests that took a certain amount of time to be
@@ -359,8 +348,7 @@ class Log(object):
 
         def format_and_append(append_to, date, counter):
             seconds_and_micro = timedelta(
-                seconds=date.second,
-                microseconds=date.microsecond,
+                seconds=date.second, microseconds=date.microsecond
             )
             minute_formatted = date - seconds_and_micro
             append_to.append((minute_formatted, counter))
@@ -368,25 +356,19 @@ class Log(object):
         # note that _valid_lines is kept sorted by date
         for line in self._valid_lines:
             line_date = line.accept_date
-            if line_date - current_minute < one_minute and \
-                    line_date.minute == current_minute.minute:
+            if (
+                line_date - current_minute < one_minute
+                and line_date.minute == current_minute.minute
+            ):
                 current_minute_counter += 1
 
             else:
-                format_and_append(
-                    requests,
-                    current_minute,
-                    current_minute_counter,
-                )
+                format_and_append(requests, current_minute, current_minute_counter)
                 current_minute_counter = 1
                 current_minute = line_date
 
         if current_minute_counter > 0:
-            format_and_append(
-                requests,
-                current_minute,
-                current_minute_counter,
-            )
+            format_and_append(requests, current_minute, current_minute_counter)
 
         return requests
 
@@ -406,10 +388,7 @@ class Log(object):
         This method sorts all valid log lines by their acceptance date,
         providing the real order in which connections where made to the server.
         """
-        self._valid_lines = sorted(
-            self._valid_lines,
-            key=lambda line: line.accept_date,
-        )
+        self._valid_lines = sorted(self._valid_lines, key=lambda line: line.accept_date)
 
     @staticmethod
     def _sort_and_trim(data, reverse=False):
@@ -423,8 +402,6 @@ class Log(object):
         threshold = 10
         data_list = data.items()
         data_list = sorted(
-            data_list,
-            key=lambda data_info: data_info[1],
-            reverse=reverse,
+            data_list, key=lambda data_info: data_info[1], reverse=reverse
         )
         return data_list[:threshold]

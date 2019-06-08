@@ -10,7 +10,6 @@ import unittest
 
 
 class LogFileTest(unittest.TestCase):
-
     def tearDown(self):
         """Be sure to remove all pickle files so to not keep stale files
         around.
@@ -26,7 +25,7 @@ class LogFileTest(unittest.TestCase):
             'start': None,
             'delta': None,
             'log': log_path,
-            'commands': ['counter', ],
+            'commands': ['counter'],
             'negate_filter': None,
             'filters': None,
             'list_commands': False,
@@ -38,27 +37,21 @@ class LogFileTest(unittest.TestCase):
 
     def test_parsed(self):
         """Check that log files are parsed."""
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
         self.assertTrue(log_file.cmd_counter() > 0)
 
     def test_total_lines(self):
         """Check that even if some lines are not valid, 'total_lines' counts
         all of them.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/2_ok_1_invalid.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/2_ok_1_invalid.log')
         self.assertEqual(log_file.total_lines, 3)
 
     def test_valid_and_invalid_lines(self):
         """Check that if some log lines can not be parsed both numbers are
         correctly reported.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/2_ok_1_invalid.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/2_ok_1_invalid.log')
         self.assertEqual(log_file.cmd_counter(), 2)
         self.assertEqual(log_file.cmd_counter_invalid(), 1)
 
@@ -66,9 +59,7 @@ class LogFileTest(unittest.TestCase):
         """Check that after parsing a log file, the valid log lines are kept
         sorted to ease further work on them.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
 
         previous = log_file._valid_lines[0]
         previous_date = previous.accept_date
@@ -77,9 +68,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_http_methods(self):
         """Check that the http methods command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
         http_methods = log_file.cmd_http_methods()
 
         self.assertEqual(len(http_methods), 3)
@@ -89,9 +78,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_ip_counter(self):
         """Check that the ip counter command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
         ip_counter = log_file.cmd_ip_counter()
 
         self.assertEqual(len(ip_counter), 5)
@@ -103,9 +90,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_status_codes(self):
         """Check that the status codes command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
         status_codes = log_file.cmd_status_codes_counter()
 
         self.assertEqual(len(status_codes), 3)
@@ -115,9 +100,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_request_path_counter(self):
         """Check that the request path counter command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
         path_counter = log_file.cmd_request_path_counter()
 
         self.assertEqual(len(path_counter), 5)
@@ -129,33 +112,24 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_slow_requests(self):
         """Check that the slow requests command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
         slow_requests = log_file.cmd_slow_requests()
 
         self.assertEqual(len(slow_requests), 5)
         slow_requests.sort()  # sort them as the log analyzer sorts by dates
-        self.assertEqual(
-            slow_requests,
-            [1293, 2936, 2942, 20095, 29408, ],
-        )
+        self.assertEqual(slow_requests, [1293, 2936, 2942, 20095, 29408])
 
     def test_cmd_counter_slow_requests(self):
         """Check that the slow requests counter command reports as expected.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
         slow_requests = log_file.cmd_counter_slow_requests()
 
         self.assertEqual(slow_requests, 5)
 
     def test_cmd_server_load(self):
         """Check that the server load counter command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/small.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/small.log')
         servers = log_file.cmd_server_load()
 
         self.assertEqual(len(servers), 3)
@@ -165,9 +139,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_queue_peaks(self):
         """Check that the queue peaks command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/queue.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/queue.log')
         peaks = log_file.cmd_queue_peaks()
 
         self.assertEqual(len(peaks), 4)
@@ -195,9 +167,7 @@ class LogFileTest(unittest.TestCase):
         """Check that the queue peaks command reports as expected when the
         last log request did not have any queue.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/queue_2.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/queue_2.log')
         peaks = log_file.cmd_queue_peaks()
 
         self.assertEqual(len(peaks), 3)
@@ -218,9 +188,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_top_ips(self):
         """Check that the top ips command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/top_ips.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/top_ips.log')
         top_ips = log_file.cmd_top_ips()
 
         self.assertEqual(len(top_ips), 10)
@@ -256,9 +224,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_top_request_paths(self):
         """Check that the top request paths command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/top_paths.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/top_paths.log')
         top_paths = log_file.cmd_top_request_paths()
 
         self.assertEqual(len(top_paths), 10)
@@ -269,22 +235,12 @@ class LogFileTest(unittest.TestCase):
         self.assertEqual(top_paths[2][1], 3)
         self.assertEqual(top_paths[3][1], 3)
         self.assertEqual(top_paths[4][1], 3)
-        self.assertTrue(top_paths[2][0] in ('/12', '/15', '/11', ))
-        self.assertTrue(top_paths[3][0] in ('/12', '/15', '/11', ))
-        self.assertTrue(top_paths[4][0] in ('/12', '/15', '/11', ))
+        self.assertTrue(top_paths[2][0] in ('/12', '/15', '/11'))
+        self.assertTrue(top_paths[3][0] in ('/12', '/15', '/11'))
+        self.assertTrue(top_paths[4][0] in ('/12', '/15', '/11'))
 
         # the same as above for all the others
-        other_paths = [
-            '/1',
-            '/2',
-            '/3',
-            '/4',
-            '/5',
-            '/6',
-            '/7',
-            '/8',
-            '/9',
-        ]
+        other_paths = ['/1', '/2', '/3', '/4', '/5', '/6', '/7', '/8', '/9']
         for path_info in top_paths[5:]:
             self.assertEqual(path_info[1], 2)
             self.assertTrue(path_info[0] in other_paths)
@@ -299,9 +255,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_connection_type(self):
         """Check that the connection type command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/connection.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/connection.log')
         ssl, non_ssl = log_file.cmd_connection_type()
 
         self.assertEqual(ssl, 7)
@@ -309,41 +263,22 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_requests_per_minute(self):
         """Check that the requests per minute command reports as expected."""
-        log_file = Log(
-            logfile='haproxy/tests/files/requests_per_minute.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/requests_per_minute.log')
         requests = log_file.cmd_requests_per_minute()
 
         self.assertEqual(len(requests), 5)
 
-        self.assertEqual(
-            requests[0],
-            (datetime(2013, 12, 11, 11, 2), 8),
-        )
-        self.assertEqual(
-            requests[1],
-            (datetime(2013, 12, 11, 11, 3), 3),
-        )
-        self.assertEqual(
-            requests[2],
-            (datetime(2013, 12, 11, 11, 13), 5),
-        )
-        self.assertEqual(
-            requests[3],
-            (datetime(2013, 12, 11, 11, 52), 7),
-        )
-        self.assertEqual(
-            requests[4],
-            (datetime(2013, 12, 11, 12, 2), 9),
-        )
+        self.assertEqual(requests[0], (datetime(2013, 12, 11, 11, 2), 8))
+        self.assertEqual(requests[1], (datetime(2013, 12, 11, 11, 3), 3))
+        self.assertEqual(requests[2], (datetime(2013, 12, 11, 11, 13), 5))
+        self.assertEqual(requests[3], (datetime(2013, 12, 11, 11, 52), 7))
+        self.assertEqual(requests[4], (datetime(2013, 12, 11, 12, 2), 9))
 
     def test_cmd_requests_per_minute_empty(self):
         """Check that the requests per minute command reports nothing if
         there are no valid lines for whichever reason.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/empty.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/empty.log')
         requests = log_file.cmd_requests_per_minute()
 
         self.assertEqual(None, requests)
@@ -351,9 +286,7 @@ class LogFileTest(unittest.TestCase):
     def test_negate_filter(self):
         """Check that reversing a filter output works as expected."""
         filter_func = filters.filter_ssl()
-        log_file = Log(
-            logfile='haproxy/tests/files/connection.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/connection.log')
 
         # total number of log lines
         self.assertEqual(log_file.cmd_counter(), 12)
@@ -368,25 +301,20 @@ class LogFileTest(unittest.TestCase):
 
         # we did get all lines?
         self.assertEqual(
-            log_file.cmd_counter(),
-            only_ssl.cmd_counter() + non_ssl.cmd_counter(),
+            log_file.cmd_counter(), only_ssl.cmd_counter() + non_ssl.cmd_counter()
         )
 
     def test_cmd_print_empty(self):
         """Check that the print command prints an empty string if the log file
         is empty.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/empty.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/empty.log')
         data = log_file.cmd_print()
         self.assertEqual('', data)
 
     def test_cmd_print(self):
         """Check that the print command prints the valid lines."""
-        log_file = Log(
-            logfile='haproxy/tests/files/2_ok_1_invalid.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/2_ok_1_invalid.log')
         data = log_file.cmd_print()
         self.assertNotEqual('', data)
 
@@ -395,9 +323,7 @@ class LogFileTest(unittest.TestCase):
 
     def test_cmd_average_response_time(self):
         """Check that the average response time returns the expected output."""
-        log_file = Log(
-            logfile='haproxy/tests/files/average_response.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/average_response.log')
         data = log_file.cmd_average_response_time()
         self.assertEqual(data, 105)
 
@@ -405,9 +331,7 @@ class LogFileTest(unittest.TestCase):
         """Check that the average response time returns the expected output
         when there are aborted connections.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/average_response_aborted.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/average_response_aborted.log')
         data = log_file.cmd_average_response_time()
         self.assertEqual(data, 110)
 
@@ -415,9 +339,7 @@ class LogFileTest(unittest.TestCase):
         """Check that the average response time returns the expected output
         when there are connections that did not take any millisecond to reply.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/average_response_no_wait.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/average_response_no_wait.log')
         data = log_file.cmd_average_response_time()
         self.assertEqual(data, 74)
 
@@ -425,9 +347,7 @@ class LogFileTest(unittest.TestCase):
         """Check that the average response time does not break if no log lines
         are logged.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/empty.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/empty.log')
         data = log_file.cmd_average_response_time()
         self.assertEqual(data, 0)
 
@@ -435,9 +355,7 @@ class LogFileTest(unittest.TestCase):
         """Check that the average time waiting on queues returns the expected
         output.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/average_waiting.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/average_waiting.log')
         data = log_file.cmd_average_waiting_time()
         self.assertEqual(data, 105)
 
@@ -445,9 +363,7 @@ class LogFileTest(unittest.TestCase):
         """Check that the average time waiting on queues does not break if no
         log lines are logged.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/empty.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/empty.log')
         data = log_file.cmd_average_waiting_time()
         self.assertEqual(data, 0)
 
@@ -455,9 +371,7 @@ class LogFileTest(unittest.TestCase):
         """Check that the average time waiting on queues returns the expected
         output when there are aborted connections.
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/average_waiting_aborted.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/average_waiting_aborted.log')
         data = log_file.cmd_average_waiting_time()
         self.assertEqual(data, 110)
 
@@ -466,9 +380,7 @@ class LogFileTest(unittest.TestCase):
         output when there are requests that did not wait at all (i.e.
         time_wait_queues is 0).
         """
-        log_file = Log(
-            logfile='haproxy/tests/files/average_waiting_no_wait.log',
-        )
+        log_file = Log(logfile='haproxy/tests/files/average_waiting_no_wait.log')
         data = log_file.cmd_average_waiting_time()
         self.assertEqual(data, 52.5)
 
