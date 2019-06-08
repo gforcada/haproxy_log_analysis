@@ -1,15 +1,26 @@
 language: python
+sudo: false
+env:
+  - QA="false"
 python:
-  - "2.7"
-  - "3.6"
+  - 2.7
+  - 3.6
+matrix:
+  include:
+    - python: "3.7"
+      dist: xenial
+    - python: "3.7"
+      dist: xenial
+      env:
+        - QA="true"
+cache: pip
 install:
-  - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
-  - buildout -c qa.cfg
 script:
-  - bin/code-analysis
-  - flake8 *.py haproxy/*.py haproxy/*/*.py
-  - nosetests --with-coverage --cover-package=haproxy
+  - if [ "$QA" == "true" ]; then isort -c -rc haproxy *.py ; fi
+  - if [ "$QA" == "true" ]; then black --check haproxy *.py ; fi
+  - if [ "$QA" == "true" ]; then flake8 haproxy *.py ; fi
+  - if [ "$QA" == "true" ]; then echo 'skip tests' ; else pytest --cov=haproxy --cov-report=term-missing --cov-report html:coverage haproxy/tests ; fi
 after_success:
   - pip install -q coveralls
   - coveralls
