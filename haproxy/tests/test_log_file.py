@@ -94,7 +94,8 @@ class LogFileTest(unittest.TestCase):
         )
         ip_counter = log_file.cmd_ip_counter()
 
-        self.assertEqual(len(ip_counter), 4)
+        self.assertEqual(len(ip_counter), 5)
+        self.assertEqual(ip_counter['127.0.0.1'], 1)
         self.assertEqual(ip_counter['123.123.123.123'], 4)
         self.assertEqual(ip_counter['123.123.124.124'], 2)
         self.assertEqual(ip_counter['123.123.124.123'], 1)
