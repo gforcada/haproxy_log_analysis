@@ -5,14 +5,14 @@ from setuptools import setup
 
 version = '2.2.dev0'
 
-description = 'Haproxy log analyzer that tries to gives an insight of ' \
-              'what\'s going on'
+description = (
+    'Haproxy log analyzer that tries to gives an insight of ' 'what\'s going on'
+)
 
 long_description = """{0}
 {1}
 """.format(
-    open('README.rst').read(),
-    open('CHANGES.rst').read(),
+    open('README.rst').read(), open('CHANGES.rst').read()
 )
 
 setup(
@@ -28,28 +28,21 @@ setup(
         'Intended Audience :: System Administrators',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Internet :: Log Analysis',
     ],
     keywords='haproxy log analysis report',
     author='Gil Forcada',
-    author_email='gforcada@gnome.org',
+    author_email='gil.gnome@gmail.com',
     url='https://github.com/gforcada/haproxy_log_analysis',
     license='GPL v3',
-    packages=find_packages(exclude=['ez_setup']),
+    packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=[
-        'setuptools',
-    ],
-    extras_require={
-        'test': [
-            'nose',
-        ],
-    },
+    install_requires=['setuptools'],
+    extras_require={'test': ['pytest']},
     entry_points={
-        'console_scripts': [
-            'haproxy_log_analysis = haproxy.main:console_script',
-        ],
+        'console_scripts': ['haproxy_log_analysis = haproxy.main:console_script']
     },
     test_suite='haproxy.tests',
 )

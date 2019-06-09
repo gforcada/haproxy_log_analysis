@@ -27,7 +27,7 @@ SYSLOG_REGEX = re.compile(
     # Dec  9
     r'\A\w+\s+\d+\s+'
     # 13:01:26
-    r'\d+:\d+:\d+\s+',
+    r'\d+:\d+:\d+\s+'
 )
 SYSLOG_NIXOS_REGEX = re.compile(
     # 2017-05-15
@@ -35,13 +35,13 @@ SYSLOG_NIXOS_REGEX = re.compile(
     # T23:45:55
     r'T(\d+:){2}\d+'
     # +02:00
-    r'\+\d+:\d+\s+',
+    r'\+\d+:\d+\s+'
 )
 SYSLOG_HOST_AND_PROCESS_REGEX = re.compile(
     # localhost haproxy[28029]:
     # note that can be either localhost or an IP or a hostname
     # and can also contain a dot in it
-    r'(\w+|(\d+\.){3}\d+|[.a-zA-Z0-9_-]+)\s+\w+\[\d+\]:\s+',
+    r'(\w+|(\d+\.){3}\d+|[.a-zA-Z0-9_-]+)\s+\w+\[\d+\]:\s+'
 )
 
 HAPROXY_LINE_REGEX = re.compile(
@@ -68,13 +68,13 @@ HAPROXY_LINE_REGEX = re.compile(
     r'(?P<headers>{.*})\s+|)'
     # "GET /path/to/image HTTP/1.1"
     r'"(?P<http_request>.*)"'
-    r'\Z',  # end of line
+    r'\Z'  # end of line
 )
 
 HTTP_REQUEST_REGEX = re.compile(
     r'(?P<method>\w+)\s+'
     r'(?P<path>(/[`´\\<>/\w:,;\.#$!?=&@%_+\'\*^~|\(\)\[\]\{\}-]*)+)'
-    r'\s+(?P<protocol>\w+/\d\.\d)',
+    r'\s+(?P<protocol>\w+/\d\.\d)'
 )
 
 
@@ -82,6 +82,7 @@ class Line(object):
     """For a precise and more detailed description of every field see:
     http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
     """
+
     #: IP of the upstream server that made the connection to HAProxy.
     client_ip = None
     #: Port used by the upstream server that made the connection to HAProxy.
@@ -251,8 +252,4 @@ class Line(object):
         self.http_request_protocol = 'invalid'
 
         if self.raw_http_request != '<BADREQ>':
-            print(
-                'Could not process HTTP request {0}'.format(
-                    self.raw_http_request,
-                ),
-            )
+            print ('Could not process HTTP request {0}'.format(self.raw_http_request),)

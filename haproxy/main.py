@@ -20,68 +20,60 @@ def create_parser():
     desc = 'Analyze HAProxy log files and outputs statistics about it'
     parser = argparse.ArgumentParser(description=desc)
 
-    parser.add_argument(
-        '-l',
-        '--log',
-        help='HAProxy log file to analyze',
-    )
+    parser.add_argument('-l', '--log', help='HAProxy log file to analyze')
 
     parser.add_argument(
         '-s',
         '--start',
         help='Process log entries starting at this time, in HAProxy date '
-             'format (e.g. 11/Dec/2013 or 11/Dec/2013:19:31:41). '
-             'At least provide the day/month/year. Values not specified will '
-             'use their base value (e.g. 00 for hour). Use in conjunction '
-             'with -d to limit the number of entries to process.',
+        'format (e.g. 11/Dec/2013 or 11/Dec/2013:19:31:41). '
+        'At least provide the day/month/year. Values not specified will '
+        'use their base value (e.g. 00 for hour). Use in conjunction '
+        'with -d to limit the number of entries to process.',
     )
 
     parser.add_argument(
         '-d',
         '--delta',
         help='Limit the number of entries to process. Express the time delta '
-             'as a number and a time unit, e.g.: 1s, 10m, 3h or 4d (for 1 '
-             'second, 10 minutes, 3 hours or 4 days). Use in conjunction with '
-             '-s to only analyze certain time delta. If no start time is '
-             'given, the time on the first line will be used instead.',
+        'as a number and a time unit, e.g.: 1s, 10m, 3h or 4d (for 1 '
+        'second, 10 minutes, 3 hours or 4 days). Use in conjunction with '
+        '-s to only analyze certain time delta. If no start time is '
+        'given, the time on the first line will be used instead.',
     )
 
     parser.add_argument(
         '-c',
         '--command',
         help='List of commands, comma separated, to run on the log file. See '
-             '--list-commands to get a full list of them.',
+        '--list-commands to get a full list of them.',
     )
 
     parser.add_argument(
         '-f',
         '--filter',
         help='List of filters to apply on the log file. Passed as comma '
-             'separated and parameters within square brackets, e.g '
-             'ip[192.168.1.1],ssl,path[/some/path]. See '
-             '--list-filters to get a full list of them.',
+        'separated and parameters within square brackets, e.g '
+        'ip[192.168.1.1],ssl,path[/some/path]. See '
+        '--list-filters to get a full list of them.',
     )
 
     parser.add_argument(
         '-n',
         '--negate-filter',
         help='Make filters passed with -f work the other way around, i.e. if '
-             'the ``ssl`` filter is passed instead of showing only ssl '
-             'requests it will show non-ssl traffic. If the ``ip`` filter is '
-             'used, then all but that ip passed to the filter will be used.',
+        'the ``ssl`` filter is passed instead of showing only ssl '
+        'requests it will show non-ssl traffic. If the ``ip`` filter is '
+        'used, then all but that ip passed to the filter will be used.',
         action='store_true',
     )
 
     parser.add_argument(
-        '--list-commands',
-        action='store_true',
-        help='Lists all commands available.',
+        '--list-commands', action='store_true', help='Lists all commands available.'
     )
 
     parser.add_argument(
-        '--list-filters',
-        action='store_true',
-        help='Lists all filters available.',
+        '--list-filters', action='store_true', help='Lists all filters available.'
     )
 
     return parser
@@ -150,8 +142,10 @@ def _parse_arg_commands(commands):
     available_commands = Log.commands()
     for cmd in input_commands:
         if cmd not in available_commands:
-            msg = 'command "{0}" is not available. Use --list-commands to ' \
-                  'get a list of all available commands.'
+            msg = (
+                'command "{0}" is not available. Use --list-commands to '
+                'get a list of all available commands.'
+            )
             raise ValueError(msg.format(cmd))
     return input_commands
 
@@ -166,15 +160,18 @@ def _parse_arg_filters(filters_arg):
 
         if filter_expression.endswith(']'):
             if '[' not in filter_expression:
-                msg = 'Error on filter "{0}". It is missing an opening ' \
-                      'square bracket.'
+                msg = (
+                    'Error on filter "{0}". It is missing an opening ' 'square bracket.'
+                )
                 raise ValueError(msg.format(filter_expression))
             filter_name, filter_arg = filter_expression.split('[')
             filter_arg = filter_arg[:-1]  # remove the closing square bracket
 
         if filter_name not in VALID_FILTERS:
-            msg = 'filter "{0}" is not available. Use --list-filters to ' \
-                  'get a list of all available filters.'
+            msg = (
+                'filter "{0}" is not available. Use --list-filters to '
+                'get a list of all available filters.'
+            )
             raise ValueError(msg.format(filter_name))
 
         return_data.append((filter_name, filter_arg))
@@ -203,7 +200,7 @@ def print_commands():
             description = re.sub(r'\n\s+', ' ', description)
             description = description.strip()
 
-        print('{0}: {1}\n'.format(cmd.__name__, description))
+        print ('{0}: {1}\n'.format(cmd.__name__, description))
 
 
 def print_filters():
@@ -215,7 +212,7 @@ def print_filters():
             description = re.sub(r'\n\s+', ' ', description)
             description.strip()
 
-        print('{0}: {1}\n'.format(filter_name, description))
+        print ('{0}: {1}\n'.format(filter_name, description))
 
 
 def show_help(data):
@@ -250,9 +247,7 @@ def main(args):
         return
 
     # create a Log instance and parse the log file
-    log_file = Log(
-        logfile=args['log'],
-    )
+    log_file = Log(logfile=args['log'])
 
     # apply the time frame filter
     if args['start'] or args['delta']:
@@ -267,20 +262,17 @@ def main(args):
         for filter_data in args['filters']:
             arg = filter_data[1] or ''
             filter_func = getattr(filters, 'filter_{0}'.format(filter_data[0]))
-            log_file = log_file.filter(
-                filter_func(arg),
-                reverse=args['negate_filter'],
-            )
+            log_file = log_file.filter(filter_func(arg), reverse=args['negate_filter'])
 
     # run all commands
     for command in args['commands']:
         string = 'command: {0}'.format(command)
-        print(string)
-        print('=' * len(string))
+        print (string)
+        print ('=' * len(string))
 
         cmd = getattr(log_file, 'cmd_{0}'.format(command))
         result = cmd()
-        print(result)
+        print (result)
 
     return log_file  # return the log_file object so that tests can inspect it
 
