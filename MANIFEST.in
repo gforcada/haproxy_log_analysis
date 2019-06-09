@@ -1,10 +1,11 @@
 include *.rst
-include *.cfg
 include .coveragerc
 include .travis.yml
 include LICENSE
 include *.txt
 exclude pyvenv.cfg
+exclude pyproject.toml
+exclude requirements-dev.in
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs Makefile
