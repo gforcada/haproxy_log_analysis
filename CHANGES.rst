@@ -4,8 +4,14 @@ CHANGES
 2.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix spelling.
+  [EdwardBetts]
 
+- Make ip_counter use client_ip per default.
+  [vixns]
+
+- Overhaul testing environment. Test on python 3.7 as well. Use black to format.
+  [gforcada]
 
 2.1 (2017-07-06)
 ----------------
