@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-2.2 (unreleased)
-----------------
+3.0.0 (2019-06-10)
+------------------
 
 - Fix spelling.
   [EdwardBetts]
