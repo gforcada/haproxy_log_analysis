@@ -4,8 +4,8 @@ CHANGES
 3.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Test against Python 3.8 as well.
+  [gforcada]
 
 3.0.0 (2019-06-10)
 ------------------
