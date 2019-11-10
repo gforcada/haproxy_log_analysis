@@ -252,4 +252,4 @@ class Line(object):
         self.http_request_protocol = 'invalid'
 
         if self.raw_http_request != '<BADREQ>':
-            print ('Could not process HTTP request {0}'.format(self.raw_http_request),)
+            print('Could not process HTTP request {0}'.format(self.raw_http_request),)
