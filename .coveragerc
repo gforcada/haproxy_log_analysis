@@ -2,8 +2,7 @@
 omit =
     */python?.?/*
     */site-packages/nose/*
-    */tests/*
 
 exclude_lines =
     def console_script()
-    except ImportError 
+    except ImportError
