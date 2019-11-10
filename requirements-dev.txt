@@ -25,24 +25,24 @@ flake8==3.7.9
 importlib-metadata==0.23  # via pluggy, pytest
 isort==4.3.21
 mccabe==0.6.1             # via flake8
-more-itertools==7.2.0     # via pytest, zipp
+more-itertools==5.0.0
 packaging==19.2           # via pytest
 pathspec==0.6.0           # via black
 pip-tools==4.2.0
 pluggy==0.13.0            # via pytest
 py==1.8.0                 # via pytest
 pycodestyle==2.5.0
-pydocstyle==4.0.1
+pydocstyle==3.0.0
 pyflakes==2.1.1
 pyparsing==2.4.4          # via packaging
 pytest-cov==2.8.1
-pytest==5.2.2
+pytest==4.6.6
 regex==2019.11.1          # via black
-six==1.13.0               # via packaging, pip-tools
+six==1.13.0               # via more-itertools, packaging, pip-tools, pydocstyle, pytest
 snowballstemmer==2.0.0    # via pydocstyle
 testfixtures==6.10.1      # via flake8-isort
 toml==0.10.0              # via black
-typed-ast==1.4.0          # via black
+typed-ast==1.4.0 ; python_version > "3.5"
 wcwidth==0.1.7            # via pytest
 zipp==0.6.0               # via importlib-metadata
 
