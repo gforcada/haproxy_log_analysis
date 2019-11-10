@@ -5,9 +5,7 @@ from setuptools import setup
 
 version = '3.0.1.dev0'
 
-description = (
-    'Haproxy log analyzer that tries to gives an insight of ' 'what\'s going on'
-)
+description = "Haproxy log analyzer that tries to gives an insight of what's going on"
 
 long_description = """{0}
 {1}
@@ -29,6 +27,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: Log Analysis',
     ],
     keywords='haproxy log analysis report',

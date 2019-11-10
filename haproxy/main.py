@@ -200,7 +200,7 @@ def print_commands():
             description = re.sub(r'\n\s+', ' ', description)
             description = description.strip()
 
-        print ('{0}: {1}\n'.format(cmd.__name__, description))
+        print('{0}: {1}\n'.format(cmd.__name__, description))
 
 
 def print_filters():
@@ -212,7 +212,7 @@ def print_filters():
             description = re.sub(r'\n\s+', ' ', description)
             description.strip()
 
-        print ('{0}: {1}\n'.format(filter_name, description))
+        print('{0}: {1}\n'.format(filter_name, description))
 
 
 def show_help(data):
@@ -267,12 +267,12 @@ def main(args):
     # run all commands
     for command in args['commands']:
         string = 'command: {0}'.format(command)
-        print (string)
-        print ('=' * len(string))
+        print(string)
+        print('=' * len(string))
 
         cmd = getattr(log_file, 'cmd_{0}'.format(command))
         result = cmd()
-        print (result)
+        print(result)
 
     return log_file  # return the log_file object so that tests can inspect it
 

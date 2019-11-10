@@ -5,12 +5,11 @@ env:
 python:
   - 2.7
   - 3.6
+  - 3.7
+  - 3.8
 matrix:
   include:
     - python: "3.7"
-      dist: xenial
-    - python: "3.7"
-      dist: xenial
       env:
         - QA="true"
 cache: pip

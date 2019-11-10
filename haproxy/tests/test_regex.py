@@ -356,7 +356,7 @@ class HttpRequestRegexTest(unittest.TestCase):
         self.assertEqual(matches.group('path'), self.path)
 
     def test_http_request_regex_with_single_quote_sign(self):
-        self.path = '/there\'s-one\'s-way-or-another\'s'
+        self.path = "/there's-one's-way-or-another's"
         line = self._build_test_request()
         matches = HTTP_REQUEST_REGEX.match(line)
 
