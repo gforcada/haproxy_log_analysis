@@ -125,17 +125,17 @@ def filter_time_frame(start, delta):
     delta_value = delta
     end_value = None
 
-    if start_value is not '':
+    if start_value != '':
         start_value = _date_str_to_datetime(start_value)
 
-    if delta_value is not '':
+    if delta_value != '':
         delta_value = _delta_str_to_timedelta(delta_value)
 
-    if start_value is not '' and delta_value is not '':
+    if start_value != '' and delta_value != '':
         end_value = start_value + delta_value
 
     def filter_func(log_line):
-        if start_value is '':
+        if start_value == '':
             return True
         elif start_value > log_line.accept_date:
             return False
