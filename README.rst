@@ -46,7 +46,7 @@ The current ``--help`` looks like this::
 
   usage: haproxy_log_analysis [-h] [-l LOG] [-s START] [-d DELTA] [-c COMMAND]
                               [-f FILTER] [-n] [--list-commands]
-                              [--list-filters]
+                              [--list-filters] [--json]
 
   Analyze HAProxy log files and outputs statistics about it
 
@@ -82,6 +82,7 @@ The current ``--help`` looks like this::
                           the filter will be used.
     --list-commands       Lists all commands available.
     --list-filters        Lists all filters available.
+    --json                Output results in json.
 
 
 Commands

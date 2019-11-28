@@ -5,6 +5,8 @@ from haproxy import START_REGEX
 from haproxy.logfile import Log
 
 import argparse
+import datetime
+import json
 import os
 import re
 
@@ -76,6 +78,8 @@ def create_parser():
         '--list-filters', action='store_true', help='Lists all filters available.'
     )
 
+    parser.add_argument('--json', action='store_true', help='Output results in json.')
+
     return parser
 
 
@@ -89,6 +93,7 @@ def parse_arguments(args):
         'log': None,
         'list_commands': None,
         'list_filters': None,
+        'json': None,
     }
 
     if args.list_commands:
@@ -121,6 +126,9 @@ def parse_arguments(args):
     if args.log is not None:
         _validate_arg_logfile(args.log)
         data['log'] = args.log
+
+    if args.json is not None:
+        data['json'] = args.json
 
     return data
 
@@ -185,6 +193,11 @@ def _validate_arg_logfile(filename):
         raise ValueError('filename {0} does not exist'.format(filepath))
 
 
+def json_dumps_converter(o):
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
+
+
 def print_commands():
     """Prints all commands available from Log with their
     description.
@@ -219,7 +232,7 @@ def show_help(data):
     # make sure that if no arguments are passed the help is shown
     show = True
     for key in data:
-        if data[key] is not None and key != 'log':
+        if data[key] is not None and key not in ('log', 'json'):
             show = False
             break
 
@@ -266,13 +279,17 @@ def main(args):
 
     # run all commands
     for command in args['commands']:
-        string = 'command: {0}'.format(command)
-        print(string)
-        print('=' * len(string))
+        if args['json'] is False:
+            string = 'command: {0}'.format(command)
+            print(string)
+            print('=' * len(string))
 
         cmd = getattr(log_file, 'cmd_{0}'.format(command))
         result = cmd()
-        print(result)
+        if args['json'] is True:
+            print(json.dumps(result, default=json_dumps_converter))
+        else:
+            print(result)
 
     return log_file  # return the log_file object so that tests can inspect it
 

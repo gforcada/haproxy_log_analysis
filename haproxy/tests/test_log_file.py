@@ -30,6 +30,7 @@ class LogFileTest(unittest.TestCase):
             'filters': None,
             'list_commands': False,
             'list_filters': False,
+            'json': False,
         }
         logfile = main(data)
 

@@ -7,6 +7,7 @@ from haproxy.main import parse_arguments
 from haproxy.main import VALID_FILTERS
 from tempfile import NamedTemporaryFile
 
+import json
 import os
 import sys
 import unittest
@@ -223,6 +224,31 @@ class ArgumentParsingTest(unittest.TestCase):
 
             for filter_name in VALID_FILTERS:
                 self.assertIn(filter_name[7:], output_text)
+
+    def test_arg_parser_json(self):
+        """Test that we really output json."""
+        arguments = ['-l', 'haproxy/tests/files/small.log', '--json', '-c', 'counter']
+        data = parse_arguments(self.parser.parse_args(arguments))
+        test_output = NamedTemporaryFile(mode='w', delete=False)
+        test_result = True
+
+        with RedirectStdout(stdout=test_output):
+            main(data)
+
+        # Since python 3.5, json.load returns a JSONDecodeError instead of a
+        # ValueError
+        try:
+            json_parse_exception = json.decoder.JSONDecodeError
+        except AttributeError:
+            json_parse_exception = ValueError
+
+        try:
+            with open(test_output.name) as json_file:
+                json.load(json_file)
+        except json_parse_exception:
+            test_result = False
+
+        self.assertTrue(test_result)
 
     def test_arg_parser_filters(self):
         """Check that the filter logic on haproxy.main.main works as expected.
