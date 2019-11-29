@@ -41,6 +41,12 @@ class LogFileTest(unittest.TestCase):
         log_file = Log(logfile='haproxy/tests/files/small.log')
         self.assertTrue(log_file.cmd_counter() > 0)
 
+    def test_rhel_v6_log(self):
+        """Check that log files that contains v6 addresses from RHEL
+        are parsed."""
+        log_file = Log(logfile='haproxy/tests/files/rhel-ipv6.log')
+        self.assertTrue(log_file.cmd_counter() > 0)
+
     def test_total_lines(self):
         """Check that even if some lines are not valid, 'total_lines' counts
         all of them.

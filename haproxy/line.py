@@ -33,9 +33,9 @@ SYSLOG_NIXOS_REGEX = re.compile(
     # 2017-05-15
     r'\A(\d+-){2}\d+'
     # T23:45:55
-    r'T(\d+:){2}\d+'
+    r'[T\s](\d+:){2}\d+'
     # +02:00
-    r'\+\d+:\d+\s+'
+    r'(\+\d+:\d+)*\s+'
 )
 SYSLOG_HOST_AND_PROCESS_REGEX = re.compile(
     # localhost haproxy[28029]:
@@ -46,7 +46,7 @@ SYSLOG_HOST_AND_PROCESS_REGEX = re.compile(
 
 HAPROXY_LINE_REGEX = re.compile(
     # 127.0.0.1:39759
-    r'\A(?P<client_ip>(\d+\.){3}\d+):(?P<client_port>\d+)\s+'
+    r'\A(?P<client_ip>[a-fA-F\d+\.:]+):(?P<client_port>\d+)\s+'
     # [09/Dec/2013:12:59:46.633]
     r'\[(?P<accept_date>.*)\..*\]\s+'
     # loadbalancer default/instance8
