@@ -6,3 +6,5 @@ omit =
 exclude_lines =
     def console_script()
     except ImportError
+    except json_parse_exception
+    if isinstance
