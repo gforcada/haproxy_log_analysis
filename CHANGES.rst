@@ -7,6 +7,9 @@ CHANGES
 - Test against Python 3.8 as well.
   [gforcada]
 
+- Add `--json` output command line option.
+  [valleedelisle]
+
 3.0.0 (2019-06-10)
 ------------------
 
