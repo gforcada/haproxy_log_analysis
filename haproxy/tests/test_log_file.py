@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
 from haproxy import filters
 from haproxy.logfile import Log
 from haproxy.main import main
@@ -269,11 +268,21 @@ class LogFileTest(unittest.TestCase):
 
         self.assertEqual(len(requests), 5)
 
-        self.assertEqual(requests[0], (datetime(2013, 12, 11, 11, 2), 8))
-        self.assertEqual(requests[1], (datetime(2013, 12, 11, 11, 3), 3))
-        self.assertEqual(requests[2], (datetime(2013, 12, 11, 11, 13), 5))
-        self.assertEqual(requests[3], (datetime(2013, 12, 11, 11, 52), 7))
-        self.assertEqual(requests[4], (datetime(2013, 12, 11, 12, 2), 9))
+        self.assertEqual(requests[0], '2013-12-11 11:02:00')
+        self.assertEqual(requests[1], '2013-12-11 11:03:00')
+        self.assertEqual(requests[2], '2013-12-11 11:13:00')
+        self.assertEqual(requests[3], '2013-12-11 11:52:00')
+        self.assertEqual(requests[4], '2013-12-11 12:02:00')
+
+    def test_cmd_requests_per_hour(self):
+        """Check that the requests per minute command reports as expected."""
+        log_file = Log(logfile='haproxy/tests/files/requests_per_minute.log')
+        requests = log_file.cmd_requests_per_hour()
+
+        self.assertEqual(len(requests), 2)
+
+        self.assertEqual(requests[0], '2013-12-11 11:00:00')
+        self.assertEqual(requests[1], '2013-12-11 12:00:00')
 
     def test_cmd_requests_per_minute_empty(self):
         """Check that the requests per minute command reports nothing if

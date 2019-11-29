@@ -10,6 +10,9 @@ CHANGES
 - Add `--json` output command line option.
   [valleedelisle]
 
+- Add `cmd_requests_per_hour`
+  [valleedelisle]
+
 3.0.0 (2019-06-10)
 ------------------
 

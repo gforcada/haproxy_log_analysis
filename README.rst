@@ -149,7 +149,11 @@ See the ``--help`` (or the section above) to know how to run them.
 ``requests_per_minute``
   Reports on how many requests were made per minute.
   It works best when used with ``-s`` and ``-d`` command line arguments,
-  as the output can be huge.
+  as the output can be huge. We can also use ``requests_per_hour``
+  if it's too much data.
+
+``requests_per_hour``
+  Reports on how many requests were made per hour.
 
 ``print``
   Prints the raw lines.

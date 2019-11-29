@@ -336,47 +336,49 @@ class Log(object):
 
         .. note::
           Try to combine it with time constrains (``-s`` and ``-d``) as this
-          command output can be huge otherwise.
+          command output can be huge otherwise. We can also use
+          ``requests_per_hour`` if it's too much data.
         """
-        if len(self._valid_lines) == 0:
-            return
+        return self._count_by_time(1)
 
-        current_minute = self._valid_lines[0].accept_date
-        current_minute_counter = 0
-        requests = []
-        one_minute = timedelta(minutes=1)
-
-        def format_and_append(append_to, date, counter):
-            seconds_and_micro = timedelta(
-                seconds=date.second, microseconds=date.microsecond
-            )
-            minute_formatted = date - seconds_and_micro
-            append_to.append((minute_formatted, counter))
-
-        # note that _valid_lines is kept sorted by date
-        for line in self._valid_lines:
-            line_date = line.accept_date
-            if (
-                line_date - current_minute < one_minute
-                and line_date.minute == current_minute.minute
-            ):
-                current_minute_counter += 1
-
-            else:
-                format_and_append(requests, current_minute, current_minute_counter)
-                current_minute_counter = 1
-                current_minute = line_date
-
-        if current_minute_counter > 0:
-            format_and_append(requests, current_minute, current_minute_counter)
-
-        return requests
+    def cmd_requests_per_hour(self):
+        """Generates statistics on how many requests were made per hour.
+        """
+        return self._count_by_time(60)
 
     def cmd_print(self):
         """Returns the raw lines to be printed."""
         if not self._valid_lines:
             return ''
         return '\n'.join([line.raw_line for line in self._valid_lines]) + '\n'
+
+    def _count_by_time(self, aggregate):
+        """
+        Helper function to compile stats by time frame.
+        Used by requests_per_minute and requests_per_hour
+        params:
+          aggregate: Number of minutes to aggregate on
+        """
+        if len(self._valid_lines) == 0:
+            return
+
+        requests = {}
+
+        # note that _valid_lines is kept sorted by date
+        for line in self._valid_lines:
+            tm = line.accept_date
+            tm += timedelta(minutes=aggregate / 2)
+            tm -= timedelta(
+                minutes=tm.minute % aggregate,
+                seconds=tm.second,
+                microseconds=tm.microsecond,
+            )
+            try:
+                requests[str(tm)] += 1
+            except KeyError:
+                requests[str(tm)] = 1
+
+        return sorted(requests)
 
     def _sort_lines(self):
         """Haproxy writes its logs after having gathered all information
