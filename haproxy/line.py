@@ -172,6 +172,7 @@ class Line(object):
 
         self.valid = self._parse_line(line)
 
+    @property
     def is_https(self):
         """Returns True if the log line is a SSL connection. False otherwise.
         """
@@ -179,7 +180,8 @@ class Line(object):
             return True
         return False
 
-    def get_ip(self):
+    @property
+    def ip(self):
         """Returns the IP provided on the log line, or the client_ip if absent/empty."""
         if self.captured_request_headers is not None:
             ip = self.captured_request_headers[1:-1].split('|')[0]

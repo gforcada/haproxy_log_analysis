@@ -166,7 +166,7 @@ class LogLineTest(LogLineBaseTest):
         """
         self.http_request = 'GET /domain:443/to/image HTTP/1.1'
         log_line = self._build_test_string()
-        self.assertTrue(log_line.is_https())
+        self.assertTrue(log_line.is_https)
 
     def test_request_is_https_false(self):
         """Check that if a log line does not contains the SSL port on it, is
@@ -174,7 +174,7 @@ class LogLineTest(LogLineBaseTest):
         """
         self.http_request = 'GET /domain:80/to/image HTTP/1.1'
         log_line = self._build_test_string()
-        self.assertFalse(log_line.is_https())
+        self.assertFalse(log_line.is_https)
 
     def test_request_is_front_page(self):
         """Check that if a request is for the front page the request path is
@@ -210,3 +210,16 @@ class LogLineTest(LogLineBaseTest):
         self.syslog_date = '2017-07-06T14:29:39+02:00'
         log_line = self._build_test_string()
         self.assertTrue(log_line.valid)
+
+    def test_ip_from_headers(self):
+        """Check that the IP from the captured headers takes precedence."""
+        self.headers = ' {1.2.3.4}'
+        log_line = self._build_test_string()
+        self.assertEqual(log_line.ip, '1.2.3.4')
+
+    def test_ip_from_client_ip(self):
+        """Check that if there is no IP on the captured headers, the client IP is used."""
+        self.headers = ''
+        self.client_ip = '127.1.2.7'
+        log_line = self._build_test_string()
+        self.assertEqual(log_line.ip, '127.1.2.7')
