@@ -46,18 +46,14 @@ class LogLineBaseTest(unittest.TestCase):
         self.http_request = 'GET /path/to/image HTTP/1.1'
 
     def _build_test_string(self):
-        client_ip_and_port = '{0}:{1}'.format(self.client_ip, self.client_port)
-        server_names = '{0} {1}/{2}'.format(
-            self.frontend_name, self.backend_name, self.server_name
+        client_ip_and_port = f'{self.client_ip}:{self.client_port}'
+        server_names = f'{self.frontend_name} {self.backend_name}/{self.server_name}'
+        timers = f'{self.tq}/{self.tw}/{self.tc}/{self.tr}/{self.tt}'
+        status_and_bytes = f'{self.status} {self.bytes}'
+        connections_and_retries = (
+            f'{self.act}/{self.fe}/{self.be}/{self.srv}/{self.retries}'
         )
-        timers = '{0}/{1}/{2}/{3}/{4}'.format(
-            self.tq, self.tw, self.tc, self.tr, self.tt
-        )
-        status_and_bytes = '{0} {1}'.format(self.status, self.bytes)
-        connections_and_retries = '{0}/{1}/{2}/{3}/{4}'.format(
-            self.act, self.fe, self.be, self.srv, self.retries
-        )
-        queues = '{0}/{1}'.format(self.queue_server, self.queue_backend)
+        queues = f'{self.queue_server}/{self.queue_backend}'
 
         log_line = LINE.format(
             self.syslog_date,
@@ -72,15 +68,13 @@ class LogLineBaseTest(unittest.TestCase):
             self.headers,
             self.http_request,
         )
-        return log_line
+        return Line(log_line)
 
 
 class LogLineTest(LogLineBaseTest):
     def test_default_values(self):
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
+        log_line = self._build_test_string()
 
-        self.assertEqual(raw_line, log_line.raw_line)
         self.assertEqual(self.client_ip, log_line.client_ip)
         self.assertEqual(self.client_port, log_line.client_port)
 
@@ -116,17 +110,14 @@ class LogLineTest(LogLineBaseTest):
         self.assertTrue(log_line.valid)
 
     def test_unused_values(self):
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
+        log_line = self._build_test_string()
 
         self.assertEqual(log_line.captured_request_cookie, None)
         self.assertEqual(log_line.captured_response_cookie, None)
         self.assertEqual(log_line.termination_state, None)
 
     def test_datetime_value(self):
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
+        log_line = self._build_test_string()
         self.assertTrue(isinstance(log_line.accept_date, datetime))
 
     def test_http_request_values(self):
@@ -134,8 +125,7 @@ class LogLineTest(LogLineBaseTest):
         path = '/path/to/image'
         protocol = 'HTTP/1.1'
         self.http_request = '{0} {1} {2}'.format(method, path, protocol)
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
+        log_line = self._build_test_string()
 
         self.assertEqual(log_line.http_request_method, method)
         self.assertEqual(log_line.http_request_path, path)
@@ -146,9 +136,7 @@ class LogLineTest(LogLineBaseTest):
         expression, 'valid' is False.
         """
         self.bytes = 'wrooooong'
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
+        log_line = self._build_test_string()
         self.assertFalse(log_line.valid)
 
     def test_no_captured_headers(self):
@@ -156,9 +144,7 @@ class LogLineTest(LogLineBaseTest):
         line is still valid.
         """
         self.headers = ''
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
+        log_line = self._build_test_string()
         self.assertTrue(log_line.valid)
 
     def test_request_and_response_captured_headers(self):
@@ -168,8 +154,7 @@ class LogLineTest(LogLineBaseTest):
         request_headers = '{something}'
         response_headers = '{something_else}'
         self.headers = ' {0} {1}'.format(request_headers, response_headers)
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
+        log_line = self._build_test_string()
 
         self.assertTrue(log_line.valid)
         self.assertEqual(log_line.captured_request_headers, request_headers)
@@ -180,10 +165,7 @@ class LogLineTest(LogLineBaseTest):
         as a https connection.
         """
         self.http_request = 'GET /domain:443/to/image HTTP/1.1'
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
-        self.assertTrue(log_line.valid)
+        log_line = self._build_test_string()
         self.assertTrue(log_line.is_https())
 
     def test_request_is_https_false(self):
@@ -191,10 +173,7 @@ class LogLineTest(LogLineBaseTest):
         not reported as a https connection.
         """
         self.http_request = 'GET /domain:80/to/image HTTP/1.1'
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
-        self.assertTrue(log_line.valid)
+        log_line = self._build_test_string()
         self.assertFalse(log_line.is_https())
 
     def test_request_is_front_page(self):
@@ -202,29 +181,19 @@ class LogLineTest(LogLineBaseTest):
         correctly stored.
         """
         self.http_request = 'GET / HTTP/1.1'
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
-        self.assertTrue(log_line.valid)
+        log_line = self._build_test_string()
         self.assertEqual('/', log_line.http_request_path)
 
     def test_strip_syslog_valid_hostname_slug(self):
-        """Checks that if the hostname added to syslog slug is still valid
-        line
-        """
+        """Checks that if the hostname added to syslog slug is still valid line"""
         self.http_request = 'GET / HTTP/1.1'
         self.process_name_and_pid = 'ip-192-168-1-1 haproxy[28029]:'
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
+        log_line = self._build_test_string()
         self.assertTrue(log_line.valid)
 
     def test_unparseable_http_request(self):
         self.http_request = 'something'
-
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
+        log_line = self._build_test_string()
         self.assertEqual(log_line.http_request_method, 'invalid')
         self.assertEqual(log_line.http_request_path, 'invalid')
         self.assertEqual(log_line.http_request_protocol, 'invalid')
@@ -232,16 +201,12 @@ class LogLineTest(LogLineBaseTest):
     def test_dot_on_process_name(self):
         """Checks that process names can have a dot on it"""
         self.process_name_and_pid = 'localhost.localdomain haproxy[2345]:'
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
+        log_line = self._build_test_string()
         self.assertTrue(log_line.valid)
 
     def test_nixos_syslog(self):
         """Check that the NixOS timestamp at the beginning can also be parsed
         """
         self.syslog_date = '2017-07-06T14:29:39+02:00'
-        raw_line = self._build_test_string()
-        log_line = Line(raw_line)
-
+        log_line = self._build_test_string()
         self.assertTrue(log_line.valid)
