@@ -1,225 +1,147 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from haproxy.line import Line
-
-import unittest
 
 
-# 8 and 9 parameters are together because if no headers are saved the field
-# is completely empty and thus there is no double space between queue backend
-# and http request.
-LINE = '{0} {1} {2} [{3}] {4} {5} {6} - - ---- {7} {8}{9} "{10}"'
+def test_default_values(line_factory, default_line_data):
+    line = line_factory()
+
+    assert line.client_ip == default_line_data['client_ip']
+    assert line.client_port == default_line_data['client_port']
+
+    assert line.raw_accept_date in default_line_data['accept_date']
+
+    assert line.frontend_name == default_line_data['frontend_name']
+    assert line.backend_name == default_line_data['backend_name']
+    assert line.server_name == default_line_data['server_name']
+
+    assert line.time_wait_request == default_line_data['tq']
+    assert line.time_wait_queues == default_line_data['tw']
+    assert line.time_connect_server == default_line_data['tc']
+    assert line.time_wait_response == default_line_data['tr']
+    assert line.total_time == default_line_data['tt']
+
+    assert line.status_code == default_line_data['status']
+    assert line.bytes_read == default_line_data['bytes']
+
+    assert line.connections_active == default_line_data['act']
+    assert line.connections_frontend == default_line_data['fe']
+    assert line.connections_backend == default_line_data['be']
+    assert line.connections_server == default_line_data['srv']
+    assert line.retries == default_line_data['retries']
+
+    assert line.queue_server == default_line_data['queue_server']
+    assert line.queue_backend == default_line_data['queue_backend']
+
+    assert line.captured_request_headers == default_line_data['headers'].strip()
+    assert line.captured_response_headers is None
+
+    assert line.raw_http_request == default_line_data['http_request']
+
+    assert line.is_valid
 
 
-class LogLineBaseTest(unittest.TestCase):
-    def setUp(self):
-        self.syslog_date = 'Dec  9 13:01:26'
-        self.process_name_and_pid = 'localhost haproxy[28029]:'
-
-        self.client_ip = '127.0.0.1'
-        self.client_port = 2345
-
-        self.accept_date = '09/Dec/2013:12:59:46.633'
-
-        self.frontend_name = 'loadbalancer'
-        self.backend_name = 'default'
-        self.server_name = 'instance8'
-
-        self.tq = 0
-        self.tw = 51536
-        self.tc = 1
-        self.tr = 48082
-        self.tt = '99627'
-
-        self.status = '200'
-        self.bytes = '83285'
-
-        self.act = '87'
-        self.fe = '89'
-        self.be = '98'
-        self.srv = '1'
-        self.retries = '20'
-
-        self.queue_server = 2
-        self.queue_backend = 67
-        self.headers = ' {77.24.148.74}'
-        self.http_request = 'GET /path/to/image HTTP/1.1'
-
-    def _build_test_string(self):
-        client_ip_and_port = f'{self.client_ip}:{self.client_port}'
-        server_names = f'{self.frontend_name} {self.backend_name}/{self.server_name}'
-        timers = f'{self.tq}/{self.tw}/{self.tc}/{self.tr}/{self.tt}'
-        status_and_bytes = f'{self.status} {self.bytes}'
-        connections_and_retries = (
-            f'{self.act}/{self.fe}/{self.be}/{self.srv}/{self.retries}'
-        )
-        queues = f'{self.queue_server}/{self.queue_backend}'
-
-        log_line = LINE.format(
-            self.syslog_date,
-            self.process_name_and_pid,
-            client_ip_and_port,
-            self.accept_date,
-            server_names,
-            timers,
-            status_and_bytes,
-            connections_and_retries,
-            queues,
-            self.headers,
-            self.http_request,
-        )
-        return Line(log_line)
+def test_unused_values(line_factory):
+    line = line_factory()
+    assert line.captured_request_cookie is None
+    assert line.captured_response_cookie is None
+    assert line.termination_state is None
 
 
-class LogLineTest(LogLineBaseTest):
-    def test_default_values(self):
-        log_line = self._build_test_string()
+def test_datetime_value(line_factory):
+    line = line_factory()
+    assert isinstance(line.accept_date, datetime)
 
-        self.assertEqual(self.client_ip, log_line.client_ip)
-        self.assertEqual(self.client_port, log_line.client_port)
 
-        self.assertTrue(log_line.raw_accept_date in self.accept_date)
+def test_http_request_values(line_factory):
+    method = 'PUT'
+    path = '/path/to/my/image'
+    protocol = 'HTTP/2.0'
+    line = line_factory(http_request=f'{method} {path} {protocol}')
+    assert line.http_request_method == method
+    assert line.http_request_path == path
+    assert line.http_request_protocol == protocol
 
-        self.assertEqual(self.frontend_name, log_line.frontend_name)
-        self.assertEqual(self.backend_name, log_line.backend_name)
-        self.assertEqual(self.server_name, log_line.server_name)
 
-        self.assertEqual(self.tq, log_line.time_wait_request)
-        self.assertEqual(self.tw, log_line.time_wait_queues)
-        self.assertEqual(self.tc, log_line.time_connect_server)
-        self.assertEqual(self.tr, log_line.time_wait_response)
-        self.assertEqual(self.tt, log_line.total_time)
+def test_invalid_line(line_factory):
+    line = line_factory(bytes='wroooong')
+    assert not line.is_valid
 
-        self.assertEqual(self.status, log_line.status_code)
-        self.assertEqual(self.bytes, log_line.bytes_read)
 
-        self.assertEqual(self.act, log_line.connections_active)
-        self.assertEqual(self.fe, log_line.connections_frontend)
-        self.assertEqual(self.be, log_line.connections_backend)
-        self.assertEqual(self.srv, log_line.connections_server)
-        self.assertEqual(self.retries, log_line.retries)
+def test_no_captured_headers(line_factory):
+    """A log line without captured headers is still valid."""
+    line = line_factory(headers='')
+    assert line.is_valid
 
-        self.assertEqual(self.queue_server, log_line.queue_server)
-        self.assertEqual(self.queue_backend, log_line.queue_backend)
 
-        self.assertEqual(self.headers.strip(), log_line.captured_request_headers)
-        self.assertEqual(None, log_line.captured_response_headers)
+def test_request_and_response_captured_headers(line_factory):
+    """Request and response headers captured are parsed correctly."""
+    request_headers = '{something}'
+    response_headers = '{something_else}'
+    line = line_factory(headers=f' {request_headers} {response_headers}')
+    assert line.is_valid
+    assert line.captured_request_headers == request_headers
+    assert line.captured_response_headers == response_headers
 
-        self.assertEqual(self.http_request, log_line.raw_http_request)
 
-        self.assertTrue(log_line.valid)
+def test_request_is_https_valid(line_factory):
+    """Check that if a log line contains the SSL port on it, is reported
+    as a https connection.
+    """
+    line = line_factory(http_request='GET /domain:443/to/image HTTP/1.1')
+    assert line.is_https
 
-    def test_unused_values(self):
-        log_line = self._build_test_string()
 
-        self.assertEqual(log_line.captured_request_cookie, None)
-        self.assertEqual(log_line.captured_response_cookie, None)
-        self.assertEqual(log_line.termination_state, None)
+def test_request_is_https_false(line_factory):
+    """Check that if a log line does not contains the SSL port on it, is
+    not reported as a https connection.
+    """
+    line = line_factory(http_request='GET /domain:80/to/image HTTP/1.1')
+    assert not line.is_https
 
-    def test_datetime_value(self):
-        log_line = self._build_test_string()
-        self.assertTrue(isinstance(log_line.accept_date, datetime))
 
-    def test_http_request_values(self):
-        method = 'GET'
-        path = '/path/to/image'
-        protocol = 'HTTP/1.1'
-        self.http_request = '{0} {1} {2}'.format(method, path, protocol)
-        log_line = self._build_test_string()
+def test_request_is_front_page(line_factory):
+    """Check that if a request is for the front page the request path is
+    correctly stored.
+    """
+    line = line_factory(http_request='GET / HTTP/1.1')
+    assert line.http_request_path == '/'
 
-        self.assertEqual(log_line.http_request_method, method)
-        self.assertEqual(log_line.http_request_path, path)
-        self.assertEqual(log_line.http_request_protocol, protocol)
 
-    def test_invalid(self):
-        """Check that if a log line can not be parsed with the regular
-        expression, 'valid' is False.
-        """
-        self.bytes = 'wrooooong'
-        log_line = self._build_test_string()
-        self.assertFalse(log_line.valid)
+def test_strip_syslog_valid_hostname_slug(line_factory):
+    """Checks that if the hostname added to syslog slug is still valid line"""
+    line = line_factory(
+        http_request='GET / HTTP/1.1',
+        process_name_and_pid='ip-192-168-1-1 haproxy[28029]:',
+    )
+    assert line.is_valid
 
-    def test_no_captured_headers(self):
-        """Check that if a log line does not have any captured headers, the
-        line is still valid.
-        """
-        self.headers = ''
-        log_line = self._build_test_string()
-        self.assertTrue(log_line.valid)
 
-    def test_request_and_response_captured_headers(self):
-        """Check that if a log line does have both request and response headers
-        captured, both are parsed correctly.
-        """
-        request_headers = '{something}'
-        response_headers = '{something_else}'
-        self.headers = ' {0} {1}'.format(request_headers, response_headers)
-        log_line = self._build_test_string()
+def test_unparseable_http_request(line_factory):
+    line = line_factory(http_request='something')
+    assert line.http_request_method == 'invalid'
+    assert line.http_request_path == 'invalid'
+    assert line.http_request_protocol == 'invalid'
 
-        self.assertTrue(log_line.valid)
-        self.assertEqual(log_line.captured_request_headers, request_headers)
-        self.assertEqual(log_line.captured_response_headers, response_headers)
 
-    def test_request_is_https_valid(self):
-        """Check that if a log line contains the SSL port on it, is reported
-        as a https connection.
-        """
-        self.http_request = 'GET /domain:443/to/image HTTP/1.1'
-        log_line = self._build_test_string()
-        self.assertTrue(log_line.is_https)
+def test_dot_on_process_name(line_factory):
+    """Checks that process names can have a dot on it"""
+    line = line_factory(process_name_and_pid='localhost.localdomain haproxy[2345]:')
+    assert line.is_valid
 
-    def test_request_is_https_false(self):
-        """Check that if a log line does not contains the SSL port on it, is
-        not reported as a https connection.
-        """
-        self.http_request = 'GET /domain:80/to/image HTTP/1.1'
-        log_line = self._build_test_string()
-        self.assertFalse(log_line.is_https)
 
-    def test_request_is_front_page(self):
-        """Check that if a request is for the front page the request path is
-        correctly stored.
-        """
-        self.http_request = 'GET / HTTP/1.1'
-        log_line = self._build_test_string()
-        self.assertEqual('/', log_line.http_request_path)
+def test_nixos_syslog(line_factory):
+    """Check that the NixOS timestamp at the beginning can also be parsed"""
+    line = line_factory(syslog_date='2017-07-06T14:29:39+02:00')
+    assert line.is_valid
 
-    def test_strip_syslog_valid_hostname_slug(self):
-        """Checks that if the hostname added to syslog slug is still valid line"""
-        self.http_request = 'GET / HTTP/1.1'
-        self.process_name_and_pid = 'ip-192-168-1-1 haproxy[28029]:'
-        log_line = self._build_test_string()
-        self.assertTrue(log_line.valid)
 
-    def test_unparseable_http_request(self):
-        self.http_request = 'something'
-        log_line = self._build_test_string()
-        self.assertEqual(log_line.http_request_method, 'invalid')
-        self.assertEqual(log_line.http_request_path, 'invalid')
-        self.assertEqual(log_line.http_request_protocol, 'invalid')
+def test_ip_from_headers(line_factory):
+    """Check that the IP from the captured headers takes precedence."""
+    line = line_factory(headers=' {1.2.3.4}')
+    assert line.ip == '1.2.3.4'
 
-    def test_dot_on_process_name(self):
-        """Checks that process names can have a dot on it"""
-        self.process_name_and_pid = 'localhost.localdomain haproxy[2345]:'
-        log_line = self._build_test_string()
-        self.assertTrue(log_line.valid)
 
-    def test_nixos_syslog(self):
-        """Check that the NixOS timestamp at the beginning can also be parsed
-        """
-        self.syslog_date = '2017-07-06T14:29:39+02:00'
-        log_line = self._build_test_string()
-        self.assertTrue(log_line.valid)
-
-    def test_ip_from_headers(self):
-        """Check that the IP from the captured headers takes precedence."""
-        self.headers = ' {1.2.3.4}'
-        log_line = self._build_test_string()
-        self.assertEqual(log_line.ip, '1.2.3.4')
-
-    def test_ip_from_client_ip(self):
-        """Check that if there is no IP on the captured headers, the client IP is used."""
-        self.headers = ''
-        self.client_ip = '127.1.2.7'
-        log_line = self._build_test_string()
-        self.assertEqual(log_line.ip, '127.1.2.7')
+def test_ip_from_client_ip(line_factory):
+    """Check that if there is no IP on the captured headers, the client IP is used."""
+    line = line_factory(headers='', client_ip='127.1.2.7')
+    assert line.ip == '127.1.2.7'
