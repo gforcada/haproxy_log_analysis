@@ -170,7 +170,7 @@ class Line(object):
     def __init__(self, line):
         self.raw_line = line
 
-        self.valid = self._parse_line(line)
+        self.is_valid = self._parse_line(line)
 
     @property
     def is_https(self):
