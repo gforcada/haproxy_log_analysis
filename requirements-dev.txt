@@ -40,11 +40,11 @@ pytest==4.6.6
 regex==2019.11.1          # via black
 six==1.13.0               # via more-itertools, packaging, pip-tools, pydocstyle, pytest
 snowballstemmer==2.0.0    # via pydocstyle
-testfixtures==6.10.1      # via flake8-isort
+testfixtures==6.10.1
 toml==0.10.0              # via black
 typed-ast==1.4.0 ; python_version > "3.5"
 wcwidth==0.1.7            # via pytest
 zipp==0.6.0               # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-# setuptools==41.6.0        # via flake8-blind-except
+# setuptools

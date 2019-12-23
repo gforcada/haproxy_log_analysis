@@ -19,3 +19,4 @@ pyflakes
 pytest < 5.0  # until we drop support for python 2.7
 pytest-cov
 typed-ast ; python_version > "3.5"
+testfixtures
