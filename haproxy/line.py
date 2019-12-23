@@ -180,6 +180,19 @@ class Line(object):
             return True
         return False
 
+    def is_within_time_frame(self, start, end):
+        if not start:
+            return True
+        elif start > self.accept_date:
+            return False
+
+        if not end:
+            return True
+        elif end < self.accept_date:
+            return False
+
+        return True
+
     @property
     def ip(self):
         """Returns the IP provided on the log line, or the client_ip if absent/empty."""

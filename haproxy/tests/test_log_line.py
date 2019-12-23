@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from datetime import timedelta
+
+import pytest
+
+
+NOW = datetime.now()
+TWO_DAYS_AGO = NOW - timedelta(days=2)
+IN_TWO_DAYS = NOW + timedelta(days=2)
 
 
 def test_default_values(line_factory, default_line_data):
@@ -145,3 +153,19 @@ def test_ip_from_client_ip(line_factory):
     """Check that if there is no IP on the captured headers, the client IP is used."""
     line = line_factory(headers='', client_ip='127.1.2.7')
     assert line.ip == '127.1.2.7'
+
+
+@pytest.mark.parametrize(
+    'start, end, result',
+    [
+        (None, None, True),
+        (TWO_DAYS_AGO, None, True),
+        (IN_TWO_DAYS, None, False),
+        (TWO_DAYS_AGO, IN_TWO_DAYS, True),
+        (TWO_DAYS_AGO, TWO_DAYS_AGO, False),
+    ],
+)
+def test_is_within_timeframe(line_factory, start, end, result):
+    """Check that a line is within a given time frame."""
+    line = line_factory(accept_date=NOW.strftime('%d/%b/%Y:%H:%M:%S.%f'))
+    assert line.is_within_time_frame(start, end) is result
