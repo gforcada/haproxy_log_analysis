@@ -48,7 +48,7 @@ HAPROXY_LINE_REGEX = re.compile(
     # 127.0.0.1:39759
     r'\A(?P<client_ip>[a-fA-F\d+\.:]+):(?P<client_port>\d+)\s+'
     # [09/Dec/2013:12:59:46.633]
-    r'\[(?P<accept_date>.*)\..*\]\s+'
+    r'\[(?P<accept_date>.+)\]\s+'
     # loadbalancer default/instance8
     r'(?P<frontend_name>.*)\s+(?P<backend_name>.*)/(?P<server_name>.*)\s+'
     # 0/51536/1/48082/99627
@@ -249,7 +249,7 @@ class Line(object):
         return True
 
     def _parse_accept_date(self):
-        return datetime.strptime(self.raw_accept_date, '%d/%b/%Y:%H:%M:%S')
+        return datetime.strptime(self.raw_accept_date, '%d/%b/%Y:%H:%M:%S.%f')
 
     def _parse_http_request(self):
         matches = HTTP_REQUEST_REGEX.match(self.raw_http_request)
