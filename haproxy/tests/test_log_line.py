@@ -115,13 +115,18 @@ def test_request_is_front_page(line_factory):
     assert line.http_request_path == '/'
 
 
-def test_strip_syslog_valid_hostname_slug(line_factory):
-    """Checks that if the hostname added to syslog slug is still valid line"""
-    line = line_factory(
-        http_request='GET / HTTP/1.1',
-        process_name_and_pid='ip-192-168-1-1 haproxy[28029]:',
-    )
-    assert line.is_valid
+@pytest.mark.parametrize(
+    'process',
+    [
+        'ip-192-168-1-1 haproxy[28029]:',
+        'dvd-ctrl1 haproxy[403100]:',
+        'localhost.localdomain haproxy[2345]:',
+    ],
+)
+def test_process_names(line_factory, process):
+    """Checks that different styles of process names are handled correctly."""
+    line = line_factory(process_name_and_pid=process,)
+    assert line.is_valid is True
 
 
 def test_unparseable_http_request(line_factory):
@@ -131,16 +136,22 @@ def test_unparseable_http_request(line_factory):
     assert line.http_request_protocol == 'invalid'
 
 
-def test_dot_on_process_name(line_factory):
-    """Checks that process names can have a dot on it"""
-    line = line_factory(process_name_and_pid='localhost.localdomain haproxy[2345]:')
-    assert line.is_valid
+@pytest.mark.parametrize(
+    'syslog',
+    [
+        # nixos format
+        '2017-07-06T14:29:39+02:00',
+        # regular format
+        'Dec  9 13:01:26',
+    ],
+)
+def test_syslog(line_factory, syslog):
+    """Check that the timestamp at the beginning are parsed.
 
-
-def test_nixos_syslog(line_factory):
-    """Check that the NixOS timestamp at the beginning can also be parsed"""
-    line = line_factory(syslog_date='2017-07-06T14:29:39+02:00')
-    assert line.is_valid
+    We support different syslog formats, NixOS style and the one on other Linux.
+    """
+    line = line_factory(syslog_date=syslog)
+    assert line.is_valid is True
 
 
 def test_ip_from_headers(line_factory):
@@ -149,10 +160,14 @@ def test_ip_from_headers(line_factory):
     assert line.ip == '1.2.3.4'
 
 
-def test_ip_from_client_ip(line_factory):
+@pytest.mark.parametrize(
+    'ip',
+    ['127.1.2.7', '1.127.230.47', 'fe80::9379:c29e:6701:cef8', 'fe80::9379:c29e::'],
+)
+def test_ip_from_client_ip(line_factory, ip):
     """Check that if there is no IP on the captured headers, the client IP is used."""
-    line = line_factory(headers='', client_ip='127.1.2.7')
-    assert line.ip == '127.1.2.7'
+    line = line_factory(headers='', client_ip=ip)
+    assert line.ip == ip
 
 
 @pytest.mark.parametrize(
