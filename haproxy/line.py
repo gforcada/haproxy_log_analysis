@@ -39,7 +39,7 @@ SYSLOG_NIXOS_REGEX = re.compile(
 )
 SYSLOG_HOST_AND_PROCESS_REGEX = re.compile(
     # localhost haproxy[28029]:
-    # note that can be either localhost or an IP or a hostname
+    # note that can be either a hostname or an IP
     # and can also contain a dot in it
     r'(\w+|(\d+\.){3}\d+|[.a-zA-Z0-9_-]+)\s+\w+\[\d+\]:\s+'
 )
