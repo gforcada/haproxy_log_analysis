@@ -40,7 +40,7 @@ def test_default_values(line_factory, default_line_data):
     assert line.queue_server == default_line_data['queue_server']
     assert line.queue_backend == default_line_data['queue_backend']
 
-    assert line.captured_request_headers == default_line_data['headers'].strip()
+    assert line.captured_request_headers == default_line_data['headers'].strip()[1:-1]
     assert line.captured_response_headers is None
 
     assert line.raw_http_request == default_line_data['http_request']
@@ -87,8 +87,8 @@ def test_request_and_response_captured_headers(line_factory):
     response_headers = '{something_else}'
     line = line_factory(headers=f' {request_headers} {response_headers}')
     assert line.is_valid
-    assert line.captured_request_headers == request_headers
-    assert line.captured_response_headers == response_headers
+    assert f'{{{line.captured_request_headers}}}' == request_headers
+    assert f'{{{line.captured_response_headers}}}' == response_headers
 
 
 def test_request_is_https_valid(line_factory):

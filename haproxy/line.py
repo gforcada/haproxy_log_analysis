@@ -64,8 +64,7 @@ HAPROXY_LINE_REGEX = re.compile(
     # 0/67
     r'(?P<queue_server>\d+)/(?P<queue_backend>\d+)\s+'
     # {77.24.148.74}
-    r'((?P<request_headers>{.*})\s+(?P<response_headers>{.*})\s+|'
-    r'(?P<headers>{.*})\s+|)'
+    r'({(?P<request_headers>.*)}\s+{(?P<response_headers>.*)}\s+|{(?P<headers>.*)}\s+|)'
     # "GET /path/to/image HTTP/1.1"
     r'"(?P<http_request>.*)"'
     r'\Z'  # end of line
@@ -197,7 +196,7 @@ class Line(object):
     def ip(self):
         """Returns the IP provided on the log line, or the client_ip if absent/empty."""
         if self.captured_request_headers is not None:
-            ip = self.captured_request_headers[1:-1].split('|')[0]
+            ip = self.captured_request_headers.split('|')[0]
             if ip:
                 return ip
         return self.client_ip
