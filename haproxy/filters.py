@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-from datetime import timedelta
-from haproxy import DELTA_REGEX
-from haproxy import START_REGEX
-
-
 def filter_ip(ip):
     """Filter :class:`.Line` objects by IP.
 
@@ -15,7 +9,7 @@ def filter_ip(ip):
     """
 
     def filter_func(log_line):
-        return log_line.get_ip() == ip
+        return log_line.ip == ip
 
     return filter_func
 
@@ -34,7 +28,7 @@ def filter_ip_range(ip_range):
     """
 
     def filter_func(log_line):
-        ip = log_line.get_ip()
+        ip = log_line.ip
         if ip:
             return ip.startswith(ip_range)
 
@@ -67,7 +61,7 @@ def filter_ssl(ignore=True):
     """
 
     def filter_func(log_line):
-        return log_line.is_https()
+        return log_line.is_https
 
     return filter_func
 
@@ -105,47 +99,6 @@ def filter_wait_on_queues(max_waiting):
     def filter_func(log_line):
         waiting = int(max_waiting)
         return waiting >= log_line.time_wait_queues
-
-    return filter_func
-
-
-def filter_time_frame(start, delta):
-    """Filter :class:`.Line` objects by their connection time.
-
-    :param start: a time expression (see -s argument on --help for its format)
-      to filter log lines that are before this time.
-    :type start: string
-    :param delta: a relative time expression (see -s argument on --help for
-      its format) to limit the amount of time log lines will be considered.
-    :type delta: string
-    :returns: a function that filters by the time a request is made.
-    :rtype: function
-    """
-    start_value = start
-    delta_value = delta
-    end_value = None
-
-    if start_value != '':
-        start_value = _date_str_to_datetime(start_value)
-
-    if delta_value != '':
-        delta_value = _delta_str_to_timedelta(delta_value)
-
-    if start_value != '' and delta_value != '':
-        end_value = start_value + delta_value
-
-    def filter_func(log_line):
-        if start_value == '':
-            return True
-        elif start_value > log_line.accept_date:
-            return False
-
-        if end_value is None:
-            return True
-        elif end_value < log_line.accept_date:
-            return False
-
-        return True
 
     return filter_func
 
@@ -272,39 +225,3 @@ def filter_response_size(size):
         return bytes_read >= size_value
 
     return filter_func
-
-
-def _date_str_to_datetime(date):
-    matches = START_REGEX.match(date)
-
-    raw_date_input = '{0}/{1}/{2}'.format(
-        matches.group('day'), matches.group('month'), matches.group('year')
-    )
-    date_format = '%d/%b/%Y'
-    if matches.group('hour'):
-        date_format += ':%H'
-        raw_date_input += ':{0}'.format(matches.group('hour'))
-    if matches.group('minute'):
-        date_format += ':%M'
-        raw_date_input += ':{0}'.format(matches.group('minute'))
-    if matches.group('second'):
-        date_format += ':%S'
-        raw_date_input += ':{0}'.format(matches.group('second'))
-
-    return datetime.strptime(raw_date_input, date_format)
-
-
-def _delta_str_to_timedelta(delta):
-    matches = DELTA_REGEX.match(delta)
-
-    value = int(matches.group('value'))
-    time_unit = matches.group('time_unit')
-
-    if time_unit == 's':
-        return timedelta(seconds=value)
-    elif time_unit == 'm':
-        return timedelta(minutes=value)
-    elif time_unit == 'h':
-        return timedelta(hours=value)
-    if time_unit == 'd':
-        return timedelta(days=value)
