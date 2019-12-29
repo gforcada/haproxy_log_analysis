@@ -33,6 +33,34 @@ DEFAULT_DATA = {
 }
 
 
+class LinesGenerator:
+    def __init__(self, line_format, return_obj=True):
+        self.data = deepcopy(DEFAULT_DATA)
+        self.line_format = line_format
+        self.return_obj = return_obj
+
+    def __call__(self, *args, **kwargs):
+        self.data.update(**kwargs)
+        self.data['client_ip_and_port'] = '{client_ip}:{client_port}'.format(
+            **self.data
+        )
+        self.data[
+            'server_names'
+        ] = '{frontend_name} {backend_name}/{server_name}'.format(**self.data)
+        self.data['timers'] = '{tq}/{tw}/{tc}/{tr}/{tt}'.format(**self.data)
+        self.data['status_and_bytes'] = '{status} {bytes}'.format(**self.data)
+        self.data['connections_and_retries'] = '{act}/{fe}/{be}/{srv}/{retries}'.format(
+            **self.data
+        )
+        self.data['queues'] = '{queue_server}/{queue_backend}'.format(**self.data)
+
+        log_line = self.line_format.format(**self.data)
+        if self.return_obj:
+            return Line(log_line)
+        else:
+            return log_line
+
+
 @pytest.fixture
 def default_line_data():
     return DEFAULT_DATA
@@ -40,30 +68,28 @@ def default_line_data():
 
 @pytest.fixture
 def line_factory():
-    def _build_test_string(**kwargs):
-        data = deepcopy(DEFAULT_DATA)
-        data.update(**kwargs)
-        data['client_ip_and_port'] = '{client_ip}:{client_port}'.format(**data)
-        data['server_names'] = '{frontend_name} {backend_name}/{server_name}'.format(
-            **data
-        )
-        data['timers'] = '{tq}/{tw}/{tc}/{tr}/{tt}'.format(**data)
-        data['status_and_bytes'] = '{status} {bytes}'.format(**data)
-        data['connections_and_retries'] = '{act}/{fe}/{be}/{srv}/{retries}'.format(
-            **data
-        )
-        data['queues'] = '{queue_server}/{queue_backend}'.format(**data)
+    # queues and headers parameters are together because if no headers are
+    # saved the field is completely empty and thus there is no double space
+    # between queue backend and http request.
+    raw_line = (
+        '{syslog_date} {process_name_and_pid} {client_ip_and_port} '
+        '[{accept_date}] {server_names} {timers} {status_and_bytes} '
+        '- - ---- {connections_and_retries} {queues}{headers} '
+        '"{http_request}"'
+    )
+    generator = LinesGenerator(raw_line)
+    return generator
 
-        # queues and headers parameters are together because if no headers are
-        # saved the field is completely empty and thus there is no double space
-        # between queue backend and http request.
-        raw_line = (
-            '{syslog_date} {process_name_and_pid} {client_ip_and_port} '
-            '[{accept_date}] {server_names} {timers} {status_and_bytes} '
-            '- - ---- {connections_and_retries} {queues}{headers} '
-            '"{http_request}"'
-        )
-        log_line = raw_line.format(**data)
-        return Line(log_line)
 
-    return _build_test_string
+@pytest.fixture
+def haproxy_line_factory():
+    """Same fixture as line_factory without th syslog_date nor the process and pid."""
+    # queues and headers parameters are together because if no headers are
+    # saved the field is completely empty and thus there is no double space
+    # between queue backend and http request.
+    raw_line = (
+        '{client_ip_and_port} [{accept_date}] {server_names} {timers} {status_and_bytes} '
+        '- - ---- {connections_and_retries} {queues}{headers} "{http_request}"'
+    )
+    generator = LinesGenerator(raw_line, return_obj=False)
+    return generator
