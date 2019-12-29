@@ -80,7 +80,7 @@ HTTP_REQUEST_REGEX = re.compile(
 
 class Line(object):
     """For a precise and more detailed description of every field see:
-    http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
+    http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.3
     """
 
     #: IP of the upstream server that made the connection to HAProxy.
