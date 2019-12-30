@@ -49,6 +49,22 @@ def delta_str_to_timedelta(delta):
     return timedelta(**{key: value})
 
 
+def validate_arg_date(start):
+    """Check that date argument is valid."""
+    try:
+        date_str_to_datetime(start)
+    except Exception:
+        raise ValueError('--start argument is not valid')
+
+
+def validate_arg_delta(delta):
+    """Check that the delta argument is valid."""
+    try:
+        delta_str_to_timedelta(delta)
+    except Exception:
+        raise ValueError('--delta argument is not valid')
+
+
 def list_filters():
     """Return the information of existing filters.
 

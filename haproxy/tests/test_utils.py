@@ -2,6 +2,8 @@ from datetime import timedelta
 from datetime import datetime
 from haproxy.utils import delta_str_to_timedelta
 from haproxy.utils import date_str_to_datetime
+from haproxy.utils import validate_arg_date
+from haproxy.utils import validate_arg_delta
 from haproxy.utils import VALID_COMMANDS
 from haproxy.utils import VALID_FILTERS
 
@@ -58,3 +60,27 @@ def test_valid_filterss(filter_key):
     assert '  ' not in filter_data['description']
     assert '\n' not in filter_data['description']
     assert filter_data['description'].startswith(f'{filter_key}: ')
+
+
+@pytest.mark.parametrize('value, expected', [('', None), ('30/Dec/2019', True),])
+def test_validate_date(value, expected):
+    """Check that the date is validated or an exception raised."""
+    if expected is None:
+        with pytest.raises(ValueError) as exception_info:
+            validate_arg_date(value)
+
+        assert '--start argument is not valid' in str(exception_info)
+    else:
+        assert validate_arg_date(value) is None
+
+
+@pytest.mark.parametrize('value, expected', [('', None), ('3d', True),])
+def test_validate_delta(value, expected):
+    """Check that the delta is validated or an exception raised."""
+    if expected is None:
+        with pytest.raises(ValueError) as exception_info:
+            validate_arg_delta(value)
+
+        assert '--delta argument is not valid' in str(exception_info)
+    else:
+        assert validate_arg_delta(value) is None
