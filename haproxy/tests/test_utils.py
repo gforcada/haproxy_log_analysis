@@ -2,6 +2,8 @@ from datetime import timedelta
 from datetime import datetime
 from haproxy.utils import delta_str_to_timedelta
 from haproxy.utils import date_str_to_datetime
+from haproxy.utils import VALID_COMMANDS
+from haproxy.utils import VALID_FILTERS
 
 import pytest
 
@@ -32,3 +34,27 @@ def test_str_to_timedelta(text, expected):
 def test_str_to_datetime(text, expected):
     """Check that start are converted to datetime objects."""
     assert date_str_to_datetime(text) == expected
+
+
+@pytest.mark.parametrize('cmd_key', [*VALID_COMMANDS])
+def test_valid_commands(cmd_key):
+    """Check that the commands information is complete."""
+    cmd_data = VALID_COMMANDS[cmd_key]
+    assert cmd_data['klass']
+    assert cmd_data['klass'].command_line_name() == cmd_key
+    assert cmd_data['description']
+    assert '  ' not in cmd_data['description']
+    assert '\n' not in cmd_data['description']
+    assert cmd_data['description'].startswith(f'{cmd_key}: ')
+
+
+@pytest.mark.parametrize('filter_key', [*VALID_FILTERS])
+def test_valid_filterss(filter_key):
+    """Check that the filters information is complete."""
+    filter_data = VALID_FILTERS[filter_key]
+    assert filter_data['obj']
+    assert filter_data['obj'].__name__ == f'filter_{filter_key}'
+    assert filter_data['description']
+    assert '  ' not in filter_data['description']
+    assert '\n' not in filter_data['description']
+    assert filter_data['description'].startswith(f'{filter_key}: ')

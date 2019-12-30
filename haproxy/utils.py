@@ -47,3 +47,62 @@ def delta_str_to_timedelta(delta):
     time_unit = matches.group('time_unit')
     key = DELTA_KEYS[time_unit]
     return timedelta(**{key: value})
+
+
+def list_filters():
+    """Return the information of existing filters.
+
+    Data returned:
+    - their names as the user is expected to use them from the command line
+    - the object itself
+    - its description
+    """
+    from haproxy import filters
+
+    data = {}
+    for full_name in dir(filters):
+        if not full_name.startswith('filter_'):
+            continue
+        name = full_name[7:]
+        obj = getattr(filters, full_name)
+
+        description = obj.__doc__
+        if description:
+            description = re.sub(r'\n\s+', ' ', description)
+            description.strip()
+
+        data[name] = {'obj': obj, 'description': f'{name}: {description}'}
+    return data
+
+
+def list_commands():
+    """Return the information of existing commands.
+
+    Data returned:
+    - their names as the user is expected to use them from the command line
+    - the object itself
+    - its description
+    """
+    from haproxy import commands
+
+    data = {}
+    for cmd in dir(commands):
+        if cmd.endswith('Mixin'):
+            continue
+        klass = getattr(commands, cmd)
+        try:
+            name = klass.command_line_name()
+        except AttributeError:
+            continue
+
+        description = klass.__doc__
+        if description:
+            description = re.sub(r'\n\s+', ' ', description)
+            description.strip()
+
+        data[name] = {'klass': klass, 'description': f'{name}: {description}'}
+    return data
+
+
+VALID_COMMANDS = list_commands()
+VALID_FILTERS = list_filters()
