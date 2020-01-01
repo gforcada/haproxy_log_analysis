@@ -72,24 +72,6 @@ def test_parse_lines(haproxy_line_factory, accept_date, start, delta, is_valid):
         assert log_file.invalid_lines == 1
 
 
-def test_from_main():
-    log_path = 'haproxy/tests/files/small.log'
-    data = {
-        'start': None,
-        'delta': None,
-        'log': log_path,
-        'commands': ['counter'],
-        'negate_filter': None,
-        'filters': None,
-        'list_commands': False,
-        'list_filters': False,
-        'json': False,
-    }
-    logfile = main(data)
-
-    assert logfile.logfile == log_path
-
-
 def test_total_lines():
     """Check that the total amount of lines are always counted."""
     log_file = Log(logfile='haproxy/tests/files/2_ok_1_invalid.log')
@@ -97,3 +79,26 @@ def test_total_lines():
     assert log_file.total_lines == 3
     assert log_file.valid_lines == 2
     assert log_file.invalid_lines == 1
+
+
+#
+# def test_negate_filter(self):
+#    """Check that reversing a filter output works as expected."""
+#    filter_func = filters.filter_ssl()
+#    log_file = Log(logfile='files/connection.log')
+#
+#    # total number of log lines
+#    self.assertEqual(log_file.cmd_counter(), 12)
+#
+#    # only SSL lines
+#    only_ssl = log_file.filter(filter_func)
+#    self.assertEqual(only_ssl.cmd_counter(), 7)
+#
+#    # non SSL lines
+#    non_ssl = log_file.filter(filter_func, reverse=True)
+#    self.assertEqual(non_ssl.cmd_counter(), 5)
+#
+#    # we did get all lines?
+#    self.assertEqual(
+#        log_file.cmd_counter(), only_ssl.cmd_counter() + non_ssl.cmd_counter()
+#    )
