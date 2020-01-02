@@ -12,41 +12,12 @@ import re
 # 0/51536/1/48082/99627 200 83285 - - ---- 87/87/87/1/0 0/67
 # {77.24.148.74} "GET /path/to/image HTTP/1.1"
 
-# From the above log line the first part
-# `Dec  9 13:01:26 localhost haproxy[28029]:`
-# is coming from syslog.
-# The following regular expression takes care of finding it.
-# With it, this syslog slug can be removed to make processing regular
-# haproxy log lines possible.
-# Note though, that some systems (at least NixOS) use a different format,
-# see below after this regex.
-# Due to that there are three regexes to take care of it:
-# - two to handle the different date format
-# - one to handle the host and process
-SYSLOG_REGEX = re.compile(
-    # Dec  9
-    r'\A\w+\s+\d+\s+'
-    # 13:01:26
-    r'\d+:\d+:\d+\s+'
-)
-SYSLOG_NIXOS_REGEX = re.compile(
-    # 2017-05-15
-    r'\A(\d+-){2}\d+'
-    # T23:45:55
-    r'[T\s](\d+:){2}\d+'
-    # +02:00
-    r'(\+\d+:\d+)*\s+'
-)
-SYSLOG_HOST_AND_PROCESS_REGEX = re.compile(
-    # localhost haproxy[28029]:
-    # note that can be either a hostname or an IP
-    # and can also contain a dot in it
-    r'(\w+|(\d+\.){3}\d+|[.a-zA-Z0-9_-]+)\s+\w+\[\d+\]:\s+'
-)
-
 HAPROXY_LINE_REGEX = re.compile(
+    # Dec  9 13:01:26 localhost haproxy[28029]:
+    # ignore the syslog prefix
+    r'\A.*\]:\s+'
     # 127.0.0.1:39759
-    r'\A(?P<client_ip>[a-fA-F\d+\.:]+):(?P<client_port>\d+)\s+'
+    r'(?P<client_ip>[a-fA-F\d+\.:]+):(?P<client_port>\d+)\s+'
     # [09/Dec/2013:12:59:46.633]
     r'\[(?P<accept_date>.+)\]\s+'
     # loadbalancer default/instance8
@@ -202,10 +173,6 @@ class Line(object):
         return self.client_ip
 
     def _parse_line(self, line):
-        # remove syslog slug if found
-        line = SYSLOG_REGEX.sub('', line)
-        line = SYSLOG_NIXOS_REGEX.sub('', line)
-        line = SYSLOG_HOST_AND_PROCESS_REGEX.sub('', line)
         matches = HAPROXY_LINE_REGEX.match(line)
         if matches is None:
             return False
