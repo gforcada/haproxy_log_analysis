@@ -43,7 +43,7 @@ HAPROXY_LINE_REGEX = re.compile(
 
 HTTP_REQUEST_REGEX = re.compile(
     r'(?P<method>\w+)\s+'
-    r'(?P<path>(/[`´\\<>/\w:,;\.#$!?=&@%_+\'\*^~|\(\)\[\]\{\}-]*)+)'
+    r'(?P<path>(/[`´\\<>/\w:,;.#$!?=&@%_+\'*^~|()\[\]{\}-]*)+)'
     r'\s+(?P<protocol>\w+/\d\.\d)'
 )
 
