@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from haproxy import filters
 from haproxy.logfile import Log
-from haproxy.line import Line
-from haproxy.main import main
+from haproxy.line import parse_line
 
 import pytest
 
@@ -38,9 +36,32 @@ def test_start_and_end_attributes(start_str, start_obj, delta, end_obj):
 
 
 @pytest.mark.parametrize(
+    'accept_date', ['09/Dec/2013:12:59:46.633', None],
+)
+def test_lines_validity(tmp_path, line_factory, accept_date):
+    """Check that lines are either counted as valid or invalid."""
+    file_path = tmp_path / 'haproxy.log'
+    line = ''
+    if accept_date:
+        line = line_factory(accept_date=accept_date).raw_line
+    with open(file_path, 'w') as file_obj:
+        file_obj.write(f'{line}\n')
+    log_file = Log(file_path)
+    lines = [x for x in log_file]
+
+    assert log_file.total_lines == 1
+    if accept_date:
+        assert log_file.valid_lines == 1
+        assert log_file.invalid_lines == 0
+    else:
+        assert log_file.valid_lines == 0
+        assert log_file.invalid_lines == 1
+
+
+@pytest.mark.parametrize(
     'accept_date, start, delta, is_valid',
     [
-        # valid line not to be stripped, returned
+        # valid line and no time frame, returned
         ('09/Dec/2013:12:59:46.633', None, None, True),
         # invalid line, not returned
         (None, None, None, False),
@@ -52,24 +73,17 @@ def test_start_and_end_attributes(start_str, start_obj, delta, end_obj):
         ('09/Dec/2013:12:59:46.633', '08/Dec/2013', '3d', True),
     ],
 )
-def test_parse_lines(haproxy_line_factory, accept_date, start, delta, is_valid):
-    """Check that lines are parsed and checked.
-
-    Only if they are valid, they are returned, otherwise, they are counted as invalid.
-    """
-    log_file = Log('something', start=start, delta=delta)
-    assert log_file.invalid_lines == 0
+def test_returned_lines(tmp_path, line_factory, accept_date, start, delta, is_valid):
+    """Check that lines are only returned if they are valid AND within the time frame."""
+    file_path = tmp_path / 'haproxy.log'
+    line = ''
     if accept_date:
-        line = haproxy_line_factory(accept_date=accept_date)
-    else:
-        line = ''
-    result = log_file.parse_line(line)
-    if is_valid:
-        assert result.raw_line == line
-        assert log_file.invalid_lines == 0
-    else:
-        assert result is None
-        assert log_file.invalid_lines == 1
+        line = line_factory(accept_date=accept_date).raw_line
+    with open(file_path, 'w') as file_obj:
+        file_obj.write(f'{line}\n')
+    log_file = Log(file_path, start=start, delta=delta)
+    lines = [x for x in log_file]
+    assert bool(len(lines)) is is_valid
 
 
 def test_total_lines():

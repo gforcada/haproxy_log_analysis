@@ -78,7 +78,7 @@ def test_main_with_filter(capsys):
     assert '4' in output_text
 
 
-#class ArgumentParsingTest(unittest.TestCase):
+# class ArgumentParsingTest(unittest.TestCase):
 #
 #    def test_arg_parser_json(self):
 #        """Test that we really output json."""
