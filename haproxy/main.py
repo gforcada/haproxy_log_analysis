@@ -256,7 +256,7 @@ def requested_commands(args):
     return cmds_list
 
 
-def console_script():
+def console_script():  # pragma: no cover
     parser = create_parser()
     arguments = parse_arguments(parser.parse_args())
     main(arguments)
