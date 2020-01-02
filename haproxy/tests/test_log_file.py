@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from haproxy.logfile import Log
-from haproxy.line import parse_line
 
 import pytest
 
@@ -47,7 +46,7 @@ def test_lines_validity(tmp_path, line_factory, accept_date):
     with open(file_path, 'w') as file_obj:
         file_obj.write(f'{line}\n')
     log_file = Log(file_path)
-    lines = [x for x in log_file]
+    _ = [x for x in log_file]
 
     assert log_file.total_lines == 1
     if accept_date:

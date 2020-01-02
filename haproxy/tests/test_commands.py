@@ -2,6 +2,7 @@ from datetime import datetime
 from datetime import timedelta
 from haproxy import commands
 from testfixtures import OutputCapture
+
 import pytest
 
 

@@ -3,8 +3,8 @@ from datetime import datetime
 from haproxy.line import HAPROXY_LINE_REGEX
 from haproxy.line import HTTP_REQUEST_REGEX
 
-import random
 import pytest
+import random
 
 
 def test_default_values(line_factory, default_line_data):

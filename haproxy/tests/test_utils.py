@@ -1,11 +1,11 @@
-from datetime import timedelta
 from datetime import datetime
-from haproxy.utils import delta_str_to_timedelta
+from datetime import timedelta
 from haproxy.utils import date_str_to_datetime
-from haproxy.utils import validate_arg_date
-from haproxy.utils import validate_arg_delta
+from haproxy.utils import delta_str_to_timedelta
 from haproxy.utils import VALID_COMMANDS
 from haproxy.utils import VALID_FILTERS
+from haproxy.utils import validate_arg_date
+from haproxy.utils import validate_arg_delta
 
 import pytest
 

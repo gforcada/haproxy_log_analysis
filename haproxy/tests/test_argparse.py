@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from haproxy.main import create_parser
-from haproxy.main import parse_arguments
 from haproxy.main import parse_arg_filters
+from haproxy.main import parse_arguments
 
 import pytest
 
