@@ -18,7 +18,7 @@ script:
   - if [ "$QA" == "true" ]; then isort -c -rc haproxy *.py ; fi
   - if [ "$QA" == "true" ]; then black --check haproxy *.py ; fi
   - if [ "$QA" == "true" ]; then flake8 haproxy *.py ; fi
-  - if [ "$QA" == "true" ]; then echo 'skip tests' ; else pytest --cov=haproxy --cov-report=term-missing --cov-report html:coverage haproxy/tests ; fi
+  - pytest --cov=haproxy --cov-report=term-missing --cov-report html:coverage haproxy/tests
 after_success:
-  - pip install -q coveralls
-  - coveralls
+  - if [ "$QA" == "true" ]; then pip install -q coveralls ; fi
+  - if [ "$QA" == "true" ]; thne coveralls ; fi
