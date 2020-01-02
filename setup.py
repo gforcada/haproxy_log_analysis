@@ -24,7 +24,7 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: System Administrators',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
@@ -39,9 +39,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=['setuptools'],
-    extras_require={'test': ['pytest']},
     entry_points={
         'console_scripts': ['haproxy_log_analysis = haproxy.main:console_script']
     },
-    test_suite='haproxy.tests',
 )
