@@ -75,7 +75,14 @@ class HttpMethods(BaseCommandMixin, AttributeCounterMixin):
 
 
 class IpCounter(BaseCommandMixin, AttributeCounterMixin):
-    """Report a breakdown of how many requests have been made per IP."""
+    """Report a breakdown of how many requests have been made per IP.
+
+    .. note::
+       For this to work you need to configure HAProxy
+       to capture the header that has the IP on it
+       (usually the X-Forwarded-For header).
+       Something like: ``capture request header X-Forwarded-For len 20``
+    """
 
     attribute_name = 'ip'
 
@@ -83,9 +90,8 @@ class IpCounter(BaseCommandMixin, AttributeCounterMixin):
 class TopIps(IpCounter, SortTrimMixin):
     """Return the top most frequent IPs.
 
-    .. note::
-      See `_sort_and_trim` for its current
-      limitations.
+    .. warning::
+       By now hardcoded to 10 items.
     """
 
     def results(self):
@@ -107,9 +113,8 @@ class RequestPathCounter(BaseCommandMixin, AttributeCounterMixin):
 class TopRequestPaths(RequestPathCounter, SortTrimMixin):
     """Returns the top most frequent paths.
 
-    .. note::
-      See `_sort_and_trim` for its current
-      limitations.
+    .. warning::
+       By now hardcoded to 10 items.
     """
 
     def results(self):
@@ -155,7 +160,7 @@ class SlowRequestsCounter(SlowRequests):
 
 
 class AverageResponseTime(SlowRequests):
-    """Return the average response time of all valid requests."""
+    """Return the average time backend servers take to answer all valid requests."""
 
     threshold = 0
 
@@ -168,7 +173,7 @@ class AverageResponseTime(SlowRequests):
 
 
 class AverageWaitingTime(BaseCommandMixin):
-    """Return the average response time of all valid requests."""
+    """Return the average time valid requests wait on HAProxy before being dispatched to a backend server."""
 
     def __init__(self):
         self.waiting_times = []

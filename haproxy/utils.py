@@ -87,7 +87,7 @@ def list_filters():
             description = re.sub(r'\n\s+', ' ', description)
             description.strip()
 
-        data[name] = {'obj': obj, 'description': f'{name}: {description}'}
+        data[name] = {'obj': obj, 'description': f'{name}: {description}\n'}
     return data
 
 
@@ -116,7 +116,7 @@ def list_commands():
             description = re.sub(r'\n\s+', ' ', description)
             description.strip()
 
-        data[name] = {'klass': klass, 'description': f'{name}: {description}'}
+        data[name] = {'klass': klass, 'description': f'{name}: {description}\n'}
     return data
 
 

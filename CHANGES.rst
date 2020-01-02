@@ -1,10 +1,33 @@
 CHANGES
 =======
 
-3.0.1 (unreleased)
+4.0.0 (unreleased)
 ------------------
 
-- Test against Python 3.8 as well.
+**BREAKING CHANGES:**
+
+- Complete rewrite to use almost no memory usage even on huge files.
+  [gforcada]
+
+- Add parallelization to make parsing faster by parsing multiple lines in parallel.
+  [gforcada]
+
+- Rename command ``counter_slow_requests`` to ``slow_requests_counter``,
+  so it is aligned with all other ``_counter`` commands.
+  [gforcada]
+
+**REMOVED TEMPORARILY:**
+
+- filter reversing
+- JSON output
+- ``counter_invalid`` command
+
+**Regular changes:**
+
+- Drop Python 2 support, and test on Python 3.8.
+  [gforcada]
+
+- Remove the pickling support.
   [gforcada]
 
 - Add `--json` output command line option.

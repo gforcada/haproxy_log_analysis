@@ -76,10 +76,10 @@ The current ``--help`` looks like this::
                           e.g ip[192.168.1.1],ssl,path[/some/path]. See --list-
                           filters to get a full list of them.
     -n, --negate-filter   Make filters passed with -f work the other way around,
-                            i.e. ifthe ``ssl`` filter is passed instead of showing
-                          only ssl requests it will show non-ssl traffic. If the
-                          ``ip`` filter isused, then all but that ip passed to
-                          the filter will be used.
+                          i.e. if the ``ssl`` filter is passed instead of
+                          showing only ssl requests it will show non-ssl
+                          traffic. If the ``ip`` filter is used, then all but
+                          that ip passed to the filter will be used.
     --list-commands       Lists all commands available.
     --list-filters        Lists all filters available.
     --json                Output results in json.
@@ -89,71 +89,24 @@ Commands
 --------
 
 Commands are small purpose specific programs in themselves that report specific statistics about the log file being analyzed.
-See the ``--help`` (or the section above) to know how to run them.
+See them all with ``--list-commands`` or online at https://haproxy-log-analyzer.readthedocs.io/modules.html#module-haproxy.commands.
 
-``counter``
-  Reports how many log lines could be parsed.
-
-``counter_invalid``
-  Reports how many log lines could *not* be parsed.
-
-``http_methods``
-  Reports a breakdown of how many requests have been made per HTTP method
-  (GET, POST...).
-
-``ip_counter``
-  Reports a breakdown of how many requests have been made per IP.
-  Note that for this to work you need to configure HAProxy to capture the header that has the IP on it
-  (usually the X-Forwarded-For header).
-  Something like:
-  ``capture request header X-Forwarded-For len 20``
-
-``top_ips``
-  Reports the 10 IPs with most requests (and the amount of requests).
-
-``status_codes_counter``
-  Reports a breakdown of how many requests per HTTP status code
-  (404, 500, 200, 301..) are on the log file.
-
-``request_path_counter``
-  Reports a breakdown of how many requests per path (/rss, /, /another/path).
-
-``top_request_paths``
-  Reports the 10 paths with most requests.
-
-``slow_requests``
-  Reports a list of requests that downstream servers took more than 1 second to response.
-
-``counter_slow_requests``
-  Reports the amount of requests that downstream servers took more than 1 second to response.
-
-``average_response_time``
-  Reports the average time (in milliseconds) servers spend to answer requests.
-  .. note:: Aborted requests are not considered.
-
-``average_waiting_time``
-  Reports the average time (in milliseconds) requests spend waiting on the various HAProxy queues.
-
-``server_load``
-  Reports a breakdown of how many requests were processed by each downstream server.
-  Note that currently it does not take into account the backend the server is configured on.
-
-``queue_peaks``
-  Reports a list of queue peaks.
-  A queue peak is defined by the biggest value on the backend queue on a series of log lines that are between log lines without being queued.
-
-``connection_type``
-  Reports on how many requests were made on SSL and how many on plain HTTP.
-  This command only works if the default port for SSL (443) appears on the path.
-
-``requests_per_minute``
-  Reports on how many requests were made per minute.
-  It works best when used with ``-s`` and ``-d`` command line arguments,
-  as the output can be huge.
-
-``print``
-  Prints the raw lines.
-  This can be useful to trim down a file (with ``-s`` and ``-d`` for example) so that later runs are faster.
+- ``average_response_time``
+- ``average_waiting_time``
+- ``connection_type``
+- ``counter``
+- ``http_methods``
+- ``ip_counter``
+- ``print``
+- ``queue_peaks``
+- ``request_path_counter``
+- ``requests_per_minute``
+- ``server_load``
+- ``slow_requests``
+- ``slow_requests_counter``
+- ``status_codes_counter``
+- ``top_ips``
+- ``top_request_paths``
 
 Filters
 -------
@@ -165,60 +118,27 @@ are a way to reduce the amount of log lines to be processed.
 
    This helps when looking for specific traces, like a certain IP, a path...
 
-``ip``
-  Filters log lines by the given IP.
+See them all with ``--list-filters`` or online at https://haproxy-log-analyzer.readthedocs.io/modules.html#module-haproxy.filters.
 
-``ip_range``
-  Filters log lines by the given IP range
-  (all IPs that begin with the same prefix).
-
-``path``
-  Filters log lines by the given string.
-
-``ssl``
-  Filters log lines that are from SSL connections.
-  See :method::`.HaproxyLogLine.is_https` for its limitations.
-
-``slow_requests``
-  Filters log lines that take at least the given time to get answered
-  (in milliseconds).
-
-``time_frame``
-  This is an implicit filter that is used when ``--start``, and optionally, ``--delta`` are used.
-  Do not use this filter on the command line, use ``--start`` and ``--delta`` instead.
-
-``status_code``
-  Filters log lines that match the given HTTP status code (i.e. 404, 200...).
-
-``status_code_family``
-  Filters log lines that match the given HTTP status code family
-  (i.e. 4 for all 4xx status codes, 5 for 5xx status codes...).
-
-``http_method``
-  Filters log lines by the HTTP method used (GET, POST...).
-
-``backend``
-  Filters log lines by the HAProxy backend the connection was handled with.
-
-``frontend``
-  Filters log lines by the HAProxy frontend the connection arrived from.
-
-``server``
-  Filters log lines by the downstream server that handled the connection.
-
-``response_size``
-  Filters log lines by the response size (in bytes).
-  Specially useful when looking for big file downloads.
-
-``wait_on_queues``
-  Filters log lines by the amount of time the request had to wait on HAProxy queues.
-  If a request waited less than the given amount of time is accepted.
+- ``backend``
+- ``frontend``
+- ``http_method``
+- ``ip``
+- ``ip_range``
+- ``path``
+- ``response_size``
+- ``server``
+- ``slow_requests``
+- ``ssl``
+- ``status_code``
+- ``status_code_family``
+- ``wait_on_queues``
 
 Installation
 ------------
 After installation you will have a console script `haproxy_log_analysis`::
 
-    $ python setup.py install
+    $ pip install haproxy_log_analysis
 
 TODO
 ----
@@ -238,6 +158,6 @@ TODO
 - *your ideas*
 
 .. _HAProxy: http://haproxy.1wt.eu/
-.. _HTTP log format: http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
-.. _documentation and API: http://haproxy-log-analyzer.readthedocs.org/en/latest/
+.. _HTTP log format: http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.3
+.. _documentation and API: https://haproxy-log-analyzer.readthedocs.io/
 .. _ReadTheDocs: http://readthedocs.org
