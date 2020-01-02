@@ -234,3 +234,7 @@ class Line(object):
 
         if self.raw_http_request != '<BADREQ>':
             print(f'Could not process HTTP request {self.raw_http_request}')
+
+
+def parse_line(line):  # pragma: no cover
+    return Line(line.strip())

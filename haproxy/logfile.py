@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from multiprocessing import Pool
 from datetime import datetime
-from haproxy.line import Line
+from haproxy.line import parse_line
 from haproxy.utils import delta_str_to_timedelta
 from haproxy.utils import date_str_to_datetime
 
@@ -24,23 +25,21 @@ class Log(object):
         self.valid_lines = 0
 
     def __iter__(self):
-        with open(self.logfile) as logfile:
-            for line in logfile:
-                parsed_line = self.parse_line(line)
-                if parsed_line:
-                    yield parsed_line
+        start = datetime.now()
+        with open(self.logfile) as logfile, Pool() as pool:
+            for index, line in enumerate(pool.imap(parse_line, logfile)):
+                if line.is_valid:
+                    self.valid_lines += 1
+                    if line.is_within_time_frame(self.start, self.end):
+                        yield line
+                else:
+                    self.invalid_lines += 1
 
-    def parse_line(self, line):
-        stripped_line = line.strip()
-        parsed_line = Line(stripped_line)
+                if index % 10000 == 0 and index > 0:  # pragma: no cover
+                    print('.', end='', flush=True)
 
-        if parsed_line.is_valid and parsed_line.is_within_time_frame(
-            self.start, self.end
-        ):
-            self.valid_lines += 1
-            return parsed_line
-        else:
-            self.invalid_lines += 1
+        end = datetime.now()
+        print(f'\nIt took {end - start}')
 
     @property
     def total_lines(self):
