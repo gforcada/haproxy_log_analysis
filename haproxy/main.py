@@ -170,11 +170,6 @@ def _validate_arg_logfile(filename):
         raise ValueError(f'filename {filepath} does not exist')
 
 
-def json_dumps_converter(o):
-    if isinstance(o, datetime.datetime):
-        return o.__str__()
-
-
 def print_commands():
     """Prints all commands available with their description."""
     for command_name in sorted(VALID_COMMANDS.keys()):
