@@ -234,6 +234,9 @@ def main(args):
     # print the results
     for cmd in cmds_to_use:
         command_name = cmd.command_line_name()
+        if command_name == 'print':
+            # it has already printed the lines
+            continue
         underline = '=' * len(command_name)
         results = cmd.results()
         print(f'{command_name.upper()}\n{underline}\n{results}')

@@ -83,6 +83,15 @@ def test_main_negate_filter(capsys, default_arguments):
     output_text = capsys.readouterr().out
     assert 'COUNTER\n=======\n5' in output_text
 
+
+def test_print_no_output(capsys, default_arguments):
+    """Check that the print header is not shown."""
+    default_arguments['commands'] = ['print']
+    main(default_arguments)
+    output_text = capsys.readouterr().out
+    assert 'PRINT\n=====' not in output_text
+
+
 # class ArgumentParsingTest(unittest.TestCase):
 #
 #    def test_arg_parser_json(self):
