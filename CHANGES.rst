@@ -18,7 +18,6 @@ CHANGES
 
 **REMOVED TEMPORARILY:**
 
-- filter reversing
 - JSON output
 - ``counter_invalid`` command
 

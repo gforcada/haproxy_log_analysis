@@ -184,7 +184,7 @@ def show_help(data):
     # make sure that if no arguments are passed the help is shown
     show = True
     for key in data:
-        if data[key] is not None and key not in ('log', 'json'):
+        if data[key] is not None and key not in ('log', 'json', 'negate_filter'):
             show = False
             break
 
@@ -218,9 +218,16 @@ def main(args):
     filters_to_use = requested_filters(args)
     cmds_to_use = requested_commands(args)
 
+    # double negation: when a user wants to negate the filters,
+    # the argument parsing sets `negate_filter` to True,
+    # but the filtering logic (the `all()`) returns True if the line meets all filters
+    # so reversing whatever `negate_filter` has is what the user wants :)
+    expected_filtering = True
+    if args['negate_filter']:
+        expected_filtering = False
     # process all log lines
     for line in log_file:
-        if all((f(line) for f in filters_to_use)):
+        if all((f(line) for f in filters_to_use)) is expected_filtering:
             for cmd in cmds_to_use:
                 cmd(line)
 

@@ -7,6 +7,22 @@ from haproxy.utils import VALID_FILTERS
 import pytest
 
 
+@pytest.fixture
+def default_arguments():
+    """Return all the expected arguments the main function expects."""
+    return {
+        'start': None,
+        'delta': None,
+        'log': 'haproxy/tests/files/small.log',
+        'commands': ['counter'],
+        'negate_filter': None,
+        'filters': None,
+        'list_commands': False,
+        'list_filters': False,
+        'json': False,
+    }
+
+
 @pytest.mark.parametrize(
     'switch, listing',
     [('list-filters', VALID_FILTERS), ('list-commands', VALID_COMMANDS),],
@@ -38,45 +54,34 @@ def test_show_help(capsys):
     assert '--list-commands ' in output_text
 
 
-def test_main(capsys):
-    log_path = 'haproxy/tests/files/small.log'
-    data = {
-        'start': None,
-        'delta': None,
-        'log': log_path,
-        'commands': ['counter'],
-        'negate_filter': None,
-        'filters': None,
-        'list_commands': False,
-        'list_filters': False,
-        'json': False,
-    }
-    main(data)
+def test_main(capsys, default_arguments):
+    """Check that the main function works as expected with default arguments."""
+    main(default_arguments)
     output_text = capsys.readouterr().out
     assert 'COUNTER' in output_text
     assert '=======' in output_text
     assert '9' in output_text
 
 
-def test_main_with_filter(capsys):
-    log_path = 'haproxy/tests/files/small.log'
-    data = {
-        'start': None,
-        'delta': None,
-        'log': log_path,
-        'commands': ['counter'],
-        'negate_filter': None,
-        'filters': [('server', 'instance1'),],
-        'list_commands': False,
-        'list_filters': False,
-        'json': False,
-    }
-    main(data)
+def test_main_with_filter(capsys, default_arguments):
+    """Check that the filters are applied as expected."""
+    default_arguments['filters'] = [
+        ('server', 'instance1'),
+    ]
+    main(default_arguments)
     output_text = capsys.readouterr().out
-    assert 'COUNTER' in output_text
-    assert '=======' in output_text
-    assert '4' in output_text
+    assert 'COUNTER\n=======\n4' in output_text
 
+
+def test_main_negate_filter(capsys, default_arguments):
+    """Check that filters can be reversed."""
+    default_arguments['filters'] = [
+        ('server', 'instance1'),
+    ]
+    default_arguments['negate_filter'] = True
+    main(default_arguments)
+    output_text = capsys.readouterr().out
+    assert 'COUNTER\n=======\n5' in output_text
 
 # class ArgumentParsingTest(unittest.TestCase):
 #
