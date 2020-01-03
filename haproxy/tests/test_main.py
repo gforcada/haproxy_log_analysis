@@ -58,9 +58,7 @@ def test_main(capsys, default_arguments):
     """Check that the main function works as expected with default arguments."""
     main(default_arguments)
     output_text = capsys.readouterr().out
-    assert 'COUNTER' in output_text
-    assert '=======' in output_text
-    assert '9' in output_text
+    assert 'COUNTER\n=======\n9' in output_text
 
 
 def test_main_with_filter(capsys, default_arguments):
@@ -92,158 +90,10 @@ def test_print_no_output(capsys, default_arguments):
     assert 'PRINT\n=====' not in output_text
 
 
-# class ArgumentParsingTest(unittest.TestCase):
-#
-#    def test_arg_parser_json(self):
-#        """Test that we really output json."""
-#        arguments = ['-l', 'haproxy/tests/files/small.log', '--json', '-c', 'counter']
-#        data = parse_arguments(self.parser.parse_args(arguments))
-#        test_output = NamedTemporaryFile(mode='w', delete=False)
-#        test_result = True
-#
-#        with RedirectStdout(stdout=test_output):
-#            main(data)
-#
-#        # Since python 3.5, json.load returns a JSONDecodeError instead of a
-#        # ValueError
-#        try:
-#            json_parse_exception = json.decoder.JSONDecodeError
-#        except AttributeError:
-#            json_parse_exception = ValueError
-#
-#        try:
-#            with open(test_output.name) as json_file:
-#                json.load(json_file)
-#        except json_parse_exception:
-#            test_result = False
-#
-#        self.assertTrue(test_result)
-#
-#    def test_arg_parser_filters(self):
-#        """Check that the filter logic on haproxy.main.main works as expected.
-#        """
-#        arguments = [
-#            '-f',
-#            'ssl,ip[1.2.3.4]',
-#            '-c',
-#            'counter',
-#            '-l',
-#            'haproxy/tests/files/filters.log',
-#        ]
-#        data = parse_arguments(self.parser.parse_args(arguments))
-#        test_output = NamedTemporaryFile(mode='w', delete=False)
-#
-#        with RedirectStdout(stdout=test_output):
-#            main(data)
-#
-#        with open(test_output.name, 'r') as output_file:
-#            output_text = output_file.read()
-#
-#            self.assertIn('counter', output_text)
-#            self.assertIn('2', output_text)
-#
-#    def test_arg_parser_filters_start(self):
-#        """Check that the filter_time is applied on the log file if a start
-#        argument is given.
-#        """
-#        arguments = [
-#            '-s',
-#            '12/Dec/2015',
-#            '-c',
-#            'counter',
-#            '-l',
-#            'haproxy/tests/files/filters.log',
-#        ]
-#        data = parse_arguments(self.parser.parse_args(arguments))
-#        test_output = NamedTemporaryFile(mode='w', delete=False)
-#
-#        with RedirectStdout(stdout=test_output):
-#            main(data)
-#
-#        with open(test_output.name, 'r') as output_file:
-#            output_text = output_file.read()
-#
-#            self.assertIn('counter', output_text)
-#            self.assertIn('4', output_text)
-#
-#    def test_arg_parser_filters_start_and_delta(self):
-#        """Check that the filter_time is applied on the log file if a start
-#        and delta arguments are given.
-#        """
-#        arguments = [
-#            '-s',
-#            '11/Dec/2015:11',
-#            '-d',
-#            '3h',
-#            '-c',
-#            'counter',
-#            '-l',
-#            'haproxy/tests/files/filters.log',
-#        ]
-#        data = parse_arguments(self.parser.parse_args(arguments))
-#        test_output = NamedTemporaryFile(mode='w', delete=False)
-#
-#        with RedirectStdout(stdout=test_output):
-#            main(data)
-#
-#        with open(test_output.name, 'r') as output_file:
-#            output_text = output_file.read()
-#
-#            self.assertIn('counter', output_text)
-#            self.assertIn('2', output_text)
-#
-#    def test_arg_parser_negate_filter_output(self):
-#        """Check that if the negate filter argument is set, is actually used.
-#        """
-#        arguments = [
-#            '-c',
-#            'counter',
-#            '-l',
-#            'haproxy/tests/files/small.log',
-#            '-f',
-#            'server[instance3]',
-#            '-n',
-#        ]
-#
-#        # with the negate argument set, there should be all but instance3 lines
-#        data = parse_arguments(self.parser.parse_args(arguments))
-#        test_output = NamedTemporaryFile(mode='w', delete=False)
-#
-#        with RedirectStdout(stdout=test_output):
-#            main(data)
-#
-#        with open(test_output.name, 'r') as output_file:
-#            output_text = output_file.read()
-#
-#            self.assertIn('counter', output_text)
-#            self.assertIn('7', output_text)
-#
-#        # remove the negate argument, now only 2 lines should match
-#        arguments.pop()
-#        data = parse_arguments(self.parser.parse_args(arguments))
-#        test_output = NamedTemporaryFile(mode='w', delete=False)
-#
-#        with RedirectStdout(stdout=test_output):
-#            main(data)
-#
-#        with open(test_output.name, 'r') as output_file:
-#            output_text = output_file.read()
-#
-#            self.assertIn('counter', output_text)
-#            self.assertIn('2', output_text)
-#
-#        # finally remove the filter, 9 lines should match
-#        arguments.pop()
-#        arguments.pop()  # this second pop() is because of the argument
-#        data = parse_arguments(self.parser.parse_args(arguments))
-#        test_output = NamedTemporaryFile(mode='w', delete=False)
-#
-#        with RedirectStdout(stdout=test_output):
-#            main(data)
-#
-#        with open(test_output.name, 'r') as output_file:
-#            output_text = output_file.read()
-#
-#            self.assertIn('counter', output_text)
-#            self.assertIn('9', output_text)
-#
+def test_json_output(capsys, default_arguments):
+    """Check that the JSON switch is used and JSON output is printed."""
+    default_arguments['json'] = True
+    main(default_arguments)
+    output_text = capsys.readouterr().out
+    assert 'COUNTER\n=======\n9' not in output_text
+    assert '{"COUNTER": 9}' in output_text

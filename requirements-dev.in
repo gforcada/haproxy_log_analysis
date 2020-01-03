@@ -17,4 +17,3 @@ pydocstyle
 pyflakes
 pytest
 pytest-cov
-testfixtures

@@ -1,6 +1,8 @@
 from collections import defaultdict
 from collections import OrderedDict
+from datetime import datetime
 
+import json
 import time
 
 
@@ -19,6 +21,25 @@ class BaseCommandMixin:
                 final_string += character
         return final_string
 
+    def raw_results(self):  # pragma: no cover
+        raise NotImplementedError
+
+    def json_data(self):
+        return self.raw_results()
+
+    def print_data(self):
+        return self.raw_results()
+
+    def results(self, output=None):
+        command_name = self.command_line_name().upper()
+        if output == 'json':
+            results = self.json_data()
+            print(json.dumps({command_name: results}))
+        else:
+            results = self.print_data()
+            underline = '=' * len(command_name)
+            print(f'{command_name}\n{underline}\n{results}\n')
+
 
 class AttributeCounterMixin:
 
@@ -30,8 +51,26 @@ class AttributeCounterMixin:
     def __call__(self, line):
         self.stats[getattr(line, self.attribute_name)] += 1
 
-    def results(self):
+    def raw_results(self):
         return self.stats
+
+    def print_data(self):
+        result = ''
+        data = sorted(
+            self.stats.items(), key=lambda data_info: data_info[1], reverse=True
+        )
+        for key, value in data:
+            result += f'- {key}: {value}\n'
+        return result
+
+    def json_data(self):
+        result = []
+        data = sorted(
+            self.stats.items(), key=lambda data_info: data_info[1], reverse=True
+        )
+        for key, value in data:
+            result.append({key: value})
+        return result
 
 
 class SortTrimMixin:
@@ -61,11 +100,11 @@ class Counter(BaseCommandMixin):
     def __call__(self, line):
         self.counter += 1
 
-    def results(self):
+    def raw_results(self):
         return self.counter
 
 
-class HttpMethods(BaseCommandMixin, AttributeCounterMixin):
+class HttpMethods(AttributeCounterMixin, BaseCommandMixin):
     """Report a breakdown of how many requests have been made per HTTP method.
 
     That is, how many GET, POST, etc requests.
@@ -74,7 +113,7 @@ class HttpMethods(BaseCommandMixin, AttributeCounterMixin):
     attribute_name = 'http_request_method'
 
 
-class IpCounter(BaseCommandMixin, AttributeCounterMixin):
+class IpCounter(AttributeCounterMixin, BaseCommandMixin):
     """Report a breakdown of how many requests have been made per IP.
 
     .. note::
@@ -94,17 +133,17 @@ class TopIps(IpCounter, SortTrimMixin):
        By now hardcoded to 10 items.
     """
 
-    def results(self):
+    def raw_results(self):
         return self._sort_and_trim(self.stats, reverse=True)
 
 
-class StatusCodesCounter(BaseCommandMixin, AttributeCounterMixin):
+class StatusCodesCounter(AttributeCounterMixin, BaseCommandMixin):
     """Generate statistics about HTTP status codes. 404, 500 and so on."""
 
     attribute_name = 'status_code'
 
 
-class RequestPathCounter(BaseCommandMixin, AttributeCounterMixin):
+class RequestPathCounter(AttributeCounterMixin, BaseCommandMixin):
     """Generate statistics about HTTP requests' path."""
 
     attribute_name = 'http_request_path'
@@ -117,7 +156,7 @@ class TopRequestPaths(RequestPathCounter, SortTrimMixin):
        By now hardcoded to 10 items.
     """
 
-    def results(self):
+    def raw_results(self):
         return self._sort_and_trim(self.stats, reverse=True)
 
 
@@ -141,7 +180,7 @@ class SlowRequests(BaseCommandMixin):
         if response_time >= self.threshold:
             self.slow_requests.append(response_time)
 
-    def results(self):
+    def raw_results(self):
         return sorted(self.slow_requests)
 
 
@@ -155,7 +194,7 @@ class SlowRequestsCounter(SlowRequests):
        or globally.
     """
 
-    def results(self):
+    def raw_results(self):
         return len(self.slow_requests)
 
 
@@ -164,7 +203,7 @@ class AverageResponseTime(SlowRequests):
 
     threshold = 0
 
-    def results(self):
+    def raw_results(self):
         total_requests = float(len(self.slow_requests))
         if total_requests > 0:
             average = sum(self.slow_requests) / total_requests
@@ -183,7 +222,7 @@ class AverageWaitingTime(BaseCommandMixin):
         if waiting_time >= 0:
             self.waiting_times.append(waiting_time)
 
-    def results(self):
+    def raw_results(self):
         total_requests = float(len(self.waiting_times))
         if total_requests > 0:
             average = sum(self.waiting_times) / total_requests
@@ -191,7 +230,7 @@ class AverageWaitingTime(BaseCommandMixin):
         return 0.0
 
 
-class ServerLoad(BaseCommandMixin, AttributeCounterMixin):
+class ServerLoad(AttributeCounterMixin, BaseCommandMixin):
     """Generate statistics regarding how many requests were processed by
     each downstream server.
     """
@@ -236,7 +275,7 @@ class QueuePeaks(BaseCommandMixin):
         key = self._generate_key(line.accept_date)
         self.requests[key] = (line.queue_backend, line.accept_date)
 
-    def results(self):
+    def raw_results(self):
         sorted_requests = OrderedDict(sorted(self.requests.items()))
         peaks = []
         current_peak = 0
@@ -264,8 +303,8 @@ class QueuePeaks(BaseCommandMixin):
                 data = {
                     'peak': current_peak,
                     'span': current_span,
-                    'first': first_with_queue,
-                    'last': timestamp,
+                    'started': first_with_queue,
+                    'finished': timestamp,
                 }
                 peaks.append(data)
                 current_peak = 0
@@ -277,12 +316,28 @@ class QueuePeaks(BaseCommandMixin):
             data = {
                 'peak': current_peak,
                 'span': current_span,
-                'first': first_with_queue,
-                'last': timestamp,
+                'started': first_with_queue,
+                'finished': timestamp,
             }
             peaks.append(data)
 
         return peaks
+
+    def print_data(self):
+        data = ''
+        for peak_info in self.raw_results():
+            data += f'- peak: {peak_info.get("peak")} '
+            data += f'- span: {peak_info.get("span")} '
+            data += f'- started: {peak_info.get("started").isoformat()} '
+            data += f'- finished: {peak_info.get("finished").isoformat()}\n'
+        return data
+
+    def json_data(self):
+        data = self.raw_results()
+        for peak_info in data:
+            peak_info['started'] = peak_info['started'].isoformat()
+            peak_info['finished'] = peak_info['finished'].isoformat()
+        return data
 
 
 class ConnectionType(BaseCommandMixin):
@@ -307,8 +362,16 @@ class ConnectionType(BaseCommandMixin):
         else:
             self.non_https += 1
 
-    def results(self):
+    def raw_results(self):
         return self.https, self.non_https
+
+    def print_data(self):
+        https, http = self.raw_results()
+        return f'- https: {https}\n- http: {http}'
+
+    def json_data(self):
+        https, http = self.raw_results()
+        return [{'https': https}, {'http': http}]
 
 
 class RequestsPerMinute(BaseCommandMixin):
@@ -327,9 +390,23 @@ class RequestsPerMinute(BaseCommandMixin):
         unixtime = time.mktime(date_with_minute_precision.timetuple())
         self.requests[unixtime] += 1
 
-    def results(self):
+    def raw_results(self):
         """Return the list of requests sorted by the timestamp."""
         data = sorted(self.requests.items(), key=lambda data_info: data_info[0])
+        return data
+
+    def print_data(self):
+        data = ''
+        for date_info, count in self.raw_results():
+            date = datetime.fromtimestamp(date_info).isoformat()
+            data += f'- {date}: {count}\n'
+        return data
+
+    def json_data(self):
+        data = []
+        for date_info, count in self.raw_results():
+            date = datetime.fromtimestamp(date_info).isoformat()
+            data.append({date: count})
         return data
 
 
@@ -339,5 +416,8 @@ class Print(BaseCommandMixin):
     def __call__(self, line):
         print(line.raw_line)
 
-    def results(self):
+    def raw_results(self):
+        return
+
+    def results(self, output=None):
         return

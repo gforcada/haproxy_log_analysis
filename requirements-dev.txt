@@ -39,7 +39,7 @@ pytest==5.3.2
 regex==2019.12.20         # via black
 six==1.13.0               # via packaging, pip-tools
 snowballstemmer==2.0.0    # via pydocstyle
-testfixtures==6.10.3
+testfixtures==6.10.3      # via flake8-isort
 toml==0.10.0              # via black, isort
 typed-ast==1.4.0          # via black
 wcwidth==0.1.8            # via pytest

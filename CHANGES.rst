@@ -18,7 +18,6 @@ CHANGES
 
 **REMOVED TEMPORARILY:**
 
-- JSON output
 - ``counter_invalid`` command
 
 **Regular changes:**
