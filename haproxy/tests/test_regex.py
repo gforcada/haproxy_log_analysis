@@ -3,424 +3,204 @@ from datetime import datetime
 from haproxy.line import HAPROXY_LINE_REGEX
 from haproxy.line import HTTP_REQUEST_REGEX
 
-import unittest
-
-
-LINE = '{0} [{1}] {2} {3} {4} - - ---- {5} {6} {7} "{8}"'
-
-
-class HaproxyLogLineRegexTest(unittest.TestCase):
-    def setUp(self):
-        self.client_ip_and_port = '127.0.0.1:39759'
-        self.accept_date = '09/Dec/2013:12:59:46.633'
-        self.server_names = 'loadbalancer default/instance8'
-        self.timers = '0/51536/1/48082/99627'
-        self.status_and_bytes = '200 83285'
-        self.connections_and_retries = '87/87/87/1/0'
-        self.queues = '0/67'
-        self.headers = '{77.24.148.74}'
-        self.http_request = 'GET /path/to/image HTTP/1.1'
-
-    def _build_test_string(self):
-        log_line = LINE.format(
-            self.client_ip_and_port,
-            self.accept_date,
-            self.server_names,
-            self.timers,
-            self.status_and_bytes,
-            self.connections_and_retries,
-            self.queues,
-            self.headers,
-            self.http_request,
-        )
-        return log_line
-
-    def test_line_regex_default_values(self):
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('http_request'), self.http_request)
-
-    def test_line_regex_client_ip_and_port(self):
-        client_ip = '192.168.0.250'
-        client_port = '34'
-        self.client_ip_and_port = '{0}:{1}'.format(client_ip, client_port)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('client_ip'), client_ip)
-        self.assertEqual(matches.group('client_port'), client_port)
-
-    def test_line_regex_accept_date(self):
-        self.accept_date = datetime.now().strftime('%d/%b/%Y:%H:%M:%S.%f')
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertTrue(matches.group('accept_date') in self.accept_date)
-
-    def test_line_regex_server_names(self):
-        frontend_name = 'SomeThing4'
-        backend_name = 'Another1'
-        server_name = 'Cloud9'
-        self.server_names = '{0} {1}/{2}'.format(
-            frontend_name, backend_name, server_name
-        )
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('frontend_name'), frontend_name)
-        self.assertEqual(matches.group('backend_name'), backend_name)
-        self.assertEqual(matches.group('server_name'), server_name)
-
-    def test_line_regex_timers(self):
-        tq = '23'
-        tw = '0'
-        tc = '3'
-        tr = '4'
-        tt = '5'
-        self.timers = '{0}/{1}/{2}/{3}/{4}'.format(tq, tw, tc, tr, tt)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('tq'), tq)
-        self.assertEqual(matches.group('tw'), tw)
-        self.assertEqual(matches.group('tc'), tc)
-        self.assertEqual(matches.group('tr'), tr)
-        self.assertEqual(matches.group('tt'), tt)
-
-    def test_line_regex_timers_with_sign(self):
-        tq = '-23'
-        tw = '-10'
-        tc = '-3'
-        tr = '-4'
-        tt = '+5'
-        self.timers = '{0}/{1}/{2}/{3}/{4}'.format(tq, tw, tc, tr, tt)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('tq'), tq)
-        self.assertEqual(matches.group('tw'), tw)
-        self.assertEqual(matches.group('tc'), tc)
-        self.assertEqual(matches.group('tr'), tr)
-        self.assertEqual(matches.group('tt'), tt)
-
-    def test_line_regex_status_and_bytes(self):
-        status = '23'
-        bytes_read = '10'
-        self.status_and_bytes = '{0} {1}'.format(status, bytes_read)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('status_code'), status)
-        self.assertEqual(matches.group('bytes_read'), bytes_read)
-
-    def test_line_regex_status_and_bytes_with_sign(self):
-        status = '404'
-        bytes_read = '+10'
-        self.status_and_bytes = '{0} {1}'.format(status, bytes_read)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('status_code'), status)
-        self.assertEqual(matches.group('bytes_read'), bytes_read)
-
-    def test_line_regex_status_and_bytes_for_terminated_request(self):
-        status = '-1'
-        bytes_read = '0'
-        self.status_and_bytes = '{0} {1}'.format(status, bytes_read)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('status_code'), status)
-        self.assertEqual(matches.group('bytes_read'), bytes_read)
-
-    def test_line_regex_connections_and_retries(self):
-        act = '40'
-        fe = '10'
-        be = '11'
-        srv = '12'
-        retries = '14'
-        self.connections_and_retries = '{0}/{1}/{2}/{3}/{4}'.format(
-            act, fe, be, srv, retries
-        )
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('act'), act)
-        self.assertEqual(matches.group('fe'), fe)
-        self.assertEqual(matches.group('be'), be)
-        self.assertEqual(matches.group('srv'), srv)
-        self.assertEqual(matches.group('retries'), retries)
-
-    def test_line_regex_connections_and_retries_with_sign(self):
-        act = '30'
-        fe = '0'
-        be = '111'
-        srv = '412'
-        retries = '+314'
-        self.connections_and_retries = '{0}/{1}/{2}/{3}/{4}'.format(
-            act, fe, be, srv, retries
-        )
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('act'), act)
-        self.assertEqual(matches.group('fe'), fe)
-        self.assertEqual(matches.group('be'), be)
-        self.assertEqual(matches.group('srv'), srv)
-        self.assertEqual(matches.group('retries'), retries)
-
-    def test_line_regex_queues(self):
-        server = '30'
-        backend = '0'
-        self.queues = '{0}/{1}'.format(server, backend)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('queue_server'), server)
-        self.assertEqual(matches.group('queue_backend'), backend)
-
-    def test_line_regex_headers_empty(self):
-        self.headers = ''
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('request_headers'), None)
-        self.assertEqual(matches.group('response_headers'), None)
-
-    def test_line_regex_headers(self):
-        request = 'something in the air'
-        response = 'something not in the air'
-        self.headers = '{{{0}}} {{{1}}}'.format(request, response)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertTrue(request in matches.group('request_headers'))
-        self.assertTrue(response in matches.group('response_headers'))
-
-    def test_line_regex_headers_only_one(self):
-        request = 'something in the air'
-        self.headers = '{{{0}}}'.format(request)
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('request_headers'), None)
-        self.assertEqual(matches.group('response_headers'), None)
-        self.assertTrue(request in matches.group('headers'))
-
-    def test_line_regex_http_request(self):
-        http_request = 'something in the air'
-        self.http_request = http_request
-
-        log_line = self._build_test_string()
-        matches = HAPROXY_LINE_REGEX.match(log_line)
-
-        self.assertEqual(matches.group('http_request'), http_request)
-
-
-class HttpRequestRegexTest(unittest.TestCase):
-    def setUp(self):
-        self.method = 'GET'
-        self.path = '/path/to/image'
-        self.protocol = 'HTTP/1.1'
-
-    def _build_test_request(self):
-        log_line = '{0} {1} {2}'.format(self.method, self.path, self.protocol)
-        return log_line
-
-    def test_http_request_regex(self):
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('method'), self.method)
-        self.assertEqual(matches.group('path'), self.path)
-        self.assertEqual(matches.group('protocol'), self.protocol)
-
-    def test_http_request_regex_with_port(self):
-        self.path = '/path/with/port:80'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_domain(self):
-        self.path = '/path/with/example.com'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_anchor(self):
-        self.path = '/path/to/article#section'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_parameters(self):
-        self.path = '/path/to/article?hello=world&goodbye=lennin'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_dashes_and_underscores(self):
-        self.path = '/path/to/article-with-dashes_and_underscores'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_double_slashes(self):
-        self.path = '/redirect_to?http://example.com'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_at_signs(self):
-        self.path = '/@@funny'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_percent_sign(self):
-        self.path = '/something%20encoded'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_plus_sign(self):
-        self.path = '/++adding++is+always+fun'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_vertical_bar_sign(self):
-        self.path = '/here_or|here'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_tilde_sign(self):
-        self.path = '/here~~~e'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_asterisk_sign(self):
-        self.path = '/here_*or'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_colon_sign(self):
-        self.path = '/something;or-not'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_exclamation_mark_sign(self):
-        self.path = '/something-important!'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_dollar_sign(self):
-        self.path = '/something$important'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_single_quote_sign(self):
-        self.path = "/there's-one's-way-or-another's"
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_comma_sign(self):
-        self.path = '/there?la=as,is'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_parenthesis(self):
-        self.path = '/here_or(here)'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_square_brackets(self):
-        self.path = '/here_or[here]'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_less_than_symbol(self):
-        self.path = '/here_or<'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_greater_than_symbol(self):
-        self.path = '/here_or>'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_back_slash_symbol(self):
-        self.path = '/georg-von-grote/\\'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_curly_brackets_symbol(self):
-        self.path = '/georg}von{grote/\\'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_diacritics_symbol(self):
-        self.path = '/georg`von´grote/\\'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
-
-    def test_http_request_regex_with_caret_symbol(self):
-        self.path = '/georg`von^grote/\\'
-        line = self._build_test_request()
-        matches = HTTP_REQUEST_REGEX.match(line)
-
-        self.assertEqual(matches.group('path'), self.path)
+import pytest
+import random
+
+
+def test_default_values(line_factory, default_line_data):
+    """Check that the default line with default values is parsed."""
+    line = line_factory()
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+    assert matches.group('http_request') == default_line_data['http_request']
+
+
+def test_client_ip_and_port(line_factory):
+    """Check that the client IP and port are extracted correctly."""
+    ip = '192.168.0.250'
+    port = '34'
+    line = line_factory(client_ip=ip, client_port=port)
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    assert matches.group('client_ip') == ip
+    assert matches.group('client_port') == port
+
+
+def test_accept_date(line_factory):
+    """Check that the accept date is extracted correctly."""
+    accept_date = datetime.now().strftime('%d/%b/%Y:%H:%M:%S.%f')
+    line = line_factory(accept_date=accept_date)
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    assert matches.group('accept_date') == accept_date
+
+
+def test_server_names(line_factory):
+    """Check that the server names are extracted correctly."""
+    frontend_name = 'SomeThing4'
+    backend_name = 'Another1'
+    server_name = 'Cloud9'
+    line = line_factory(
+        frontend_name=frontend_name, backend_name=backend_name, server_name=server_name
+    )
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    assert matches.group('frontend_name') == frontend_name
+    assert matches.group('backend_name') == backend_name
+    assert matches.group('server_name') == server_name
+
+
+@pytest.mark.parametrize(
+    'tq,tw,tc,tr,tt',
+    [
+        ('0', '0', '0', '0', '0'),
+        ('23', '55', '3', '4', '5'),
+        ('-23', '-33', '-3', '-4', '5'),
+        ('23', '33', '3', '4', '+5'),
+    ],
+)
+def test_timers(line_factory, tq, tw, tc, tr, tt):
+    """Check that the timers are extracted correctly.
+
+    Note that all timers can be negative but `tt`,
+    and that `tt` is the only one that can have a positive sign.
+    """
+    line = line_factory(tq=tq, tw=tw, tc=tc, tr=tr, tt=tt)
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    assert matches.group('tq') == tq
+    assert matches.group('tw') == tw
+    assert matches.group('tc') == tc
+    assert matches.group('tr') == tr
+    assert matches.group('tt') == tt
+
+
+@pytest.mark.parametrize(
+    'status, bytes_read', [('200', '0'), ('-301', '543'), ('200', '+543'),]
+)
+def test_status_and_bytes(line_factory, status, bytes_read):
+    """Check that the status code and bytes are extracted correctly.
+
+    Note that `status` can be negative (for terminated requests),
+    and `bytes` can be prefixed with a plus sign.
+    """
+    line = line_factory(status=status, bytes=bytes_read)
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    assert matches.group('status_code') == status
+    assert matches.group('bytes_read') == bytes_read
+
+
+@pytest.mark.parametrize(
+    'act,fe,be,srv,retries',
+    [
+        ('0', '0', '0', '0', '0'),
+        ('40', '10', '11', '12', '14'),
+        ('40', '10', '11', '12', '+14'),
+    ],
+)
+def test_connections_and_retries(line_factory, act, fe, be, srv, retries):
+    """Check that the connections and retries are extracted correctly.
+
+    Note that `retries` might have a plus sign prefixed.
+    """
+    line = line_factory(act=act, fe=fe, be=be, srv=srv, retries=retries)
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    assert matches.group('act') == act
+    assert matches.group('fe') == fe
+    assert matches.group('be') == be
+    assert matches.group('srv') == srv
+    assert matches.group('retries') == retries
+
+
+@pytest.mark.parametrize('server, backend', [('0', '0'), ('200', '200'),])
+def test_queues(line_factory, server, backend):
+    """Check that the server and backend queues are extracted correctly."""
+    line = line_factory(queue_server=server, queue_backend=backend)
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    assert matches.group('queue_server') == server
+    assert matches.group('queue_backend') == backend
+
+
+@pytest.mark.parametrize(
+    'request_header, response_header',
+    [
+        ('', ''),
+        ('something', None),
+        ('something here', 'and there'),
+        ('multiple | request | headers', 'and | multiple | response ones'),
+    ],
+)
+def test_captured_headers(line_factory, request_header, response_header):
+    """Check that captured headers are extracted correctly."""
+    if response_header:
+        headers = f' {{{request_header}}} {{{response_header}}}'
+    else:
+        headers = f' {{{request_header}}}'
+    line = line_factory(headers=headers)
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    if response_header:
+        assert matches.group('request_headers') == request_header
+        assert matches.group('response_headers') == response_header
+    else:
+        assert matches.group('headers') == request_header
+        assert matches.group('request_headers') is None
+        assert matches.group('response_headers') is None
+
+
+def test_http_request(line_factory):
+    """Check that the HTTP request is extracted correctly."""
+    http_request = 'something in the air'
+    line = line_factory(http_request=http_request)
+    matches = HAPROXY_LINE_REGEX.match(line.raw_line)
+
+    assert matches.group('http_request') == http_request
+
+
+@pytest.mark.parametrize(
+    'path',
+    [
+        '/path/to/image',
+        '/path/with/port:80',  # with port
+        '/path/with/example.com',  # with domain
+        '/path/to/article#section',  # with anchor
+        '/article?hello=world&goodbye=lennin',  # with parameters
+        '/article-with-dashes_and_underscores',  # dashes and underscores
+        '/redirect_to?http://example.com',  # double slashes
+        '/@@funny',  # at sign
+        '/something%20encoded',  # percent sign
+        '/++adding++is+always+fun',  # plus sign
+        '/here_or|here',  # vertical bar
+        '/here~~~e',  # tilde sign
+        '/here_*or',  # asterisk sign
+        '/something;or-not',  # colon
+        '/something-important!probably',  # exclamation mark
+        '/something$important',  # dollar sign
+        "/there's-one's-way-or-another's"  # single quote sign
+        '/there?la=as,is',  # comma
+        '/here_or(here)',  # parenthesis
+        '/here_or[here]',  # square brackets
+        '/georg}von{grote/\\',  # curly brackets
+        '/here_or<',  # less than
+        '/here_or>',  # more than
+        '/georg-von-grote/\\',  # back slash
+        '/georg`von´grote/\\',  # diacritics
+        '/georg`von^grote/\\',  # caret
+    ],
+)
+def test_http_request_regex(path):
+    """Test that the method/path/protocol are extracted properly from the HTTP request."""
+    verbs = ('GET', 'POST', 'DELETE', 'PATCH', 'PUT')
+    protocols = (
+        'HTTP/1.0',
+        'HTTP/1.1',
+        'HTTP/2.0',
+    )
+    method = random.choice(verbs)
+    protocol = random.choice(protocols)
+    matches = HTTP_REQUEST_REGEX.match(f'{method} {path} {protocol}')
+    assert matches.group('method') == method
+    assert matches.group('path') == path
+    assert matches.group('protocol') == protocol

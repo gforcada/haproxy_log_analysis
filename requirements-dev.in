@@ -11,11 +11,9 @@ flake8-quotes
 flake8-string-format
 flake8-todo
 isort
-more-itertools < 6.0  # until we drop support for python 2.7
 pip-tools
 pycodestyle
-pydocstyle < 4.0  # until we drop support for python 2.7
+pydocstyle
 pyflakes
-pytest < 5.0  # until we drop support for python 2.7
+pytest
 pytest-cov
-typed-ast ; python_version > "3.5"

@@ -1,21 +1,12 @@
 # -*- encoding: utf-8 -*-
-from haproxy import DELTA_REGEX
-from haproxy import filters
-from haproxy import START_REGEX
 from haproxy.logfile import Log
+from haproxy.utils import VALID_COMMANDS
+from haproxy.utils import VALID_FILTERS
+from haproxy.utils import validate_arg_date
+from haproxy.utils import validate_arg_delta
 
 import argparse
-import datetime
-import json
 import os
-import re
-
-
-VALID_FILTERS = [
-    f[7:]
-    for f in dir(filters)
-    if f.startswith('filter_') and not f.endswith('time_frame')
-]
 
 
 def create_parser():
@@ -79,6 +70,12 @@ def create_parser():
     )
 
     parser.add_argument('--json', action='store_true', help='Output results in json.')
+    parser.add_argument(
+        '--invalid',
+        action='store_false',
+        help='Print the lines that could not be parsed. '
+        'Be aware that mixing it with the print command will mix their output.',
+    )
 
     return parser
 
@@ -94,6 +91,7 @@ def parse_arguments(args):
         'list_commands': None,
         'list_filters': None,
         'json': None,
+        'invalid_lines': None,
     }
 
     if args.list_commands:
@@ -110,18 +108,18 @@ def parse_arguments(args):
         data['negate_filter'] = True
 
     if args.start is not None:
-        _validate_arg_date(args.start)
+        validate_arg_date(args.start)
         data['start'] = args.start
 
     if args.delta is not None:
-        _validate_arg_delta(args.delta)
+        validate_arg_delta(args.delta)
         data['delta'] = args.delta
 
     if args.command is not None:
-        data['commands'] = _parse_arg_commands(args.command)
+        data['commands'] = parse_arg_commands(args.command)
 
     if args.filter is not None:
-        data['filters'] = _parse_arg_filters(args.filter)
+        data['filters'] = parse_arg_filters(args.filter)
 
     if args.log is not None:
         _validate_arg_logfile(args.log)
@@ -130,35 +128,24 @@ def parse_arguments(args):
     if args.json is not None:
         data['json'] = args.json
 
+    if args.invalid:
+        data['invalid_lines'] = args.json
+
     return data
 
 
-def _validate_arg_date(start):
-    matches = START_REGEX.match(start)
-    if not matches:
-        raise ValueError('--start argument is not valid')
-
-
-def _validate_arg_delta(delta):
-    matches = DELTA_REGEX.match(delta)
-    if not matches:
-        raise ValueError('--delta argument is not valid')
-
-
-def _parse_arg_commands(commands):
-    input_commands = commands.split(',')
-    available_commands = Log.commands()
+def parse_arg_commands(commands_list):
+    input_commands = commands_list.split(',')
     for cmd in input_commands:
-        if cmd not in available_commands:
-            msg = (
-                'command "{0}" is not available. Use --list-commands to '
-                'get a list of all available commands.'
+        if cmd not in VALID_COMMANDS:
+            raise ValueError(
+                f'command "{cmd}" is not available. '
+                'Use --list-commands to get a list of all available commands.'
             )
-            raise ValueError(msg.format(cmd))
     return input_commands
 
 
-def _parse_arg_filters(filters_arg):
+def parse_arg_filters(filters_arg):
     input_filters = filters_arg.split(',')
 
     return_data = []
@@ -168,19 +155,17 @@ def _parse_arg_filters(filters_arg):
 
         if filter_expression.endswith(']'):
             if '[' not in filter_expression:
-                msg = (
-                    'Error on filter "{0}". It is missing an opening ' 'square bracket.'
+                raise ValueError(
+                    f'Error on filter "{filter_expression}". '
+                    f'It is missing an opening square bracket.'
                 )
-                raise ValueError(msg.format(filter_expression))
             filter_name, filter_arg = filter_expression.split('[')
             filter_arg = filter_arg[:-1]  # remove the closing square bracket
 
         if filter_name not in VALID_FILTERS:
-            msg = (
-                'filter "{0}" is not available. Use --list-filters to '
-                'get a list of all available filters.'
+            raise ValueError(
+                f'filter "{filter_name}" is not available. Use --list-filters to get a list of all available filters.'
             )
-            raise ValueError(msg.format(filter_name))
 
         return_data.append((filter_name, filter_arg))
 
@@ -190,49 +175,27 @@ def _parse_arg_filters(filters_arg):
 def _validate_arg_logfile(filename):
     filepath = os.path.join(os.getcwd(), filename)
     if not os.path.exists(filepath):
-        raise ValueError('filename {0} does not exist'.format(filepath))
-
-
-def json_dumps_converter(o):
-    if isinstance(o, datetime.datetime):
-        return o.__str__()
+        raise ValueError(f'filename {filepath} does not exist')
 
 
 def print_commands():
-    """Prints all commands available from Log with their
-    description.
-    """
-    dummy_log_file = Log()
-    commands = Log.commands()
-    commands.sort()
-
-    for cmd in commands:
-        cmd = getattr(dummy_log_file, 'cmd_{0}'.format(cmd))
-        description = cmd.__doc__
-        if description:
-            description = re.sub(r'\n\s+', ' ', description)
-            description = description.strip()
-
-        print('{0}: {1}\n'.format(cmd.__name__, description))
+    """Prints all commands available with their description."""
+    for command_name in sorted(VALID_COMMANDS.keys()):
+        print(VALID_COMMANDS[command_name]['description'])
 
 
 def print_filters():
     """Prints all filters available with their description."""
-    for filter_name in VALID_FILTERS:
-        filter_func = getattr(filters, 'filter_{0}'.format(filter_name))
-        description = filter_func.__doc__
-        if description:
-            description = re.sub(r'\n\s+', ' ', description)
-            description.strip()
-
-        print('{0}: {1}\n'.format(filter_name, description))
+    for filter_name in sorted(VALID_FILTERS.keys()):
+        print(VALID_FILTERS[filter_name]['description'])
 
 
 def show_help(data):
     # make sure that if no arguments are passed the help is shown
     show = True
+    ignore_keys = ('log', 'json', 'negate_filter', 'invalid_lines')
     for key in data:
-        if data[key] is not None and key not in ('log', 'json'):
+        if data[key] is not None and key not in ignore_keys:
             show = False
             break
 
@@ -259,42 +222,58 @@ def main(args):
         # no need to process further
         return
 
-    # create a Log instance and parse the log file
-    log_file = Log(logfile=args['log'])
+    # initialize the log file
+    log_file = Log(
+        logfile=args['log'],
+        start=args['start'],
+        delta=args['delta'],
+        show_invalid=args['invalid_lines'],
+    )
 
-    # apply the time frame filter
-    if args['start'] or args['delta']:
-        start = args['start'] or ''
-        delta = args['delta'] or ''
-        filter_func = filters.filter_time_frame(start, delta)
+    # get the commands and filters to use
+    filters_to_use = requested_filters(args)
+    cmds_to_use = requested_commands(args)
 
-        log_file = log_file.filter(filter_func)
+    # double negation: when a user wants to negate the filters,
+    # the argument parsing sets `negate_filter` to True,
+    # but the filtering logic (the `all()`) returns True if the line meets all filters
+    # so reversing whatever `negate_filter` has is what the user wants :)
+    expected_filtering = True
+    if args['negate_filter']:
+        expected_filtering = False
+    # process all log lines
+    for line in log_file:
+        if all((f(line) for f in filters_to_use)) is expected_filtering:
+            for cmd in cmds_to_use:
+                cmd(line)
 
-    # apply all other filters given
+    # print the results
+    print('\nRESULTS\n')
+    output = None
+    if args['json']:
+        output = 'json'
+    for cmd in cmds_to_use:
+        cmd.results(output=output)
+
+
+def requested_filters(args):
+    filters_list = []
     if args['filters']:
-        for filter_data in args['filters']:
-            arg = filter_data[1] or ''
-            filter_func = getattr(filters, 'filter_{0}'.format(filter_data[0]))
-            log_file = log_file.filter(filter_func(arg), reverse=args['negate_filter'])
+        for filter_name, arg in args['filters']:
+            filter_func = VALID_FILTERS[filter_name]['obj']
+            filters_list.append(filter_func(arg))
+    return filters_list
 
-    # run all commands
+
+def requested_commands(args):
+    cmds_list = []
     for command in args['commands']:
-        if args['json'] is False:
-            string = 'command: {0}'.format(command)
-            print(string)
-            print('=' * len(string))
-
-        cmd = getattr(log_file, 'cmd_{0}'.format(command))
-        result = cmd()
-        if args['json'] is True:
-            print(json.dumps(result, default=json_dumps_converter))
-        else:
-            print(result)
-
-    return log_file  # return the log_file object so that tests can inspect it
+        cmd_klass = VALID_COMMANDS[command]['klass']
+        cmds_list.append(cmd_klass())
+    return cmds_list
 
 
-def console_script():
+def console_script():  # pragma: no cover
     parser = create_parser()
     arguments = parse_arguments(parser.parse_args())
     main(arguments)

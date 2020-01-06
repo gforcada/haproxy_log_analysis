@@ -12,43 +12,14 @@ import re
 # 0/51536/1/48082/99627 200 83285 - - ---- 87/87/87/1/0 0/67
 # {77.24.148.74} "GET /path/to/image HTTP/1.1"
 
-# From the above log line the first part
-# `Dec  9 13:01:26 localhost haproxy[28029]:`
-# is coming from syslog.
-# The following regular expression takes care of finding it.
-# With it, this syslog slug can be removed to make processing regular
-# haproxy log lines possible.
-# Note though, that some systems (at least NixOS) use a different format,
-# see below after this regex.
-# Due to that there are three regexes to take care of it:
-# - two to handle the different date format
-# - one to handle the host and process
-SYSLOG_REGEX = re.compile(
-    # Dec  9
-    r'\A\w+\s+\d+\s+'
-    # 13:01:26
-    r'\d+:\d+:\d+\s+'
-)
-SYSLOG_NIXOS_REGEX = re.compile(
-    # 2017-05-15
-    r'\A(\d+-){2}\d+'
-    # T23:45:55
-    r'[T\s](\d+:){2}\d+'
-    # +02:00
-    r'(\+\d+:\d+)*\s+'
-)
-SYSLOG_HOST_AND_PROCESS_REGEX = re.compile(
-    # localhost haproxy[28029]:
-    # note that can be either localhost or an IP or a hostname
-    # and can also contain a dot in it
-    r'(\w+|(\d+\.){3}\d+|[.a-zA-Z0-9_-]+)\s+\w+\[\d+\]:\s+'
-)
-
 HAPROXY_LINE_REGEX = re.compile(
+    # Dec  9 13:01:26 localhost haproxy[28029]:
+    # ignore the syslog prefix
+    r'\A.*\]:\s+'
     # 127.0.0.1:39759
-    r'\A(?P<client_ip>[a-fA-F\d+\.:]+):(?P<client_port>\d+)\s+'
+    r'(?P<client_ip>[a-fA-F\d+\.:]+):(?P<client_port>\d+)\s+'
     # [09/Dec/2013:12:59:46.633]
-    r'\[(?P<accept_date>.*)\..*\]\s+'
+    r'\[(?P<accept_date>.+)\]\s+'
     # loadbalancer default/instance8
     r'(?P<frontend_name>.*)\s+(?P<backend_name>.*)/(?P<server_name>.*)\s+'
     # 0/51536/1/48082/99627
@@ -64,8 +35,7 @@ HAPROXY_LINE_REGEX = re.compile(
     # 0/67
     r'(?P<queue_server>\d+)/(?P<queue_backend>\d+)\s+'
     # {77.24.148.74}
-    r'((?P<request_headers>{.*})\s+(?P<response_headers>{.*})\s+|'
-    r'(?P<headers>{.*})\s+|)'
+    r'({(?P<request_headers>.*)}\s+{(?P<response_headers>.*)}\s+|{(?P<headers>.*)}\s+|)'
     # "GET /path/to/image HTTP/1.1"
     r'"(?P<http_request>.*)"'
     r'\Z'  # end of line
@@ -73,14 +43,14 @@ HAPROXY_LINE_REGEX = re.compile(
 
 HTTP_REQUEST_REGEX = re.compile(
     r'(?P<method>\w+)\s+'
-    r'(?P<path>(/[`´\\<>/\w:,;\.#$!?=&@%_+\'\*^~|\(\)\[\]\{\}-]*)+)'
+    r'(?P<path>(/[`´\\<>/\w:,;.#$!?=&@%_+\'*^~|()\[\]{\}-]*)+)'
     r'\s+(?P<protocol>\w+/\d\.\d)'
 )
 
 
 class Line(object):
     """For a precise and more detailed description of every field see:
-    http://cbonte.github.io/haproxy-dconv/configuration-1.4.html#8.2.3
+    http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.3
     """
 
     #: IP of the upstream server that made the connection to HAProxy.
@@ -170,8 +140,9 @@ class Line(object):
     def __init__(self, line):
         self.raw_line = line
 
-        self.valid = self._parse_line(line)
+        self.is_valid = self._parse_line(line)
 
+    @property
     def is_https(self):
         """Returns True if the log line is a SSL connection. False otherwise.
         """
@@ -179,19 +150,29 @@ class Line(object):
             return True
         return False
 
-    def get_ip(self):
+    def is_within_time_frame(self, start, end):
+        if not start:
+            return True
+        elif start > self.accept_date:
+            return False
+
+        if not end:
+            return True
+        elif end < self.accept_date:
+            return False
+
+        return True
+
+    @property
+    def ip(self):
         """Returns the IP provided on the log line, or the client_ip if absent/empty."""
         if self.captured_request_headers is not None:
-            ip = self.captured_request_headers[1:-1].split('|')[0]
+            ip = self.captured_request_headers.split('|')[0]
             if ip:
                 return ip
         return self.client_ip
 
     def _parse_line(self, line):
-        # remove syslog slug if found
-        line = SYSLOG_REGEX.sub('', line)
-        line = SYSLOG_NIXOS_REGEX.sub('', line)
-        line = SYSLOG_HOST_AND_PROCESS_REGEX.sub('', line)
         matches = HAPROXY_LINE_REGEX.match(line)
         if matches is None:
             return False
@@ -235,7 +216,7 @@ class Line(object):
         return True
 
     def _parse_accept_date(self):
-        return datetime.strptime(self.raw_accept_date, '%d/%b/%Y:%H:%M:%S')
+        return datetime.strptime(self.raw_accept_date, '%d/%b/%Y:%H:%M:%S.%f')
 
     def _parse_http_request(self):
         matches = HTTP_REQUEST_REGEX.match(self.raw_http_request)
@@ -252,4 +233,10 @@ class Line(object):
         self.http_request_protocol = 'invalid'
 
         if self.raw_http_request != '<BADREQ>':
-            print('Could not process HTTP request {0}'.format(self.raw_http_request),)
+            print(f'Could not process HTTP request {self.raw_http_request}')
+
+
+# it is not coverage covered as this is executed by the multiprocessor module,
+# and setting it up on coverage just for two lines is not worth it
+def parse_line(line):  # pragma: no cover
+    return Line(line.strip())

@@ -14,7 +14,6 @@ Contents:
 
    README_link
    modules
-   filters
    changelog
 
 

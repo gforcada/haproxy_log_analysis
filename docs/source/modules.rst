@@ -19,3 +19,13 @@ Line
 
 .. autoclass:: Line
     :members:
+
+Filters
+-------
+.. automodule:: haproxy.filters
+   :members:
+
+Commands
+--------
+.. automodule:: haproxy.commands
+   :members:
