@@ -9,6 +9,10 @@ CHANGES
   Idea and first implementation done by ``valleedelisle``.
   [gforcada]
 
+- Fix parsing truncated requests.
+  Idea and first implementation by ``vixns``.
+  [gforcada]
+
 4.0.0 (2020-01-06)
 ------------------
 
