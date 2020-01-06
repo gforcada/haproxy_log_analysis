@@ -4,8 +4,10 @@ CHANGES
 4.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- **New command:** ``requests_per_hour``.
+  Just like the ``requests_per_minute`` but with hour granularity.
+  Idea and first implementation done by ``valleedelisle``.
+  [gforcada]
 
 4.0.0 (2020-01-06)
 ------------------
