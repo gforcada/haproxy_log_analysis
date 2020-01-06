@@ -83,6 +83,9 @@ The current ``--help`` looks like this::
     --list-commands       Lists all commands available.
     --list-filters        Lists all filters available.
     --json                Output results in json.
+    --invalid             Print the lines that could not be parsed. Be aware
+                          that mixing it with the print command will mix their
+                          output.
 
 
 Commands

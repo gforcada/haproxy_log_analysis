@@ -20,6 +20,7 @@ def default_arguments():
         'list_commands': False,
         'list_filters': False,
         'json': False,
+        'invalid_lines': False,
     }
 
 

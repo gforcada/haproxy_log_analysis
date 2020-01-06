@@ -7,8 +7,9 @@ from multiprocessing import Pool
 
 
 class Log(object):
-    def __init__(self, logfile=None, start=None, delta=None):
+    def __init__(self, logfile=None, start=None, delta=None, show_invalid=False):
         self.logfile = logfile
+        self.show_invalid = show_invalid
         self.start = None
         self.end = None
 
@@ -33,6 +34,8 @@ class Log(object):
                     if line.is_within_time_frame(self.start, self.end):
                         yield line
                 else:
+                    if self.show_invalid:
+                        print(line.raw_line)
                     self.invalid_lines += 1
 
                 if index % 10000 == 0 and index > 0:  # pragma: no cover

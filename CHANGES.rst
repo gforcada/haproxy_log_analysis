@@ -16,9 +16,8 @@ CHANGES
   so it is aligned with all other ``_counter`` commands.
   [gforcada]
 
-**REMOVED TEMPORARILY:**
-
-- ``counter_invalid`` command
+- Changed the ``counter_invalid`` command to a new command line switch ``--invalid``.
+  [gforcada]
 
 **Regular changes:**
 

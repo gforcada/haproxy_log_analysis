@@ -70,6 +70,12 @@ def create_parser():
     )
 
     parser.add_argument('--json', action='store_true', help='Output results in json.')
+    parser.add_argument(
+        '--invalid',
+        action='store_false',
+        help='Print the lines that could not be parsed. '
+        'Be aware that mixing it with the print command will mix their output.',
+    )
 
     return parser
 
@@ -85,6 +91,7 @@ def parse_arguments(args):
         'list_commands': None,
         'list_filters': None,
         'json': None,
+        'invalid_lines': None,
     }
 
     if args.list_commands:
@@ -120,6 +127,9 @@ def parse_arguments(args):
 
     if args.json is not None:
         data['json'] = args.json
+
+    if args.invalid:
+        data['invalid_lines'] = args.json
 
     return data
 
@@ -183,8 +193,9 @@ def print_filters():
 def show_help(data):
     # make sure that if no arguments are passed the help is shown
     show = True
+    ignore_keys = ('log', 'json', 'negate_filter', 'invalid_lines')
     for key in data:
-        if data[key] is not None and key not in ('log', 'json', 'negate_filter'):
+        if data[key] is not None and key not in ignore_keys:
             show = False
             break
 
@@ -212,7 +223,12 @@ def main(args):
         return
 
     # initialize the log file
-    log_file = Log(logfile=args['log'], start=args['start'], delta=args['delta'])
+    log_file = Log(
+        logfile=args['log'],
+        start=args['start'],
+        delta=args['delta'],
+        show_invalid=args['invalid_lines'],
+    )
 
     # get the commands and filters to use
     filters_to_use = requested_filters(args)

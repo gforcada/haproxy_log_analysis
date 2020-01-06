@@ -20,6 +20,7 @@ def test_parser_arguments_defaults():
         'list_commands': None,
         'list_filters': None,
         'json': False,
+        'invalid_lines': False,
     }
 
 

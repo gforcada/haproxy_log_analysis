@@ -9,6 +9,7 @@ def test_logfile_default_values():
     """Check that the default values are set."""
     log_file = Log('something')
     assert log_file.logfile == 'something'
+    assert log_file.show_invalid is False
     assert log_file.invalid_lines == 0
     assert log_file.valid_lines == 0
     assert log_file.total_lines == 0
@@ -94,24 +95,20 @@ def test_total_lines():
     assert log_file.invalid_lines == 1
 
 
-#
-# def test_negate_filter(self):
-#    """Check that reversing a filter output works as expected."""
-#    filter_func = filters.filter_ssl()
-#    log_file = Log(logfile='files/connection.log')
-#
-#    # total number of log lines
-#    self.assertEqual(log_file.cmd_counter(), 12)
-#
-#    # only SSL lines
-#    only_ssl = log_file.filter(filter_func)
-#    self.assertEqual(only_ssl.cmd_counter(), 7)
-#
-#    # non SSL lines
-#    non_ssl = log_file.filter(filter_func, reverse=True)
-#    self.assertEqual(non_ssl.cmd_counter(), 5)
-#
-#    # we did get all lines?
-#    self.assertEqual(
-#        log_file.cmd_counter(), only_ssl.cmd_counter() + non_ssl.cmd_counter()
-#    )
+@pytest.mark.parametrize(
+    'client_port', ['90', 'random-value-that-breaks'],
+)
+def test_print_invalid_lines(tmp_path, line_factory, client_port, capsys):
+    """Check that invalid lines are printed, if asked to do so."""
+    file_path = tmp_path / 'haproxy.log'
+    line = line_factory(client_port=client_port).raw_line
+    with open(file_path, 'w') as file_obj:
+        file_obj.write(f'{line}\n')
+    log_file = Log(file_path, show_invalid=True)
+    _ = [x for x in log_file]
+
+    output = capsys.readouterr().out
+    if log_file.valid_lines == 1:
+        assert client_port not in output
+    else:
+        assert client_port in output

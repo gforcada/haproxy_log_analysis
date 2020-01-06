@@ -236,5 +236,7 @@ class Line(object):
             print(f'Could not process HTTP request {self.raw_http_request}')
 
 
+# it is not coverage covered as this is executed by the multiprocessor module,
+# and setting it up on coverage just for two lines is not worth it
 def parse_line(line):  # pragma: no cover
     return Line(line.strip())
