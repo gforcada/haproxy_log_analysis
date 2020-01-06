@@ -136,6 +136,17 @@ def test_unparseable_http_request(line_factory):
     assert line.http_request_protocol == 'invalid'
 
 
+def test_truncated_requests(line_factory):
+    """Check that truncated requests are still valid.
+
+    That would be requests that do not have the protocol part specified.
+    """
+    line = line_factory(http_request='GET /')
+    assert line.http_request_method == 'GET'
+    assert line.http_request_path == '/'
+    assert line.http_request_protocol is None
+
+
 @pytest.mark.parametrize(
     'syslog',
     [
