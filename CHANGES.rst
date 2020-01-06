@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-4.0.0 (unreleased)
+4.0.0 (2020-01-06)
 ------------------
 
 **BREAKING CHANGES:**
