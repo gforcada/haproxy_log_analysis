@@ -385,10 +385,14 @@ class RequestsPerMinute(BaseCommandMixin):
     def __init__(self):
         self.requests = defaultdict(int)
 
-    def __call__(self, line):
-        date_with_minute_precision = line.accept_date.replace(second=0, microsecond=0)
+    def generate_key(self, accept_date):
+        date_with_minute_precision = accept_date.replace(second=0, microsecond=0)
         unixtime = time.mktime(date_with_minute_precision.timetuple())
-        self.requests[unixtime] += 1
+        return unixtime
+
+    def __call__(self, line):
+        key = self.generate_key(line.accept_date)
+        self.requests[key] += 1
 
     def raw_results(self):
         """Return the list of requests sorted by the timestamp."""
@@ -408,6 +412,19 @@ class RequestsPerMinute(BaseCommandMixin):
             date = datetime.fromtimestamp(date_info).isoformat()
             data.append({date: count})
         return data
+
+
+class RequestsPerHour(RequestsPerMinute):
+    """Generates statistics on how many requests were made per hour.
+
+    .. note::
+      Try to combine it with time constrains (``-s`` and ``-d``) to reduce the amount of output.
+    """
+
+    def generate_key(self, accept_date):
+        date_with_hour_precision = accept_date.replace(minute=0, second=0, microsecond=0)
+        unixtime = time.mktime(date_with_hour_precision.timetuple())
+        return unixtime
 
 
 class Print(BaseCommandMixin):

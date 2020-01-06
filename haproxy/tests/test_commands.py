@@ -708,6 +708,64 @@ def test_requests_per_minute_output(line_factory, capsys, output):
         assert ':00: 1\n- ' in output_text
 
 
+def test_requests_per_hour_results(line_factory):
+    """Test the RequestsPerHour command.
+
+    It counts how many requests have been made per hour.
+    """
+    cmd = commands.RequestsPerHour()
+    assert cmd.raw_results() == []
+    now = datetime.now()
+    # to avoid leaping into the next/previous minute with the timedeltas below
+    now = now.replace(second=30)
+    minutes = timedelta(minutes=5)
+    hours = timedelta(hours=2)
+    dates = [
+        now,
+        now + minutes,
+        now - minutes,
+        now + hours,
+        now - hours,
+        now + hours * 2,
+        now - hours * 2,
+    ]
+    for time in dates:
+        cmd(line_factory(accept_date=f'{time:%d/%b/%Y:%H:%M:%S.%f}'))
+    results = cmd.raw_results()
+    assert len(results) == 5
+    assert results[0][1] == 1
+    assert results[1][1] == 1
+    assert results[2][1] == 3  # now and the +- minutes
+    assert results[3][1] == 1
+    assert results[4][1] == 1
+
+
+@pytest.mark.parametrize(
+    'output', [None, 'json',],
+)
+def test_requests_per_hour_output(line_factory, capsys, output):
+    """Test the RequestsPerHour command.
+
+    It counts how many requests have been made per hour.
+    """
+    cmd = commands.RequestsPerHour()
+    now = datetime.now()
+    for time in (now, now + timedelta(hours=2)):
+        cmd(line_factory(accept_date=f'{time:%d/%b/%Y:%H:%M:%S.%f}'))
+    name = cmd.command_line_name().upper()
+    cmd.results(output=output)
+    output_text = capsys.readouterr().out
+    if output == 'json':
+        assert f'{{"{name}": ' in output_text
+        # this is quite fuzzy to not have to fiddle with the date formatting
+        # change it once we hit 2030 :)
+        assert ':00": 1}, {"202' in output_text
+    else:
+        assert f'{name}\n====' in output_text
+        # this is quite fuzzy to not have to fiddle with the date formatting
+        assert ':00: 1\n- ' in output_text
+
+
 def test_print_results_and_output(line_factory, capsys):
     """Test the Print command.
 
