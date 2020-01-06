@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-4.0.1 (unreleased)
+4.1.0 (2020-01-06)
 ------------------
 
 - **New command:** ``requests_per_hour``.
