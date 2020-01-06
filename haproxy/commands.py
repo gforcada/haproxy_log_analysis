@@ -422,7 +422,9 @@ class RequestsPerHour(RequestsPerMinute):
     """
 
     def generate_key(self, accept_date):
-        date_with_hour_precision = accept_date.replace(minute=0, second=0, microsecond=0)
+        date_with_hour_precision = accept_date.replace(
+            minute=0, second=0, microsecond=0
+        )
         unixtime = time.mktime(date_with_hour_precision.timetuple())
         return unixtime
 

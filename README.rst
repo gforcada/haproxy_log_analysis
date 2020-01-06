@@ -103,6 +103,7 @@ See them all with ``--list-commands`` or online at https://haproxy-log-analyzer.
 - ``print``
 - ``queue_peaks``
 - ``request_path_counter``
+- ``requests_per_hour``
 - ``requests_per_minute``
 - ``server_load``
 - ``slow_requests``
