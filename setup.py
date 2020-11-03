@@ -39,6 +39,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=['setuptools'],
+    python_requires='>=3.6',
     entry_points={
         'console_scripts': ['haproxy_log_analysis = haproxy.main:console_script']
     },
