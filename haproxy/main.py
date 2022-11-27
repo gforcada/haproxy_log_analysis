@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 import argparse
 import os
 
@@ -245,7 +244,7 @@ def main(args):
         expected_filtering = False
     # process all log lines
     for line in log_file:
-        if all((f(line) for f in filters_to_use)) is expected_filtering:
+        if all(f(line) for f in filters_to_use) is expected_filtering:
             for cmd in cmds_to_use:
                 cmd(line)
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 from multiprocessing import Pool
 
@@ -6,7 +5,7 @@ from haproxy.line import parse_line
 from haproxy.utils import date_str_to_datetime, delta_str_to_timedelta
 
 
-class Log(object):
+class Log:
     def __init__(self, logfile=None, start=None, delta=None, show_invalid=False):
         self.logfile = logfile
         self.show_invalid = show_invalid

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 from datetime import datetime
 
@@ -46,7 +45,7 @@ HTTP_REQUEST_REGEX = re.compile(
 )
 
 
-class Line(object):
+class Line:
     """For a precise and more detailed description of every field see:
     http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.3
     """

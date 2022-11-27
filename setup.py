@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from setuptools import find_packages, setup
 
 version = '4.1.1.dev0'

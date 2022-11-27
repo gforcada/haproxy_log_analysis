@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 
 from haproxy.main import create_parser, parse_arg_filters, parse_arguments
