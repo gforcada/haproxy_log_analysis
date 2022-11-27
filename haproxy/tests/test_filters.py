@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from haproxy import filters
-
 import pytest
+
+from haproxy import filters
 
 
 @pytest.mark.parametrize(

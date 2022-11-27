@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from haproxy.logfile import Log
 
 import pytest
+
+from haproxy.logfile import Log
 
 
 def test_logfile_default_values():

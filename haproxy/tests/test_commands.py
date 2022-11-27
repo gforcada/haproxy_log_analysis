@@ -1,8 +1,8 @@
-from datetime import datetime
-from datetime import timedelta
-from haproxy import commands
+from datetime import datetime, timedelta
 
 import pytest
+
+from haproxy import commands
 
 
 def check_output(cmd, output, expected, capsys):

@@ -1,13 +1,15 @@
-from datetime import datetime
-from datetime import timedelta
-from haproxy.utils import date_str_to_datetime
-from haproxy.utils import delta_str_to_timedelta
-from haproxy.utils import VALID_COMMANDS
-from haproxy.utils import VALID_FILTERS
-from haproxy.utils import validate_arg_date
-from haproxy.utils import validate_arg_delta
+from datetime import datetime, timedelta
 
 import pytest
+
+from haproxy.utils import (
+    VALID_COMMANDS,
+    VALID_FILTERS,
+    date_str_to_datetime,
+    delta_str_to_timedelta,
+    validate_arg_date,
+    validate_arg_delta,
+)
 
 
 @pytest.mark.parametrize(

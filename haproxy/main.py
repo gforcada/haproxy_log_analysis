@@ -1,12 +1,14 @@
 # -*- encoding: utf-8 -*-
-from haproxy.logfile import Log
-from haproxy.utils import VALID_COMMANDS
-from haproxy.utils import VALID_FILTERS
-from haproxy.utils import validate_arg_date
-from haproxy.utils import validate_arg_delta
-
 import argparse
 import os
+
+from haproxy.logfile import Log
+from haproxy.utils import (
+    VALID_COMMANDS,
+    VALID_FILTERS,
+    validate_arg_date,
+    validate_arg_delta,
+)
 
 
 def create_parser():

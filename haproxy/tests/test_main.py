@@ -1,10 +1,7 @@
-from haproxy.main import create_parser
-from haproxy.main import main
-from haproxy.main import parse_arguments
-from haproxy.utils import VALID_COMMANDS
-from haproxy.utils import VALID_FILTERS
-
 import pytest
+
+from haproxy.main import create_parser, main, parse_arguments
+from haproxy.utils import VALID_COMMANDS, VALID_FILTERS
 
 
 @pytest.fixture

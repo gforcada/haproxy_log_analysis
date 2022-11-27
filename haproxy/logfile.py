@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from haproxy.line import parse_line
-from haproxy.utils import date_str_to_datetime
-from haproxy.utils import delta_str_to_timedelta
 from multiprocessing import Pool
+
+from haproxy.line import parse_line
+from haproxy.utils import date_str_to_datetime, delta_str_to_timedelta
 
 
 class Log(object):
