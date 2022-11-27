@@ -4,8 +4,20 @@ CHANGES
 4.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Drop testing on travis-ci.
+  [gforcada]
 
+- Use GitHub Actions.
+  [gforcada]
+
+- Format the code with `pyupgrade`, `black` and `isort`.
+  [gforcada]
+
+- Use `pip-tools` to keep dependencies locked.
+  [gforcada]
+
+- Bump python versions supported to 3.7-3.11 and pypy.
+  [gforcada]
 
 4.1.0 (2020-01-06)
 ------------------
