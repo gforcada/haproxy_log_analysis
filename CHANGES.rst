@@ -86,7 +86,7 @@ CHANGES
 
 2.0 (2016-07-06)
 ----------------
-- Handle unparseable HTTP requests.
+- Handle unparsable HTTP requests.
   [gforcada]
 
 - Only test on python 2.7 and 3.5
@@ -210,7 +210,7 @@ CHANGES
   [gforcada]
 
 - Improve :method::`.HaproxyLogFile.cmd_queue_peaks` output to not only show
-  peaks but also when requests started to queue and when they finsihed and
+  peaks but also when requests started to queue and when they finished and
   the amount of requests that had been queued.
   [gforcada]
 
