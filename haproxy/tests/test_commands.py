@@ -44,7 +44,7 @@ def test_counter_results():
     assert cmd.raw_results() == 3
 
 
-@pytest.mark.parametrize('output', [None, 'json',])
+@pytest.mark.parametrize('output', [None, 'json'])
 def test_counter_output(capsys, output):
     """Test the Counter command.
 
@@ -76,7 +76,7 @@ def test_http_methods_results(line_factory):
 
 @pytest.mark.parametrize(
     'output, expected',
-    [(None, '- PUT: 2\n- GET: 1'), ('json', '[{"PUT": 2}, {"GET": 1}]'),],
+    [(None, '- PUT: 2\n- GET: 1'), ('json', '[{"PUT": 2}, {"GET": 1}]')],
 )
 def test_http_methods_output(line_factory, capsys, output, expected):
     """Test the HTTPMethods command.
@@ -195,7 +195,7 @@ def test_status_codes_counter_results(line_factory):
 
 @pytest.mark.parametrize(
     'output, expected',
-    [(None, '- 301: 3\n- 500: 2'), ('json', '[{"301": 3}, {"500": 2}]'),],
+    [(None, '- 301: 3\n- 500: 2'), ('json', '[{"301": 3}, {"500": 2}]')],
 )
 def test_status_codes_counter_output(line_factory, capsys, output, expected):
     """Test the StatusCodesCounter command.
@@ -337,9 +337,7 @@ def test_slow_requests_counter_results(line_factory):
     assert results == 5
 
 
-@pytest.mark.parametrize(
-    'output', [None, 'json',],
-)
+@pytest.mark.parametrize('output', [None, 'json'])
 def test_slow_requests_counter_output(line_factory, capsys, output):
     """Test the SlowRequestsCounter command.
 
@@ -356,7 +354,7 @@ def test_slow_requests_counter_output(line_factory, capsys, output):
     [
         ((1003, 987, 456, 2013, 1000, 3200, 999), 1379.71),
         ((110, -1, 110), 110),  # aborted connections are ignored
-        ((45, 30, 0,), 25),  # responses that take 0 milliseconds are still counted
+        ((45, 30, 0), 25),  # responses that take 0 milliseconds are still counted
     ],
 )
 def test_average_response_time_results(line_factory, series, average):
@@ -372,7 +370,7 @@ def test_average_response_time_results(line_factory, series, average):
     assert results == average
 
 
-@pytest.mark.parametrize('output', [None, 'json',])
+@pytest.mark.parametrize('output', [None, 'json'])
 def test_average_response_time_output(line_factory, capsys, output):
     """Test the AverageResponseTime command.
 
@@ -392,7 +390,7 @@ def test_average_response_time_output(line_factory, capsys, output):
     [
         ((1003, 987, 456, 2013, 1000, 3200, 999), 1379.71),
         ((110, -1, 110), 110),  # aborted connections are ignored
-        ((45, 30, 0,), 25),  # requests that do not wait at all are still counted
+        ((45, 30, 0), 25),  # requests that do not wait at all are still counted
     ],
 )
 def test_average_waiting_time_results(line_factory, series, average):
@@ -408,7 +406,7 @@ def test_average_waiting_time_results(line_factory, series, average):
     assert results == average
 
 
-@pytest.mark.parametrize('output', [None, 'json',])
+@pytest.mark.parametrize('output', [None, 'json'])
 def test_average_waiting_time_output(line_factory, capsys, output):
     """Test the AverageWaitingTime command.
 
@@ -631,7 +629,7 @@ def test_connection_type_results(line_factory):
 
 @pytest.mark.parametrize(
     'output, expected',
-    [(None, '- https: 4\n- http: 2'), ('json', '[{"https": 4}, {"http": 2}]'),],
+    [(None, '- https: 4\n- http: 2'), ('json', '[{"https": 4}, {"http": 2}]')],
 )
 def test_connection_type_output(line_factory, capsys, output, expected):
     """Test the ConnectionType command.
@@ -682,9 +680,7 @@ def test_requests_per_minute_results(line_factory):
     assert results[4][1] == 1
 
 
-@pytest.mark.parametrize(
-    'output', [None, 'json',],
-)
+@pytest.mark.parametrize('output', [None, 'json'])
 def test_requests_per_minute_output(line_factory, capsys, output):
     """Test the RequestsPerMinute command.
 
@@ -740,9 +736,7 @@ def test_requests_per_hour_results(line_factory):
     assert results[4][1] == 1
 
 
-@pytest.mark.parametrize(
-    'output', [None, 'json',],
-)
+@pytest.mark.parametrize('output', [None, 'json'])
 def test_requests_per_hour_output(line_factory, capsys, output):
     """Test the RequestsPerHour command.
 

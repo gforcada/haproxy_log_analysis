@@ -34,39 +34,37 @@ def test_parser_arguments_defaults():
 def test_parser_boolean_arguments(argument, option):
     """Test that the argument parsing defaults works."""
     parser = create_parser()
-    data = parse_arguments(parser.parse_args([argument,]))
+    data = parse_arguments(parser.parse_args([argument]))
     assert data[option] is True
 
 
-@pytest.mark.parametrize(
-    'start, delta', [('30/Dec/2019', '3d',), ('20/Jun/2015', '2h',),]
-)
+@pytest.mark.parametrize('start, delta', [('30/Dec/2019', '3d'), ('20/Jun/2015', '2h')])
 def test_arguments_dates(start, delta):
     """Check that properly formatted start and delta arguments are processed fine.
 
     Thus they are extracted and stored for later use.
     """
     parser = create_parser()
-    data = parse_arguments(parser.parse_args(['-s', start, '-d', delta,]))
+    data = parse_arguments(parser.parse_args(['-s', start, '-d', delta]))
     assert data['start'] == start
     assert data['delta'] == delta
 
 
-@pytest.mark.parametrize('start', ['33/Dec/2019', '5/Hallo/2019',])
+@pytest.mark.parametrize('start', ['33/Dec/2019', '5/Hallo/2019'])
 def test_arguments_date_invalid(start):
     """Incorrectly formatted start argument raises an exception."""
     parser = create_parser()
     with pytest.raises(ValueError) as exception_info:
-        parse_arguments(parser.parse_args(['-s', start,]))
+        parse_arguments(parser.parse_args(['-s', start]))
     assert '--start argument is not valid' in str(exception_info)
 
 
-@pytest.mark.parametrize('delta', ['3P', '2323MM',])
+@pytest.mark.parametrize('delta', ['3P', '2323MM'])
 def test_arguments_delta_invalid(delta):
     """Incorrectly formatted delta argument raises an exception."""
     parser = create_parser()
     with pytest.raises(ValueError) as exception_info:
-        parse_arguments(parser.parse_args(['-d', delta,]))
+        parse_arguments(parser.parse_args(['-d', delta]))
     assert '--delta argument is not valid' in str(exception_info)
 
 
@@ -84,10 +82,10 @@ def test_commands_arguments(cmds, is_valid):
     parser = create_parser()
     if not is_valid:
         with pytest.raises(ValueError) as exception_info:
-            parse_arguments(parser.parse_args(['-c', cmds,]))
+            parse_arguments(parser.parse_args(['-c', cmds]))
         assert 'is not available. Use --list-commands' in str(exception_info)
     else:
-        data = parse_arguments(parser.parse_args(['-c', cmds,]))
+        data = parse_arguments(parser.parse_args(['-c', cmds]))
         assert data['commands'] == cmds.split(',')
 
 
@@ -105,10 +103,10 @@ def test_filters_arguments(filters_list, is_valid):
     parser = create_parser()
     if not is_valid:
         with pytest.raises(ValueError) as exception_info:
-            parse_arguments(parser.parse_args(['-f', filters_list,]))
+            parse_arguments(parser.parse_args(['-f', filters_list]))
         assert 'is not available. Use --list-filters' in str(exception_info)
     else:
-        data = parse_arguments(parser.parse_args(['-f', filters_list,]))
+        data = parse_arguments(parser.parse_args(['-f', filters_list]))
         assert data['filters'] == [(x, None) for x in filters_list.split(',')]
 
 

@@ -122,7 +122,7 @@ def test_request_is_front_page(line_factory):
 )
 def test_process_names(line_factory, process):
     """Checks that different styles of process names are handled correctly."""
-    line = line_factory(process_name_and_pid=process,)
+    line = line_factory(process_name_and_pid=process)
     assert line.is_valid is True
 
 

@@ -35,9 +35,7 @@ def test_start_and_end_attributes(start_str, start_obj, delta, end_obj):
     assert log_file.end == end_obj
 
 
-@pytest.mark.parametrize(
-    'accept_date', ['09/Dec/2013:12:59:46.633', None],
-)
+@pytest.mark.parametrize('accept_date', ['09/Dec/2013:12:59:46.633', None])
 def test_lines_validity(tmp_path, line_factory, accept_date):
     """Check that lines are either counted as valid or invalid."""
     file_path = tmp_path / 'haproxy.log'
@@ -95,9 +93,7 @@ def test_total_lines():
     assert log_file.invalid_lines == 1
 
 
-@pytest.mark.parametrize(
-    'client_port', ['90', 'random-value-that-breaks'],
-)
+@pytest.mark.parametrize('client_port', ['90', 'random-value-that-breaks'])
 def test_print_invalid_lines(tmp_path, line_factory, client_port, capsys):
     """Check that invalid lines are printed, if asked to do so."""
     file_path = tmp_path / 'haproxy.log'

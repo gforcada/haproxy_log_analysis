@@ -23,12 +23,12 @@ def default_arguments():
 
 @pytest.mark.parametrize(
     'switch, listing',
-    [('list-filters', VALID_FILTERS), ('list-commands', VALID_COMMANDS),],
+    [('list-filters', VALID_FILTERS), ('list-commands', VALID_COMMANDS)],
 )
 def test_list_filters_and_commands(capsys, switch, listing):
     """Test that one can request the filters/commands to be listed."""
     parser = create_parser()
-    data = parse_arguments(parser.parse_args([f'--{switch}',]))
+    data = parse_arguments(parser.parse_args([f'--{switch}']))
     argument = switch.replace('-', '_')
     for key in data:
         expected = None
