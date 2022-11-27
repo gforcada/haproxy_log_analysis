@@ -7,23 +7,32 @@ version = '4.1.1.dev0'
 
 description = "Haproxy log analyzer that tries to gives an insight of what's going on"
 
-long_description = """{0}
-{1}
-""".format(
-    open('README.rst').read(), open('CHANGES.rst').read()
-)
+
+def read_file(filename):
+    with open(filename) as file_obj:
+        file_contents = file_obj.read()
+    return file_contents
+
+
+long_description = f"""
+{read_file('README.rst')}
+{read_file('CHANGES.rst')}
+"""
+
 
 setup(
     name='haproxy_log_analysis',
     version=version,
     description=description,
     long_description=long_description,
-    # Get more strings from
-    # http://pypi.python.org/pypi?:action=list_classifiers
+    # Get more from https://pypi.org/classifiers/
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
