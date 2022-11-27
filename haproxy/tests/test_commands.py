@@ -497,7 +497,7 @@ def test_queue_peaks_generated_keys(line_factory, date, expected_key):
     cmd = commands.QueuePeaks()
     cmd(line_factory(queue_backend=0, accept_date=date))
     keys = list(cmd.requests.keys())
-    # account for a 1h difference, if UTC is used (as in travis)
+    # account for a 1h difference, if UTC is used (as in CI)
     assert expected_key - 4000 <= keys[0] <= expected_key + 4000
     # check that microseconds are exact though
     assert expected_key - int(expected_key) == keys[0] - int(keys[0])
