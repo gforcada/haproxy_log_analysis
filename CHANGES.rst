@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-4.1.1 (unreleased)
+5.0.0 (2022-11-27)
 ------------------
 
 - Drop testing on travis-ci.
