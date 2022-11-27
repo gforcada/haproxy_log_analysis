@@ -1,7 +1,11 @@
+import sys
+
 import pytest
 
 from haproxy.main import create_parser, main, parse_arguments
 from haproxy.utils import VALID_COMMANDS, VALID_FILTERS
+
+PY310_OR_HIGHER = sys.version_info[1] > 9
 
 
 @pytest.fixture
@@ -47,7 +51,10 @@ def test_show_help(capsys):
     data = parse_arguments(parser.parse_args([]))
     main(data)
     output_text = capsys.readouterr().out
-    assert 'optional arguments:' in output_text
+    if PY310_OR_HIGHER:
+        assert 'options:' in output_text
+    else:
+        assert 'optional arguments:' in output_text
     assert '--list-filters ' in output_text
     assert '--list-commands ' in output_text
 
