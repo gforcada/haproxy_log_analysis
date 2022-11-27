@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 def filter_ip(ip):
     """Filter :class:`.Line` objects by IP.
 

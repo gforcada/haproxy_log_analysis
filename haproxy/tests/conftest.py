@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 from copy import deepcopy
-from haproxy.line import Line
 
 import pytest
 
+from haproxy.line import Line
 
 DEFAULT_DATA = {
     'syslog_date': 'Dec  9 13:01:26',

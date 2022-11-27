@@ -1,12 +1,13 @@
-# -*- encoding: utf-8 -*-
-from haproxy.logfile import Log
-from haproxy.utils import VALID_COMMANDS
-from haproxy.utils import VALID_FILTERS
-from haproxy.utils import validate_arg_date
-from haproxy.utils import validate_arg_delta
-
 import argparse
 import os
+
+from haproxy.logfile import Log
+from haproxy.utils import (
+    VALID_COMMANDS,
+    VALID_FILTERS,
+    validate_arg_date,
+    validate_arg_delta,
+)
 
 
 def create_parser():
@@ -243,7 +244,7 @@ def main(args):
         expected_filtering = False
     # process all log lines
     for line in log_file:
-        if all((f(line) for f in filters_to_use)) is expected_filtering:
+        if all(f(line) for f in filters_to_use) is expected_filtering:
             for cmd in cmds_to_use:
                 cmd(line)
 

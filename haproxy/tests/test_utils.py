@@ -1,13 +1,15 @@
-from datetime import datetime
-from datetime import timedelta
-from haproxy.utils import date_str_to_datetime
-from haproxy.utils import delta_str_to_timedelta
-from haproxy.utils import VALID_COMMANDS
-from haproxy.utils import VALID_FILTERS
-from haproxy.utils import validate_arg_date
-from haproxy.utils import validate_arg_delta
+from datetime import datetime, timedelta
 
 import pytest
+
+from haproxy.utils import (
+    VALID_COMMANDS,
+    VALID_FILTERS,
+    date_str_to_datetime,
+    delta_str_to_timedelta,
+    validate_arg_date,
+    validate_arg_delta,
+)
 
 
 @pytest.mark.parametrize(
@@ -62,7 +64,7 @@ def test_valid_filterss(filter_key):
     assert filter_data['description'].startswith(f'{filter_key}: ')
 
 
-@pytest.mark.parametrize('value, expected', [('', None), ('30/Dec/2019', True),])
+@pytest.mark.parametrize('value, expected', [('', None), ('30/Dec/2019', True)])
 def test_validate_date(value, expected):
     """Check that the date is validated or an exception raised."""
     if expected is None:
@@ -74,7 +76,7 @@ def test_validate_date(value, expected):
         assert validate_arg_date(value) is None
 
 
-@pytest.mark.parametrize('value, expected', [('', None), ('3d', True),])
+@pytest.mark.parametrize('value, expected', [('', None), ('3d', True)])
 def test_validate_delta(value, expected):
     """Check that the delta is validated or an exception raised."""
     if expected is None:

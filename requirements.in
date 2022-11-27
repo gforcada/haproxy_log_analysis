@@ -1,0 +1,5 @@
+coveralls
+importlib-metadata; python_version < '3.8'
+pytest
+pytest-cov
+zipp; python_version < '3.8'  # dependency of importlib-metadata

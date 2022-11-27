@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-from datetime import datetime
-
 import re
-
+from datetime import datetime
 
 # Example log line, to understand the regex below (truncated to fit into
 # 80 chars):
@@ -48,7 +45,7 @@ HTTP_REQUEST_REGEX = re.compile(
 )
 
 
-class Line(object):
+class Line:
     """For a precise and more detailed description of every field see:
     http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.3
     """
@@ -144,8 +141,7 @@ class Line(object):
 
     @property
     def is_https(self):
-        """Returns True if the log line is a SSL connection. False otherwise.
-        """
+        """Returns True if the log line is a SSL connection. False otherwise."""
         if ':443' in self.http_request_path:
             return True
         return False

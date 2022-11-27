@@ -4,8 +4,20 @@ CHANGES
 4.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Drop testing on travis-ci.
+  [gforcada]
 
+- Use GitHub Actions.
+  [gforcada]
+
+- Format the code with `pyupgrade`, `black` and `isort`.
+  [gforcada]
+
+- Use `pip-tools` to keep dependencies locked.
+  [gforcada]
+
+- Bump python versions supported to 3.7-3.11 and pypy.
+  [gforcada]
 
 4.1.0 (2020-01-06)
 ------------------
@@ -86,7 +98,7 @@ CHANGES
 
 2.0 (2016-07-06)
 ----------------
-- Handle unparseable HTTP requests.
+- Handle unparsable HTTP requests.
   [gforcada]
 
 - Only test on python 2.7 and 3.5
@@ -210,7 +222,7 @@ CHANGES
   [gforcada]
 
 - Improve :method::`.HaproxyLogFile.cmd_queue_peaks` output to not only show
-  peaks but also when requests started to queue and when they finsihed and
+  peaks but also when requests started to queue and when they finished and
   the amount of requests that had been queued.
   [gforcada]
 

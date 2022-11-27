@@ -1,10 +1,11 @@
-from haproxy.main import create_parser
-from haproxy.main import main
-from haproxy.main import parse_arguments
-from haproxy.utils import VALID_COMMANDS
-from haproxy.utils import VALID_FILTERS
+import sys
 
 import pytest
+
+from haproxy.main import create_parser, main, parse_arguments
+from haproxy.utils import VALID_COMMANDS, VALID_FILTERS
+
+PY310_OR_HIGHER = sys.version_info[1] > 9
 
 
 @pytest.fixture
@@ -26,12 +27,12 @@ def default_arguments():
 
 @pytest.mark.parametrize(
     'switch, listing',
-    [('list-filters', VALID_FILTERS), ('list-commands', VALID_COMMANDS),],
+    [('list-filters', VALID_FILTERS), ('list-commands', VALID_COMMANDS)],
 )
 def test_list_filters_and_commands(capsys, switch, listing):
     """Test that one can request the filters/commands to be listed."""
     parser = create_parser()
-    data = parse_arguments(parser.parse_args([f'--{switch}',]))
+    data = parse_arguments(parser.parse_args([f'--{switch}']))
     argument = switch.replace('-', '_')
     for key in data:
         expected = None
@@ -50,7 +51,10 @@ def test_show_help(capsys):
     data = parse_arguments(parser.parse_args([]))
     main(data)
     output_text = capsys.readouterr().out
-    assert 'optional arguments:' in output_text
+    if PY310_OR_HIGHER:
+        assert 'options:' in output_text
+    else:
+        assert 'optional arguments:' in output_text
     assert '--list-filters ' in output_text
     assert '--list-commands ' in output_text
 

@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-from haproxy import filters
-
 import pytest
+
+from haproxy import filters
 
 
 @pytest.mark.parametrize(
@@ -72,7 +71,7 @@ def test_filter_ssl(line_factory, path, result):
     assert current_filter(line) is result
 
 
-@pytest.mark.parametrize('tr, result', [(45, False), (13000, True), (4566, False),])
+@pytest.mark.parametrize('tr, result', [(45, False), (13000, True), (4566, False)])
 def test_filter_slow_requests(line_factory, tr, result):
     """Check that filter_slow_requests filter works as expected."""
     current_filter = filters.filter_slow_requests('10000')
@@ -80,7 +79,7 @@ def test_filter_slow_requests(line_factory, tr, result):
     assert current_filter(line) is result
 
 
-@pytest.mark.parametrize('tw, result', [(45, True), (13000, False), (4566, False),])
+@pytest.mark.parametrize('tw, result', [(45, True), (13000, False), (4566, False)])
 def test_filter_wait_on_queues(line_factory, tw, result):
     """Check that filter_wait_on_queues filter works as expected"""
     current_filter = filters.filter_wait_on_queues('50')
