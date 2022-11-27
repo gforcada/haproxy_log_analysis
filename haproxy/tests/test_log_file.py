@@ -45,7 +45,7 @@ def test_lines_validity(tmp_path, line_factory, accept_date):
     with open(file_path, 'w') as file_obj:
         file_obj.write(f'{line}\n')
     log_file = Log(file_path)
-    _ = [x for x in log_file]
+    _ = list(log_file)
 
     assert log_file.total_lines == 1
     if accept_date:
@@ -80,14 +80,14 @@ def test_returned_lines(tmp_path, line_factory, accept_date, start, delta, is_va
     with open(file_path, 'w') as file_obj:
         file_obj.write(f'{line}\n')
     log_file = Log(file_path, start=start, delta=delta)
-    lines = [x for x in log_file]
+    lines = list(log_file)
     assert bool(len(lines)) is is_valid
 
 
 def test_total_lines():
     """Check that the total amount of lines are always counted."""
     log_file = Log(logfile='haproxy/tests/files/2_ok_1_invalid.log')
-    _ = [x for x in log_file]
+    _ = list(log_file)
     assert log_file.total_lines == 3
     assert log_file.valid_lines == 2
     assert log_file.invalid_lines == 1
@@ -101,7 +101,7 @@ def test_print_invalid_lines(tmp_path, line_factory, client_port, capsys):
     with open(file_path, 'w') as file_obj:
         file_obj.write(f'{line}\n')
     log_file = Log(file_path, show_invalid=True)
-    _ = [x for x in log_file]
+    _ = list(log_file)
 
     output = capsys.readouterr().out
     if log_file.valid_lines == 1:

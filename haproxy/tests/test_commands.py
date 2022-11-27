@@ -65,7 +65,7 @@ def test_http_methods_results(line_factory):
     assert cmd.raw_results() == {}
     for verb, count in (('POST', 4), ('GET', 3), ('PUT', 2)):
         line = line_factory(http_request=f'{verb} /path/to/image HTTP/1.1')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     results = cmd.raw_results()
     assert len(results) == 3
@@ -86,7 +86,7 @@ def test_http_methods_output(line_factory, capsys, output, expected):
     cmd = commands.HttpMethods()
     for verb, count in (('GET', 1), ('PUT', 2)):
         line = line_factory(http_request=f'{verb} /path/to/image HTTP/1.1')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     check_output(cmd, output, expected, capsys)
 
@@ -100,7 +100,7 @@ def test_ip_counter_results(line_factory):
     assert cmd.raw_results() == {}
     for ip, count in (('192.168.0.1', 4), ('172.4.3.2', 3), ('8.7.6.5', 2)):
         line = line_factory(headers=f' {{{ip}}}')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     results = cmd.raw_results()
     assert len(results) == 3
@@ -124,7 +124,7 @@ def test_ip_counter_output(line_factory, capsys, output, expected):
     cmd = commands.IpCounter()
     for ip, count in (('172.4.3.2', 3), ('8.7.6.5', 2)):
         line = line_factory(headers=f' {{{ip}}}')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     check_output(cmd, output, expected, capsys)
 
@@ -138,7 +138,7 @@ def test_top_ips_results(line_factory):
     assert cmd.raw_results() == []
     for ip, count in ((f'192.168.0.{x}', x) for x in range(11)):
         line = line_factory(headers=f' {{{ip}}}')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     results = cmd.raw_results()
     assert len(results) == 10
@@ -170,7 +170,7 @@ def test_top_ips_output(line_factory, capsys, output, expected):
     assert cmd.raw_results() == []
     for ip, count in ((f'192.168.0.{x}', x) for x in range(3)):
         line = line_factory(headers=f' {{{ip}}}')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     check_output(cmd, output, expected, capsys)
 
@@ -184,7 +184,7 @@ def test_status_codes_counter_results(line_factory):
     assert cmd.raw_results() == {}
     for status_code, count in (('200', 4), ('301', 3), ('500', 2)):
         line = line_factory(status=status_code)
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     results = cmd.raw_results()
     assert len(results) == 3
@@ -205,7 +205,7 @@ def test_status_codes_counter_output(line_factory, capsys, output, expected):
     cmd = commands.StatusCodesCounter()
     for status_code, count in (('301', 3), ('500', 2)):
         line = line_factory(status=status_code)
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     check_output(cmd, output, expected, capsys)
 
@@ -219,7 +219,7 @@ def test_request_path_counter_results(line_factory):
     assert cmd.raw_results() == {}
     for path, count in (('/image/one', 4), ('/video/two', 3), ('/article/three', 2)):
         line = line_factory(http_request=f'GET {path} HTTP/1.1')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     results = cmd.raw_results()
     assert len(results) == 3
@@ -243,7 +243,7 @@ def test_request_path_counter_output(line_factory, capsys, output, expected):
     cmd = commands.RequestPathCounter()
     for path, count in (('/video/two', 3), ('/article/three', 2)):
         line = line_factory(http_request=f'GET {path} HTTP/1.1')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     check_output(cmd, output, expected, capsys)
 
@@ -288,7 +288,7 @@ def test_top_request_paths_results(line_factory):
     assert cmd.raw_results() == []
     for path, count in ((f'/file/{x}', x) for x in range(11)):
         line = line_factory(http_request=f'GET {path} HTTP/1.1')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     results = cmd.raw_results()
     assert len(results) == 10
@@ -319,7 +319,7 @@ def test_top_request_paths_output(line_factory, capsys, output, expected):
     cmd = commands.TopRequestPaths()
     for path, count in ((f'/file/{x}', x) for x in range(3)):
         line = line_factory(http_request=f'GET {path} HTTP/1.1')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     check_output(cmd, output, expected, capsys)
 
@@ -427,7 +427,7 @@ def test_server_load_results(line_factory):
     assert cmd.raw_results() == {}
     for name, count in (('server4', 4), ('server3', 3), ('server5', 5)):
         line = line_factory(server_name=name)
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     results = cmd.raw_results()
     assert len(results) == 3
@@ -451,7 +451,7 @@ def test_server_load_output(line_factory, capsys, output, expected):
     cmd = commands.ServerLoad()
     for name, count in (('server3', 3), ('server5', 5)):
         line = line_factory(server_name=name)
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     check_output(cmd, output, expected, capsys)
 
@@ -622,7 +622,7 @@ def test_connection_type_results(line_factory):
     assert cmd.raw_results() == (0, 0)
     for path, count in (('/Virtual:443/something', 4), ('/something', 2)):
         line = line_factory(http_request=f'GET {path} HTTP/1.1')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     assert cmd.raw_results() == (4, 2)
 
@@ -639,7 +639,7 @@ def test_connection_type_output(line_factory, capsys, output, expected):
     cmd = commands.ConnectionType()
     for path, count in (('/Virtual:443/something', 4), ('/something', 2)):
         line = line_factory(http_request=f'GET {path} HTTP/1.1')
-        for x in range(count):
+        for _ in range(count):
             cmd(line)
     check_output(cmd, output, expected, capsys)
 

@@ -50,7 +50,7 @@ def validate_arg_date(start):
     """Check that date argument is valid."""
     try:
         date_str_to_datetime(start)
-    except Exception:
+    except (AttributeError, ValueError):
         raise ValueError('--start argument is not valid')
 
 
@@ -58,7 +58,7 @@ def validate_arg_delta(delta):
     """Check that the delta argument is valid."""
     try:
         delta_str_to_timedelta(delta)
-    except Exception:
+    except (AttributeError, ValueError):
         raise ValueError('--delta argument is not valid')
 
 
