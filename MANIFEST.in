@@ -1,6 +1,7 @@
 include *.rst
 include .coveragerc
 include LICENSE
+include *.in
 include *.txt
 exclude pyvenv.cfg
 exclude pyproject.toml
