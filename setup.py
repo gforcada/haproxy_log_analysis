@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = '5.0.0'
+version = '5.0.1.dev0'
 
 description = "Haproxy log analyzer that tries to gives an insight of what's going on"
 
