@@ -19,6 +19,9 @@ CHANGES
 - Bump python versions supported to 3.7-3.11 and pypy.
   [gforcada]
 
+- Drop python 3.6 (EOL).
+  [gforcada]
+
 4.1.0 (2020-01-06)
 ------------------
 
