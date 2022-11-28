@@ -35,7 +35,6 @@ HAPROXY_LINE_REGEX = re.compile(
     r'({(?P<request_headers>.*)}\s+{(?P<response_headers>.*)}\s+|{(?P<headers>.*)}\s+|)'
     # "GET /path/to/image HTTP/1.1"
     r'"(?P<http_request>.*)"'
-    r'\Z'  # end of line
 )
 
 HTTP_REQUEST_REGEX = re.compile(
