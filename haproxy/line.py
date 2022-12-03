@@ -165,7 +165,9 @@ class Line:
         if self.captured_request_headers is not None:
             ip = self.captured_request_headers.split('|')[0]
             if ip:
-                return ip
+                # only get the first IP, if there are more usually
+                # are the intermediate servers
+                return ip.split(',')[0]
         return self.client_ip
 
     def _parse_line(self, line):

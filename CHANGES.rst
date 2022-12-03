@@ -4,8 +4,8 @@ CHANGES
 5.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Only get the first IP from `X-Forwarded-For` header.
+  [gforcada]
 
 5.0.0 (2022-11-27)
 ------------------
