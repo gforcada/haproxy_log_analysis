@@ -15,8 +15,9 @@ No project is trustworthy if does not have tests and a decent coverage!
 .. image:: https://github.com/gforcada/haproxy_log_analysis/actions/workflows/tests.yml/badge.svg?branch=master
    :target: https://github.com/gforcada/haproxy_log_analysis/actions/workflows/tests.yml
 
-.. image:: https://coveralls.io/repos/gforcada/haproxy-log-analysis/badge.svg?branch=master
-   :target: https://coveralls.io/github/gforcada/haproxy-log-analysis?branch=master
+.. image:: https://coveralls.io/repos/github/gforcada/haproxy_log_analysis/badge.svg?branch=master
+   :target: https://coveralls.io/github/gforcada/haproxy_log_analysis?branch=master
+
 
 Documentation
 -------------
