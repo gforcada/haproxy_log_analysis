@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-5.0.1 (unreleased)
+5.1.0 (2022-12-03)
 ------------------
 
 - Only get the first IP from `X-Forwarded-For` header.
