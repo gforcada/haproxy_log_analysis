@@ -14,7 +14,7 @@ def default_arguments():
     return {
         'start': None,
         'delta': None,
-        'log': 'haproxy/tests/files/small.log',
+        'log': 'tests/files/small.log',
         'commands': ['counter'],
         'negate_filter': None,
         'filters': None,

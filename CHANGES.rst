@@ -14,6 +14,9 @@ CHANGES
   They were showing all output, rather than only the top 10.
   [gforcada]
 
+- Move `tests` folder to the top-level.
+  [gforcada]
+
 5.0.0 (2022-11-27)
 ------------------
 

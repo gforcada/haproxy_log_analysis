@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.10", 3.9, 3.8, 3.7, pypy-3.9]
+        python-version: ["3.11", "3.10", "3.9", "3.8", "3.7", "pypy-3.9"]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -37,20 +37,20 @@ jobs:
       # formatters
       - name: Run pyupgrade
         if: matrix.python-version == '3.9'
-        run: pyupgrade --py37-plus *.py `find haproxy -name "*.py"`
+        run: pyupgrade --py37-plus *.py `find haproxy tests -name "*.py"`
       - name: Run isort
         if: matrix.python-version == '3.9'
-        run: isort --check-only *.py `find haproxy -name "*.py"`
+        run: isort --check-only *.py `find haproxy tests -name "*.py"`
       - name: Run black
         if: matrix.python-version == '3.9'
-        run: black --check *.py `find haproxy -name "*.py"`
+        run: black --check *.py `find haproxy tests -name "*.py"`
       # linters
       - name: Lint with codespell
         if: matrix.python-version == '3.9'
-        run: codespell *.rst *.py `find haproxy -name "*.py"`
+        run: codespell *.rst *.py `find haproxy tests -name "*.py"`
       - name: Lint with flake8
         if: matrix.python-version == '3.9'
-        run: flake8 *.py `find haproxy -name "*.py"` --count --max-complexity=18 --max-line-length=88 --show-source --statistics
+        run: flake8 *.py `find haproxy tests -name "*.py"` --count --max-complexity=18 --max-line-length=88 --show-source --statistics
       # tests and coverage
       - name: Test
         run: pytest --cov --cov-report term-missing

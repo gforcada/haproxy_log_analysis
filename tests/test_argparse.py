@@ -135,8 +135,8 @@ def test_filters_with_arguments(filter_expression, expected):
 @pytest.mark.parametrize(
     'filename, is_valid',
     [
-        ('haproxy/tests/conftest.py', True),
-        ('haproxy/tests/non-existing-file.py', False),
+        ('tests/conftest.py', True),
+        ('tests/non-existing-file.py', False),
     ],
 )
 def test_log_argument(filename, is_valid):

@@ -86,7 +86,7 @@ def test_returned_lines(tmp_path, line_factory, accept_date, start, delta, is_va
 
 def test_total_lines():
     """Check that the total amount of lines are always counted."""
-    log_file = Log(logfile='haproxy/tests/files/2_ok_1_invalid.log')
+    log_file = Log(logfile='tests/files/2_ok_1_invalid.log')
     _ = list(log_file)
     assert log_file.total_lines == 3
     assert log_file.valid_lines == 2
