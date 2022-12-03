@@ -10,6 +10,10 @@ CHANGES
 - Improve tests robustness.
   [gforcada]
 
+- Fix `top_ips` and `top_request_paths` commands output.
+  They were showing all output, rather than only the top 10.
+  [gforcada]
+
 5.0.0 (2022-11-27)
 ------------------
 

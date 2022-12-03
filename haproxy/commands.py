@@ -54,9 +54,10 @@ class AttributeCounterMixin:
 
     def print_data(self):
         result = ''
-        data = sorted(
-            self.stats.items(), key=lambda data_info: data_info[1], reverse=True
-        )
+        data = self.raw_results()
+        if isinstance(data, list):
+            data = {x: y for x, y in data}
+        data = sorted(data.items(), key=lambda data_info: data_info[1], reverse=True)
         for key, value in data:
             result += f'- {key}: {value}\n'
         return result
