@@ -170,6 +170,16 @@ def test_ip_from_headers(line_factory):
 
 @pytest.mark.parametrize(
     'ip',
+    ['1.2.3.4', '1.2.3.4, 2.3.4.5', '1.2.3.4,2.3.4.5,5.4.3.2'],
+)
+def test_only_first_ip_from_headers(line_factory, ip):
+    """Check that if there are multiple IPs, only the first one is used."""
+    line = line_factory(headers=f' {{{ip}}}')
+    assert line.ip == '1.2.3.4'
+
+
+@pytest.mark.parametrize(
+    'ip',
     ['127.1.2.7', '1.127.230.47', 'fe80::9379:c29e:6701:cef8', 'fe80::9379:c29e::'],
 )
 def test_ip_from_client_ip(line_factory, ip):
