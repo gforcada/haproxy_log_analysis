@@ -93,11 +93,11 @@ def test_total_lines():
     assert log_file.invalid_lines == 1
 
 
-@pytest.mark.parametrize('client_port', ['90', 'random-value-that-breaks'])
-def test_print_invalid_lines(tmp_path, line_factory, client_port, capsys):
+@pytest.mark.parametrize('headers', [' {1.2.3.4}', 'random-value-that-breaks'])
+def test_print_invalid_lines(tmp_path, line_factory, headers, capsys):
     """Check that invalid lines are printed, if asked to do so."""
     file_path = tmp_path / 'haproxy.log'
-    line = line_factory(client_port=client_port).raw_line
+    line = line_factory(headers=headers).raw_line
     with open(file_path, 'w') as file_obj:
         file_obj.write(f'{line}\n')
     log_file = Log(file_path, show_invalid=True)
@@ -105,6 +105,6 @@ def test_print_invalid_lines(tmp_path, line_factory, client_port, capsys):
 
     output = capsys.readouterr().out
     if log_file.valid_lines == 1:
-        assert client_port not in output
+        assert headers not in output
     else:
-        assert client_port in output
+        assert headers in output
