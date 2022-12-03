@@ -1,10 +1,10 @@
 def filter_ip(ip):
-    """Filter :class:`.Line` objects by IP.
+    """Filter by IP.
 
-    :param ip: IP that you want to filter to.
-    :type ip: string
-    :returns: a function that filters by the provided IP.
-    :rtype: function
+    -f ip[192.168.1.2]  # will return only lines that have this IP.
+
+    Either the client IP, or, if present, the first IP captured
+    in the X-Forwarded-For header.
     """
 
     def filter_func(log_line):
@@ -14,16 +14,12 @@ def filter_ip(ip):
 
 
 def filter_ip_range(ip_range):
-    """Filter :class:`.Line` objects by IP range.
+    """Filter by an IP range.
 
-    Both *192.168.1.203* and *192.168.1.10* are valid if the provided ip
-    range is ``192.168.1`` whereas *192.168.2.103* is not valid (note the
-    *.2.*).
+    -f ip_range[192.168.1]
 
-    :param ip_range: IP range that you want to filter to.
-    :type ip_range: string
-    :returns: a function that filters by the provided IP range.
-    :rtype: function
+    Rather than proper IP ranges, is a string matching.
+    See `ip` filter about which IP is being.
     """
 
     def filter_func(log_line):
@@ -35,12 +31,11 @@ def filter_ip_range(ip_range):
 
 
 def filter_path(path):
-    """Filter :class:`.Line` objects by their request path.
+    """Filter by the request path.
 
-    :param path: part of a path that needs to be on the request path.
-    :type path: string
-    :returns: a function that filters by the provided path.
-    :rtype: function
+    -f path[/one/two]
+
+    It looks for the given path to be part of the requested path.
     """
 
     def filter_func(log_line):
@@ -50,13 +45,11 @@ def filter_path(path):
 
 
 def filter_ssl(ignore=True):
-    """Filter :class:`.Line` objects that from SSL connections.
+    """Filter by SSL connection.
 
-    :param ignore: parameter to be ignored just to conform to the rule that all
-      filters need a parameter
-    :type ignore: bool
-    :returns: a function that filters SSL log lines.
-    :rtype: function
+    -f ssl
+
+    It checks that the request is made via the standard https port.
     """
 
     def filter_func(log_line):
@@ -66,14 +59,12 @@ def filter_ssl(ignore=True):
 
 
 def filter_slow_requests(slowness):
-    """Filter :class:`.Line` objects by their response time.
+    """Filter by response time.
 
-    :param slowness: minimum time, in milliseconds, a server needs to answer
-      a request. If the server takes more time than that the log line is
-      accepted.
-    :type slowness: string
-    :returns: a function that filters by the server response time.
-    :rtype: function
+    -f slow_requests[1000]  # get all lines that took more than a second to process
+
+    Filters by the time it took the downstream server to process the request.
+    Time is in milliseconds.
     """
 
     def filter_func(log_line):
@@ -84,15 +75,12 @@ def filter_slow_requests(slowness):
 
 
 def filter_wait_on_queues(max_waiting):
-    """Filter :class:`.Line` objects by their queueing time in
-    HAProxy.
+    """Filter by queue time in HAProxy.
 
-    :param max_waiting: maximum time, in milliseconds, a request is waiting on
-      HAProxy prior to be delivered to a backend server. If HAProxy takes less
-      than that time the log line is counted.
-    :type max_waiting: string
-    :returns: a function that filters by HAProxy queueing time.
-    :rtype: function
+    -f wait_on_queues[1000]  # get all requests that waited more than a second in HAProxy
+
+    Filters by the time a request had to wait in HAProxy
+    prior to be sent to a downstream server to be processed.
     """
 
     def filter_func(log_line):
@@ -103,13 +91,9 @@ def filter_wait_on_queues(max_waiting):
 
 
 def filter_status_code(http_status):
-    """Filter :class:`.Line` objects by their HTTP status code.
+    """Filter by a specific HTTP status code.
 
-    :param http_status: HTTP status code (200, 404, 502...) to filter lines
-      with.
-    :type http_status: string
-    :returns: a function that filters by HTTP status code.
-    :rtype: function
+    -f status_code[404]
     """
 
     def filter_func(log_line):
@@ -119,14 +103,9 @@ def filter_status_code(http_status):
 
 
 def filter_status_code_family(family_number):
-    """Filter :class:`.Line` objects by their family of HTTP status
-    code, i.e. 2xx, 3xx, 4xx
+    """Filter by a family of HTTP status code.
 
-    :param family_number: First digit of the HTTP status code family, i.e. 2
-      to get all the 2xx status codes, 4 for the client errors and so on.
-    :type family_number: string
-    :returns: a function that filters by HTTP status code family.
-    :rtype: function
+    -f status_code_family[5]  # get all 5xx status codes
     """
 
     def filter_func(log_line):
@@ -136,13 +115,9 @@ def filter_status_code_family(family_number):
 
 
 def filter_http_method(http_method):
-    """Filter :class:`.Line` objects by their HTTP method used (i.e.
-    GET, POST...).
+    """Filter by HTTP method (GET, POST, PUT, HEAD...).
 
-    :param http_method: HTTP method (POST, GET...).
-    :type http_method: string
-    :returns: a function that filters by the given HTTP method.
-    :rtype: function
+    -f http_method[GET]
     """
 
     def filter_func(log_line):
@@ -152,13 +127,11 @@ def filter_http_method(http_method):
 
 
 def filter_backend(backend_name):
-    """Filter :class:`.Line` objects by the HAProxy backend name
-    they were processed with.
+    """Filter by HAProxy backend.
 
-    :param backend_name: Name of the HAProxy backend section to investigate.
-    :type backend_name: string
-    :returns: a function that filters by the given backend name.
-    :rtype: function
+    -f backend[specific_app]
+
+    See HAProxy configuration, it can have multiple backends defined.
     """
 
     def filter_func(log_line):
@@ -168,13 +141,11 @@ def filter_backend(backend_name):
 
 
 def filter_frontend(frontend_name):
-    """Filter :class:`.Line` objects by the HAProxy frontend name
-    the connection arrived from.
+    """Filter by which HAProxy frontend got the request.
 
-    :param frontend_name: Name of the HAProxy frontend section to investigate.
-    :type frontend_name: string
-    :returns: a function that filters by the given frontend name.
-    :rtype: function
+    -f frontend[loadbalancer]
+
+    See HAProxy configuration, it can have multiple frontends defined.
     """
 
     def filter_func(log_line):
@@ -184,13 +155,9 @@ def filter_frontend(frontend_name):
 
 
 def filter_server(server_name):
-    """Filter :class:`.Line` objects by the downstream server that
-    handled the connection.
+    """Filter by downstream server.
 
-    :param server_name: Name of the server HAProxy send the connection to.
-    :type server_name: string
-    :returns: a function that filters by the given server name.
-    :rtype: function
+    -f server[app01]
     """
 
     def filter_func(log_line):
@@ -200,14 +167,11 @@ def filter_server(server_name):
 
 
 def filter_response_size(size):
-    """Filter :class:`.Line` objects by the response size (in bytes).
+    """Filter by how big (in bytes) the response was.
+
+    -f response_size[50000]
 
     Specially useful when looking for big file downloads.
-
-    :param size: Minimum amount of bytes a response body weighted.
-    :type size: string
-    :returns: a function that filters by the response size.
-    :rtype: function
     """
     if size.startswith('+'):
         size_value = int(size[1:])

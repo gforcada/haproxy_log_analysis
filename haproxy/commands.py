@@ -104,10 +104,7 @@ class Counter(BaseCommandMixin):
 
 
 class HttpMethods(AttributeCounterMixin, BaseCommandMixin):
-    """Report a breakdown of how many requests have been made per HTTP method.
-
-    That is, how many GET, POST, etc requests.
-    """
+    """Tally all requests per HTTP method (GET/POST...)."""
 
     attribute_name = 'http_request_method'
 
@@ -115,59 +112,41 @@ class HttpMethods(AttributeCounterMixin, BaseCommandMixin):
 class IpCounter(AttributeCounterMixin, BaseCommandMixin):
     """Report a breakdown of how many requests have been made per IP.
 
-    .. note::
-       For this to work you need to configure HAProxy
-       to capture the header that has the IP on it
-       (usually the X-Forwarded-For header).
-       Something like: ``capture request header X-Forwarded-For len 20``
+    For this to work you need to configure HAProxy to capture
+    the `X-Forwarded-For` header.
     """
 
     attribute_name = 'ip'
 
 
 class TopIps(IpCounter, SortTrimMixin):
-    """Return the top most frequent IPs.
-
-    .. warning::
-       By now hardcoded to 10 items.
-    """
+    """Return the top most frequent IPs (10 items)."""
 
     def raw_results(self):
         return self._sort_and_trim(self.stats, reverse=True)
 
 
 class StatusCodesCounter(AttributeCounterMixin, BaseCommandMixin):
-    """Generate statistics about HTTP status codes. 404, 500 and so on."""
+    """Tally requests per HTTP status (404, 500...)"""
 
     attribute_name = 'status_code'
 
 
 class RequestPathCounter(AttributeCounterMixin, BaseCommandMixin):
-    """Generate statistics about HTTP requests' path."""
+    """Tally requests per the request's path."""
 
     attribute_name = 'http_request_path'
 
 
 class TopRequestPaths(RequestPathCounter, SortTrimMixin):
-    """Returns the top most frequent paths.
-
-    .. warning::
-       By now hardcoded to 10 items.
-    """
+    """Returns the top most frequent paths (10 items)."""
 
     def raw_results(self):
         return self._sort_and_trim(self.stats, reverse=True)
 
 
 class SlowRequests(BaseCommandMixin):
-    """List all requests that took a certain amount of time to be
-    processed.
-
-    .. warning::
-       By now hardcoded to 1 second (1000 milliseconds), improve the
-       command line interface to allow to send parameters to each command
-       or globally.
-    """
+    """List all requests that are considered slow to process (1 second)."""
 
     threshold = 1000
 
@@ -184,21 +163,14 @@ class SlowRequests(BaseCommandMixin):
 
 
 class SlowRequestsCounter(SlowRequests):
-    """Counts all requests that took a certain amount of time to be
-    processed.
-
-    .. warning::
-       By now hardcoded to 1 second (1000 milliseconds), improve the
-       command line interface to allow to send parameters to each command
-       or globally.
-    """
+    """Counts requests that are considered slow (1 second)."""
 
     def raw_results(self):
         return len(self.slow_requests)
 
 
 class AverageResponseTime(SlowRequests):
-    """Return the average time backend servers take to answer all valid requests."""
+    """Global average response time it took downstream servers to answer requests."""
 
     threshold = 0
 
@@ -230,26 +202,19 @@ class AverageWaitingTime(BaseCommandMixin):
 
 
 class ServerLoad(AttributeCounterMixin, BaseCommandMixin):
-    """Generate statistics regarding how many requests were processed by
-    each downstream server.
-    """
+    """Tally requests per downstream server."""
 
     attribute_name = 'server_name'
 
 
 class QueuePeaks(BaseCommandMixin):
-    """Generate a list of the requests peaks on the queue.
+    """Give stats about queue peaks in HAProxy.
 
-    When servers can not handle all incoming requests,
-    they have to wait on HAProxy.
+    When servers can not handle all incoming requests, they have to wait on HAProxy.
     On every log line there is an account for how many requests have been piled up.
 
     A queue peak is defined by the biggest value on the backend queue
     on a series of log lines that are between log lines with the queue empty.
-
-    .. warning::
-      Allow to configure up to which peak can be ignored. Currently
-      set to 1.
     """
 
     def __init__(self):
@@ -340,15 +305,9 @@ class QueuePeaks(BaseCommandMixin):
 
 
 class ConnectionType(BaseCommandMixin):
-    """Generate statistics on how many requests are made via HTTP and how
-    many are made via SSL.
+    """Tally requests per their SSL usage (either yes or no).
 
-    .. note::
-      This only works if the request path contains the default port for
-      SSL (443).
-
-    .. warning::
-      The ports are hardcoded, they should be configurable.
+    This only works if the request path contains the default port for SSL (443).
     """
 
     def __init__(self):
@@ -374,11 +333,9 @@ class ConnectionType(BaseCommandMixin):
 
 
 class RequestsPerMinute(BaseCommandMixin):
-    """Generates statistics on how many requests were made per minute.
+    """Report the count of requests per minute.
 
-    .. note::
-      Try to combine it with time constrains (``-s`` and ``-d``) as this
-      command output can be huge otherwise.
+    Combine it with time constrains (`-s` and `-d`) otherwise the output will be long.
     """
 
     def __init__(self):
@@ -414,10 +371,9 @@ class RequestsPerMinute(BaseCommandMixin):
 
 
 class RequestsPerHour(RequestsPerMinute):
-    """Generates statistics on how many requests were made per hour.
+    """Report the count of requests per hour.
 
-    .. note::
-      Try to combine it with time constrains (``-s`` and ``-d``) to reduce the amount of output.
+    Combine it with time constrains (`-s` and `-d`) otherwise the output will be long.
     """
 
     def generate_key(self, accept_date):
