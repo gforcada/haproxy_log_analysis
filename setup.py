@@ -46,6 +46,7 @@ setup(
     author_email='gil.gnome@gmail.com',
     url='https://github.com/gforcada/haproxy_log_analysis',
     license='GPL v3',
+    license_file='LICENSE',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,

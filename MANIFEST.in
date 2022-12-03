@@ -1,12 +1,8 @@
 include *.rst
-include .coveragerc
-include LICENSE
-include *.in
+exclude .coveragerc
 include *.txt
-exclude pyvenv.cfg
-exclude pyproject.toml
-exclude requirements-dev.in
+exclude requirements*.in
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs Makefile
-recursive-include haproxy *.log
+recursive-include tests *.log
