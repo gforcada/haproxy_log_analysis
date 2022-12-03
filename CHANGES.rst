@@ -4,8 +4,12 @@ CHANGES
 5.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make listing of commands and filters easier to read.
+  [gforcada]
 
+- Improve the filters' and commands' descriptions,
+  with ready to use examples.
+  [gforcada]
 
 5.1.0 (2022-12-03)
 ------------------
