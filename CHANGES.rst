@@ -7,6 +7,9 @@ CHANGES
 - Only get the first IP from `X-Forwarded-For` header.
   [gforcada]
 
+- Improve tests robustness.
+  [gforcada]
+
 5.0.0 (2022-11-27)
 ------------------
 
