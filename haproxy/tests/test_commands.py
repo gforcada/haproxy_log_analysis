@@ -711,19 +711,17 @@ def test_requests_per_hour_results(line_factory):
     """
     cmd = commands.RequestsPerHour()
     assert cmd.raw_results() == []
-    now = datetime.now()
-    # to avoid leaping into the next/previous minute with the timedeltas below
-    now = now.replace(second=30)
+    specific_date = datetime(year=2022, month=12, day=3, hour=14, minute=10, second=30)
     minutes = timedelta(minutes=5)
     hours = timedelta(hours=2)
     dates = [
-        now,
-        now + minutes,
-        now - minutes,
-        now + hours,
-        now - hours,
-        now + hours * 2,
-        now - hours * 2,
+        specific_date,
+        specific_date + minutes,
+        specific_date - minutes,
+        specific_date + hours,
+        specific_date - hours,
+        specific_date + hours * 2,
+        specific_date - hours * 2,
     ]
     for time in dates:
         cmd(line_factory(accept_date=f'{time:%d/%b/%Y:%H:%M:%S.%f}'))
