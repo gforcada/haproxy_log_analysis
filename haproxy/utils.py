@@ -79,12 +79,8 @@ def list_filters():
         name = full_name[7:]
         obj = getattr(filters, full_name)
 
-        description = obj.__doc__
-        if description:
-            description = re.sub(r'\n\s+', ' ', description)
-            description.strip()
-
-        data[name] = {'obj': obj, 'description': f'{name}: {description}\n'}
+        description = _strip_description(obj.__doc__)
+        data[name] = {'obj': obj, 'description': f'{name}:\n\t{description}'}
     return data
 
 
@@ -108,13 +104,16 @@ def list_commands():
         except AttributeError:
             continue
 
-        description = klass.__doc__
-        if description:
-            description = re.sub(r'\n\s+', ' ', description)
-            description.strip()
-
-        data[name] = {'klass': klass, 'description': f'{name}: {description}\n'}
+        description = _strip_description(klass.__doc__)
+        data[name] = {'klass': klass, 'description': f'{name}:\n\t{description}'}
     return data
+
+
+def _strip_description(raw_text):
+    if not raw_text:
+        return ''
+    text = '\n\t'.join([line.strip() for line in raw_text.split('\n') if line.strip()])
+    return text
 
 
 VALID_COMMANDS = list_commands()
