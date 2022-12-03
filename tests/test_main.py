@@ -42,7 +42,7 @@ def test_list_filters_and_commands(capsys, switch, listing):
     main(data)
     output_text = capsys.readouterr().out
     for name in listing:
-        assert f'{name}: ' in output_text
+        assert f'{name}:\n\t' in output_text
 
 
 def test_show_help(capsys):
