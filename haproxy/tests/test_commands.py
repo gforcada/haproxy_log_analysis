@@ -154,6 +154,23 @@ def test_top_ips_results(line_factory):
     assert results[9] == ('192.168.0.1', 1)
 
 
+def test_top_ips_print_results(line_factory):
+    """Test the TopIps command.
+
+    Ensure that when they are printed, only 10 results are shown.
+    """
+    cmd = commands.TopIps()
+    for ip, count in ((f'192.168.0.{x}', x) for x in range(14)):
+        line = line_factory(headers=f' {{{ip}}}')
+        for _ in range(count):
+            cmd(line)
+    results = cmd.print_data()
+    results = [x for x in results.split('\n') if x]
+    assert len(results) == 10
+    assert results[0] == '- 192.168.0.13: 13'
+    assert results[-1] == '- 192.168.0.4: 4'
+
+
 @pytest.mark.parametrize(
     'output, expected',
     [
@@ -302,6 +319,23 @@ def test_top_request_paths_results(line_factory):
     assert results[7] == ('/file/3', 3)
     assert results[8] == ('/file/2', 2)
     assert results[9] == ('/file/1', 1)
+
+
+def test_top_request_paths_print_results(line_factory):
+    """Test the TopRequestPaths command.
+
+    Ensure that when they are printed, only 10 results are shown.
+    """
+    cmd = commands.TopRequestPaths()
+    for path, count in ((f'/file/{x}', x) for x in range(14)):
+        line = line_factory(http_request=f'GET {path} HTTP/1.1')
+        for _ in range(count):
+            cmd(line)
+    results = cmd.print_data()
+    results = [x for x in results.split('\n') if x]
+    assert len(results) == 10
+    assert results[0] == '- /file/13: 13'
+    assert results[-1] == '- /file/4: 4'
 
 
 @pytest.mark.parametrize(
