@@ -11,6 +11,11 @@ CHANGES
   with ready to use examples.
   [gforcada]
 
+- Switch logic of `wait_on_queues` filter,
+  count lines that are above the filter,
+  e.g. the lines that took more than the specified time.
+  [gforcada]
+
 5.1.0 (2022-12-03)
 ------------------
 
