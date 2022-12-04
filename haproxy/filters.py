@@ -85,7 +85,7 @@ def filter_wait_on_queues(max_waiting):
 
     def filter_func(log_line):
         waiting = int(max_waiting)
-        return waiting >= log_line.time_wait_queues
+        return waiting <= log_line.time_wait_queues
 
     return filter_func
 
