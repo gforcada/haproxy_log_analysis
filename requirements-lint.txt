@@ -10,7 +10,7 @@ attrs==22.1.0
     #   pytest
 black==22.10.0
     # via -r requirements-lint.in
-certifi==2022.9.24
+certifi==2022.12.7
     # via requests
 charset-normalizer==2.1.1
     # via requests
