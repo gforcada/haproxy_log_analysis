@@ -26,8 +26,6 @@ coveralls==3.3.1
     # via -r requirements.in
 docopt==0.6.2
     # via coveralls
-exceptiongroup==1.0.4
-    # via pytest
 flake8==5.0.4
     # via
     #   flake8-bugbear
@@ -57,14 +55,6 @@ flake8-todo==0.7
     # via -r requirements-lint.in
 idna==3.4
     # via requests
-importlib-metadata==4.2.0 ; python_version < "3.8"
-    # via
-    #   -r requirements.in
-    #   click
-    #   flake8
-    #   flake8-comprehensions
-    #   pluggy
-    #   pytest
 iniconfig==1.1.1
     # via pytest
 isort==5.10.1
@@ -100,26 +90,9 @@ pytest-cov==4.0.0
     # via -r requirements.in
 pyupgrade==3.2.2
     # via -r requirements-lint.in
-requests==2.28.1
+requests==2.31.0
     # via coveralls
 tokenize-rt==5.0.0
     # via pyupgrade
-tomli==2.0.1
-    # via
-    #   black
-    #   coverage
-    #   pytest
-typed-ast==1.5.4 ; python_version < "3.8"
-    # via
-    #   -r requirements-lint.in
-    #   black
-typing-extensions==4.4.0
-    # via
-    #   black
-    #   importlib-metadata
 urllib3==1.26.13
     # via requests
-zipp==3.11.0 ; python_version < "3.8"
-    # via
-    #   -r requirements.in
-    #   importlib-metadata
