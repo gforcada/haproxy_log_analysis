@@ -36,9 +36,6 @@ classifiers = [
 "Bug Tracker" = "https://github.com/gforcada/haproxy_log_analysis/issues"
 "Changelog" = "https://github.com/gforcada/haproxy_log_analysis/blob/main/CHANGES.rst"
 
-[project.optional-dependencies]
-test = ["pytest"]
-
 [project.scripts]
 haproxy_log_analysis = "haproxy.main:console_script"
 
