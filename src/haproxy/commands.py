@@ -57,7 +57,7 @@ class AttributeCounterMixin:
         result = ''
         data = self.raw_results()
         if isinstance(data, list):
-            data = {x: y for x, y in data}
+            data = dict(data)
         data = sorted(data.items(), key=lambda data_info: data_info[1], reverse=True)
         for key, value in data:
             result += f'- {key}: {value}\n'
@@ -291,10 +291,12 @@ class QueuePeaks(BaseCommandMixin):
     def print_data(self):
         data = ''
         for peak_info in self.raw_results():
-            data += f'- peak: {peak_info.get("peak")} '
-            data += f'- span: {peak_info.get("span")} '
-            data += f'- started: {peak_info.get("started").isoformat()} '
-            data += f'- finished: {peak_info.get("finished").isoformat()}\n'
+            data += f'- peak: {peak_info.get("peak")} '  # noqa: Q000
+            data += f'- span: {peak_info.get("span")} '  # noqa: Q000
+            data += f'- started: {peak_info.get("started").isoformat()} '  # noqa: Q000
+            data += (
+                f'- finished: {peak_info.get("finished").isoformat()}\n'  # noqa: Q000
+            )
         return data
 
     def json_data(self):

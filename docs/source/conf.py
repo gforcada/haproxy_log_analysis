@@ -11,10 +11,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import os
-import sys
-
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -46,7 +42,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'HAProxy log analyzer'
-copyright = '2013, Gil Forcada'
+copyright = '2013, Gil Forcada'  # noqa: A001
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -185,11 +181,11 @@ htmlhelp_basename = 'HAProxyloganalyzerdoc'
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
+    # 'papersize': 'letterpaper',
     # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
+    # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
-    #'preamble': '',
+    # 'preamble': '',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
