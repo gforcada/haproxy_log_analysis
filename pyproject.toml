@@ -1,4 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "haproxy_log_analysis"
+version = "5.1.1.dev0"
+authors = [
+  { name="Gil Forcada Codinachs", email="gil.gnome@gmail.com" },
+]
+description = "Analayze HAProxy log files"
+keywords = ["haproxy", "log", "sysadmin", "devops", "report" ]
+license = {file = "LICENSE"}
+readme = "README.rst"
+requires-python = ">=3.7"
+classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Intended Audience :: System Administrators",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: Implementation :: CPython",
+        "Programming Language :: Python :: Implementation :: PyPy",
+        "Topic :: Internet :: Log Analysis",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/gforcada/haproxy_log_analysis"
+"Bug Tracker" = "https://github.com/gforcada/haproxy_log_analysis/issues"
+"Changelog" = "https://github.com/gforcada/haproxy_log_analysis/blob/main/CHANGES.rst"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+haproxy_log_analysis = "haproxy.main:console_script"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/haproxy"]
+
+[tool.hatch.build.targets.sdist]
+packages = ["src/haproxy"]
+
+[tool.isort]
+profile = "plone"
+
 [tool.black]
 target-version = ["py37"]
 skip-string-normalization = true
-
