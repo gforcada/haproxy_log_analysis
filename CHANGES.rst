@@ -37,6 +37,9 @@ CHANGES
 - soft drop python 3.7 (it's EOL, and we stop testing against it)
   [gforcada]
 
+- Pin dependencies installed in `tox.ini`
+  [gforcada]
+
 5.1.0 (2022-12-03)
 ------------------
 
