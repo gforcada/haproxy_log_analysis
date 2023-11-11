@@ -56,12 +56,12 @@ class LinesGenerator:
         return Line(log_line)
 
 
-@pytest.fixture
+@pytest.fixture()
 def default_line_data():
     return DEFAULT_DATA
 
 
-@pytest.fixture
+@pytest.fixture()
 def line_factory():
     # queues and headers parameters are together because if no headers are
     # saved the field is completely empty and thus there is no double space

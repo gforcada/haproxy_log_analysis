@@ -49,7 +49,7 @@ def test_server_names(line_factory):
 
 
 @pytest.mark.parametrize(
-    'tq,tw,tc,tr,tt',
+    ('tq', 'tw', 'tc', 'tr', 'tt'),
     [
         ('0', '0', '0', '0', '0'),
         ('23', '55', '3', '4', '5'),
@@ -74,7 +74,7 @@ def test_timers(line_factory, tq, tw, tc, tr, tt):
 
 
 @pytest.mark.parametrize(
-    'status, bytes_read', [('200', '0'), ('-301', '543'), ('200', '+543')]
+    ('status', 'bytes_read'), [('200', '0'), ('-301', '543'), ('200', '+543')]
 )
 def test_status_and_bytes(line_factory, status, bytes_read):
     """Check that the status code and bytes are extracted correctly.
@@ -90,7 +90,7 @@ def test_status_and_bytes(line_factory, status, bytes_read):
 
 
 @pytest.mark.parametrize(
-    'act,fe,be,srv,retries',
+    ('act', 'fe', 'be', 'srv', 'retries'),
     [
         ('0', '0', '0', '0', '0'),
         ('40', '10', '11', '12', '14'),
@@ -112,7 +112,7 @@ def test_connections_and_retries(line_factory, act, fe, be, srv, retries):
     assert matches.group('retries') == retries
 
 
-@pytest.mark.parametrize('server, backend', [('0', '0'), ('200', '200')])
+@pytest.mark.parametrize(('server', 'backend'), [('0', '0'), ('200', '200')])
 def test_queues(line_factory, server, backend):
     """Check that the server and backend queues are extracted correctly."""
     line = line_factory(queue_server=server, queue_backend=backend)
@@ -123,7 +123,7 @@ def test_queues(line_factory, server, backend):
 
 
 @pytest.mark.parametrize(
-    'request_header, response_header',
+    ('request_header', 'response_header'),
     [
         ('', ''),
         ('something', None),

@@ -17,7 +17,7 @@ def test_logfile_default_values():
 
 
 @pytest.mark.parametrize(
-    'start_str, start_obj, delta, end_obj',
+    ('start_str', 'start_obj', 'delta', 'end_obj'),
     [
         (None, None, None, None),
         (None, None, '3d', None),
@@ -56,7 +56,7 @@ def test_lines_validity(tmp_path, line_factory, accept_date):
 
 
 @pytest.mark.parametrize(
-    'accept_date, start, delta, is_valid',
+    ('accept_date', 'start', 'delta', 'is_valid'),
     [
         # valid line and no time frame, returned
         ('09/Dec/2013:12:59:46.633', None, None, True),

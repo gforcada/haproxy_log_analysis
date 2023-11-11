@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('1.2.3.4', '1.2.3.4', True),
         ('2.3.4.5', '5.3.5.4', False),
@@ -21,7 +21,7 @@ def test_filter_ip(line_factory, to_filter, to_check, result):
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('1.2.3', '1.2.3.4', True),
         ('1.2.3', '1.2.3.78', True),
@@ -40,7 +40,7 @@ def test_filter_ip_range(line_factory, to_filter, to_check, result):
 
 
 @pytest.mark.parametrize(
-    'path, result',
+    ('path', 'result'),
     [
         ('/path/to/image', True),
         ('/something/else', False),
@@ -56,7 +56,7 @@ def test_filter_path(line_factory, path, result):
 
 
 @pytest.mark.parametrize(
-    'path, result',
+    ('path', 'result'),
     [
         ('/ssl_path:443/image', True),
         ('/something/else', False),
@@ -71,7 +71,7 @@ def test_filter_ssl(line_factory, path, result):
     assert current_filter(line) is result
 
 
-@pytest.mark.parametrize('tr, result', [(45, False), (13000, True), (4566, False)])
+@pytest.mark.parametrize(('tr', 'result'), [(45, False), (13000, True), (4566, False)])
 def test_filter_slow_requests(line_factory, tr, result):
     """Check that filter_slow_requests filter works as expected."""
     current_filter = filters.filter_slow_requests('10000')
@@ -79,7 +79,7 @@ def test_filter_slow_requests(line_factory, tr, result):
     assert current_filter(line) is result
 
 
-@pytest.mark.parametrize('tw, result', [(45, False), (13000, True), (4566, True)])
+@pytest.mark.parametrize(('tw', 'result'), [(45, False), (13000, True), (4566, True)])
 def test_filter_wait_on_queues(line_factory, tw, result):
     """Check that filter_wait_on_queues filter works as expected"""
     current_filter = filters.filter_wait_on_queues('50')
@@ -88,7 +88,7 @@ def test_filter_wait_on_queues(line_factory, tw, result):
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('200', '200', True),
         ('200', '230', False),
@@ -104,7 +104,7 @@ def test_filter_status_code(line_factory, to_filter, to_check, result):
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('2', '200', True),
         ('2', '230', True),
@@ -122,7 +122,7 @@ def test_filter_status_code_family(line_factory, to_filter, to_check, result):
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('GET', 'GET', True),
         ('GET', 'POST', False),
@@ -141,7 +141,7 @@ def test_filter_http_method(line_factory, to_filter, to_check, result):
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('default', 'default', True),
         ('default', 'backend', False),
@@ -157,7 +157,7 @@ def test_filter_backend(line_factory, to_filter, to_check, result):
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('varnish', 'varnish', True),
         ('varnish', 'nginx', False),
@@ -173,7 +173,7 @@ def test_filter_frontend(line_factory, to_filter, to_check, result):
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('server1', 'server1', True),
         ('server1', 'backend23', False),
@@ -189,7 +189,7 @@ def test_filter_server(line_factory, to_filter, to_check, result):
 
 
 @pytest.mark.parametrize(
-    'to_filter, to_check, result',
+    ('to_filter', 'to_check', 'result'),
     [
         ('400', '500', True),
         ('400', '+500', True),

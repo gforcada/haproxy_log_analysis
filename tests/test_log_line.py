@@ -191,7 +191,7 @@ def test_ip_from_client_ip(line_factory, ip):
 
 
 @pytest.mark.parametrize(
-    'start, end, result',
+    ('start', 'end', 'result'),
     [
         (None, None, True),
         (TWO_DAYS_AGO, None, True),
