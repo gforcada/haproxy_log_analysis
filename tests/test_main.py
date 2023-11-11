@@ -1,9 +1,12 @@
-import sys
+from haproxy.main import create_parser
+from haproxy.main import main
+from haproxy.main import parse_arguments
+from haproxy.utils import VALID_COMMANDS
+from haproxy.utils import VALID_FILTERS
 
 import pytest
+import sys
 
-from haproxy.main import create_parser, main, parse_arguments
-from haproxy.utils import VALID_COMMANDS, VALID_FILTERS
 
 PY310_OR_HIGHER = sys.version_info[1] > 9
 

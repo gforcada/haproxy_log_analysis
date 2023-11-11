@@ -1,5 +1,8 @@
+from datetime import datetime
+from datetime import timedelta
+
 import re
-from datetime import datetime, timedelta
+
 
 DELTA_REGEX = re.compile(r'\A(?P<value>\d+)(?P<time_unit>[smhd])\Z')
 
