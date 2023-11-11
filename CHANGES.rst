@@ -40,6 +40,9 @@ CHANGES
 - Pin dependencies installed in `tox.ini`
   [gforcada]
 
+- Add support for Python 3.12
+  [gforcada]
+
 5.1.0 (2022-12-03)
 ------------------
 
