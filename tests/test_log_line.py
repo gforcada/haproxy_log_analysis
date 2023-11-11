@@ -1,6 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 
 import pytest
+
 
 NOW = datetime.now()
 TWO_DAYS_AGO = NOW - timedelta(days=2)

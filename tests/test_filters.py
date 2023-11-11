@@ -1,6 +1,6 @@
-import pytest
-
 from haproxy import filters
+
+import pytest
 
 
 @pytest.mark.parametrize(
