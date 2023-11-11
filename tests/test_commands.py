@@ -18,7 +18,7 @@ def check_output(cmd, output, expected, capsys):
 
 
 @pytest.mark.parametrize(
-    'klass, expected',
+    ('klass', 'expected'),
     [
         (commands.StatusCodesCounter, 'status_codes_counter'),
         (commands.AverageResponseTime, 'average_response_time'),
@@ -75,7 +75,7 @@ def test_http_methods_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [(None, '- PUT: 2\n- GET: 1'), ('json', '[{"PUT": 2}, {"GET": 1}]')],
 )
 def test_http_methods_output(line_factory, capsys, output, expected):
@@ -110,7 +110,7 @@ def test_ip_counter_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [
         (None, '- 172.4.3.2: 3\n- 8.7.6.5: 2'),
         ('json', '[{"172.4.3.2": 3}, {"8.7.6.5": 2}]'),
@@ -172,7 +172,7 @@ def test_top_ips_print_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [
         (None, '- 192.168.0.2: 2\n- 192.168.0.1: 1'),
         ('json', '[{"192.168.0.2": 2}, {"192.168.0.1": 1}]'),
@@ -211,7 +211,7 @@ def test_status_codes_counter_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [(None, '- 301: 3\n- 500: 2'), ('json', '[{"301": 3}, {"500": 2}]')],
 )
 def test_status_codes_counter_output(line_factory, capsys, output, expected):
@@ -246,7 +246,7 @@ def test_request_path_counter_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [
         (None, '- /video/two: 3\n- /article/three: 2'),
         ('json', '[{"/video/two": 3}, {"/article/three": 2}]'),
@@ -279,7 +279,7 @@ def test_slow_requests_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [
         (None, [1000, 1003, 2013, 3200, 45000]),
         ('json', '[1000, 1003, 2013, 3200, 45000]'),
@@ -339,7 +339,7 @@ def test_top_request_paths_print_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [
         (None, '- /file/2: 2\n- /file/1: 1'),
         ('json', '[{"/file/2": 2}, {"/file/1": 1}]'),
@@ -384,7 +384,7 @@ def test_slow_requests_counter_output(line_factory, capsys, output):
 
 
 @pytest.mark.parametrize(
-    'series, average',
+    ('series', 'average'),
     [
         ((1003, 987, 456, 2013, 1000, 3200, 999), 1379.71),
         ((110, -1, 110), 110),  # aborted connections are ignored
@@ -420,7 +420,7 @@ def test_average_response_time_output(line_factory, capsys, output):
 
 
 @pytest.mark.parametrize(
-    'series, average',
+    ('series', 'average'),
     [
         ((1003, 987, 456, 2013, 1000, 3200, 999), 1379.71),
         ((110, -1, 110), 110),  # aborted connections are ignored
@@ -471,7 +471,7 @@ def test_server_load_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [
         (None, '- server5: 5\n- server3: 3'),
         ('json', '[{"server5": 5}, {"server3": 3}]'),
@@ -514,7 +514,7 @@ def test_queue_peaks_no_queues(line_factory):
 
 
 @pytest.mark.parametrize(
-    'date,expected_key',
+    ('date', 'expected_key'),
     [
         ('10/Dec/2019:15:40:12.12345', 1575988812.12345),
         ('15/Jan/2017:05:23:05.456', 1484454185.456),
@@ -619,7 +619,7 @@ def test_queue_peaks_did_not_finish(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [
         (
             None,
@@ -662,7 +662,7 @@ def test_connection_type_results(line_factory):
 
 
 @pytest.mark.parametrize(
-    'output, expected',
+    ('output', 'expected'),
     [(None, '- https: 4\n- http: 2'), ('json', '[{"https": 4}, {"http": 2}]')],
 )
 def test_connection_type_output(line_factory, capsys, output, expected):

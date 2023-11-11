@@ -29,6 +29,7 @@ repos:
           - flake8-isort
           - flake8-pep3101
           - flake8-quotes
+          - flake8-pytest-style
 
 -   repo: https://github.com/codespell-project/codespell
     rev: v2.2.6

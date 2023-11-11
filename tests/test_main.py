@@ -11,7 +11,7 @@ import sys
 PY310_OR_HIGHER = sys.version_info[1] > 9
 
 
-@pytest.fixture
+@pytest.fixture()
 def default_arguments():
     """Return all the expected arguments the main function expects."""
     return {
@@ -29,7 +29,7 @@ def default_arguments():
 
 
 @pytest.mark.parametrize(
-    'switch, listing',
+    ('switch', 'listing'),
     [('list-filters', VALID_FILTERS), ('list-commands', VALID_COMMANDS)],
 )
 def test_list_filters_and_commands(capsys, switch, listing):

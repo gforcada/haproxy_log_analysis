@@ -11,7 +11,7 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    'text, expected',
+    ('text', 'expected'),
     [
         ('45s', timedelta(seconds=45)),
         ('2m', timedelta(minutes=2)),
@@ -25,7 +25,7 @@ def test_str_to_timedelta(text, expected):
 
 
 @pytest.mark.parametrize(
-    'text, expected',
+    ('text', 'expected'),
     [
         ('04/Jan/2013', datetime(2013, 1, 4)),
         ('13/May/2015:13', datetime(2015, 5, 13, 13)),
@@ -58,25 +58,22 @@ def test_valid_filters(filter_key):
     assert filter_data['description'].startswith(f'{filter_key}:\n\t')
 
 
-@pytest.mark.parametrize('value, expected', [('', None), ('30/Dec/2019', True)])
+@pytest.mark.parametrize(('value', 'expected'), [('', None), ('30/Dec/2019', True)])
 def test_validate_date(value, expected):
     """Check that the date is validated or an exception raised."""
     if expected is None:
-        with pytest.raises(ValueError) as exception_info:
+        with pytest.raises(ValueError, match='--start argument is not valid'):
             validate_arg_date(value)
-
-        assert '--start argument is not valid' in str(exception_info)
     else:
         assert validate_arg_date(value) is None
 
 
-@pytest.mark.parametrize('value, expected', [('', None), ('3d', True)])
+@pytest.mark.parametrize(('value', 'expected'), [('', None), ('3d', True)])
 def test_validate_delta(value, expected):
     """Check that the delta is validated or an exception raised."""
     if expected is None:
-        with pytest.raises(ValueError) as exception_info:
+        with pytest.raises(ValueError, match='--delta argument is not valid'):
             validate_arg_delta(value)
 
-        assert '--delta argument is not valid' in str(exception_info)
     else:
         assert validate_arg_delta(value) is None
