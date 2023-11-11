@@ -42,7 +42,6 @@ class BaseCommandMixin:
 
 
 class AttributeCounterMixin:
-
     attribute_name = None
 
     def __init__(self):
