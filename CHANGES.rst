@@ -16,6 +16,27 @@ CHANGES
   e.g. the lines that took more than the specified time.
   [gforcada]
 
+- move code to a `src` folder
+  [gforcada]
+
+- drop `pkg_resources` usage, default to native namespaces
+  [gforcada]
+
+- switch to `pyproject.toml` and remove `setup.py`
+  [gforcada]
+
+- replace `setuptools` for `hatchling`
+  [gforcada]
+
+- use `tox`
+  [gforcada]
+
+- use `pre-commit`
+  [gforcada]
+
+- soft drop python 3.7 (it's EOL, and we stop testing against it)
+  [gforcada]
+
 5.1.0 (2022-12-03)
 ------------------
 
