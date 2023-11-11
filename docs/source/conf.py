@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # HAProxy log analyzer documentation build configuration file, created by
 # sphinx-quickstart on Thu Dec 19 00:06:54 2013.
@@ -45,8 +44,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'HAProxy log analyzer'
-copyright = u'2013, Gil Forcada'
+project = 'HAProxy log analyzer'
+copyright = '2013, Gil Forcada'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -198,8 +197,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'HAProxyloganalyzer.tex', u'HAProxy log analyzer Documentation',
-   u'Gil Forcada', 'manual'),
+  ('index', 'HAProxyloganalyzer.tex', 'HAProxy log analyzer Documentation',
+   'Gil Forcada', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -228,8 +227,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'haproxyloganalyzer', u'HAProxy log analyzer Documentation',
-     [u'Gil Forcada'], 1)
+    ('index', 'haproxyloganalyzer', 'HAProxy log analyzer Documentation',
+     ['Gil Forcada'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -242,8 +241,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'HAProxyloganalyzer', u'HAProxy log analyzer Documentation',
-   u'Gil Forcada', 'HAProxyloganalyzer', 'One line description of project.',
+  ('index', 'HAProxyloganalyzer', 'HAProxy log analyzer Documentation',
+   'Gil Forcada', 'HAProxyloganalyzer', 'One line description of project.',
    'Miscellaneous'),
 ]
 
