@@ -1,8 +1,12 @@
-include *.rst
+include CHANGES.rst
+exclude .flake8
+exclude *.in
+exclude *.txt
+exclude *.yaml
 exclude .coveragerc
-include *.txt
-exclude requirements*.in
-recursive-include docs *.py
-recursive-include docs *.rst
-recursive-include docs Makefile
-recursive-include tests *.log
+exclude tox.ini
+recursive-exclude docs *.py
+recursive-exclude docs *.rst
+recursive-exclude docs Makefile
+recursive-exclude tests *.log
+recursive-exclude tests *.py
