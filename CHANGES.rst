@@ -40,6 +40,9 @@ CHANGES
 - Add support for Python 3.12
   [gforcada]
 
+- Automatically create GitHub releases with GitHub Actions.
+  [gforcada]
+
 5.1.0 (2022-12-03)
 ------------------
 
