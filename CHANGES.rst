@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-5.1.1 (unreleased)
-------------------
+6.0.0a1 (2023-11-12)
+--------------------
 
 - Make listing of commands and filters easier to read.
   [gforcada]
