@@ -25,9 +25,6 @@ CHANGES
 - switch to `pyproject.toml` and remove `setup.py`
   [gforcada]
 
-- replace `setuptools` for `hatchling`
-  [gforcada]
-
 - use `tox`
   [gforcada]
 
