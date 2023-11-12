@@ -1,0 +1,49 @@
+name: GitHub
+on:
+  push:
+    tags: ["*"]
+
+jobs:
+  release:
+    permissions: write-all
+    runs-on: "ubuntu-latest"
+    name: Create a Release
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Create a new GitHub release
+        run: |
+          # get the lines where the changelog for the last release starts and finishes
+          first_line=$(grep -n "\-\-\-\-" CHANGES.rst | cut -d":" -f1 |head -n1)
+          last_line=$(grep -n "\-\-\-\-" CHANGES.rst | cut -d":" -f1 |head -n2 | tail -n1)
+
+          # do some math to adjust the line numbers
+          first=$((${first_line}+1))
+          last=$((${last_line}-2))
+          end=$((${last_line}-1))
+
+          # extract the changelog
+          sed -n "${first},${last}p;${end}q" CHANGES.rst > body.txt
+
+          # remove new line characters
+          sed -z 's/\n/\\n/g' body.txt > body.json
+
+          echo '{"tag_name": "${{ github.ref_name }}",' > data.json
+          echo '"name": "${{ github.ref_name }}",' >> data.json
+          echo '"body": "' >> data.json
+          cat body.json >> data.json
+          echo '"}"' >> data.json
+
+          cat data.json
+
+          curl -L \
+          -X POST \
+          --header "Accept: application/vnd.github+json" \
+          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          https://api.github.com/repos/${{ github.repository }}/releases \
+          -d "@data.json"
+
