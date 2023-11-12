@@ -4,8 +4,8 @@ CHANGES
 6.0.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- Test again a release.
+  [gforcada]
 
 6.0.0a1 (2023-11-12)
 --------------------
