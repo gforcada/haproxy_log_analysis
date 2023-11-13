@@ -39,7 +39,9 @@ def filter_path(path):
     """
 
     def filter_func(log_line):
-        return path in log_line.http_request_path
+        http_request_path = log_line.http_request_path
+        if http_request_path:
+            return path in log_line.http_request_path
 
     return filter_func
 
