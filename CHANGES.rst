@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-6.0.0a4 (unreleased)
+6.0.0a4 (2023-11-25)
 --------------------
 
 - More GHA automation fixes.
