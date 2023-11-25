@@ -4,7 +4,7 @@ CHANGES
 6.0.0a5 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Random stuff.
 
 
 6.0.0a4 (2023-11-25)
