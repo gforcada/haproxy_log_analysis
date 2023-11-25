@@ -4,8 +4,8 @@ CHANGES
 6.0.0a3 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- Play with gh command line tool.
+  [gforcada]
 
 6.0.0a2 (2023-11-12)
 --------------------
