@@ -4,8 +4,8 @@ CHANGES
 6.0.0a4 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- More GHA automation fixes.
+  [gforcada]
 
 6.0.0a3 (2023-11-25)
 --------------------
