@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-6.0.0a3 (unreleased)
+6.0.0a3 (2023-11-25)
 --------------------
 
 - Play with gh command line tool.
