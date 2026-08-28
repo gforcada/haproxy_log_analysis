@@ -12,7 +12,7 @@ description = "Analayze HAProxy log files"
 keywords = ["haproxy", "log", "sysadmin", "devops", "report" ]
 license = {file = "LICENSE"}
 readme = "README.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 classifiers = [
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -22,11 +22,10 @@ classifiers = [
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Internet :: Log Analysis",
@@ -44,5 +43,5 @@ haproxy_log_analysis = "haproxy.main:console_script"
 profile = "plone"
 
 [tool.black]
-target-version = ["py38"]
+target-version = ["py311"]
 skip-string-normalization = true
