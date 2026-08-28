@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-6.0.0a5 (unreleased)
---------------------
+6.0.0 (2026-08-28)
+------------------
 
 - Update python versions and dependencies.
   [gforcada]
