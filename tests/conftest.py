@@ -3,7 +3,6 @@ from haproxy.line import Line
 
 import pytest
 
-
 DEFAULT_DATA = {
     'syslog_date': 'Dec  9 13:01:26',
     'process_name_and_pid': 'localhost haproxy[28029]:',
@@ -42,9 +41,9 @@ class LinesGenerator:
         self.data['client_ip_and_port'] = '{client_ip}:{client_port}'.format(
             **self.data
         )
-        self.data[
-            'server_names'
-        ] = '{frontend_name} {backend_name}/{server_name}'.format(**self.data)
+        self.data['server_names'] = (
+            '{frontend_name} {backend_name}/{server_name}'.format(**self.data)
+        )
         self.data['timers'] = '{tq}/{tw}/{tc}/{tr}/{tt}'.format(**self.data)
         self.data['status_and_bytes'] = '{status} {bytes}'.format(**self.data)
         self.data['connections_and_retries'] = '{act}/{fe}/{be}/{srv}/{retries}'.format(
@@ -56,12 +55,12 @@ class LinesGenerator:
         return Line(log_line)
 
 
-@pytest.fixture()
+@pytest.fixture
 def default_line_data():
     return DEFAULT_DATA
 
 
-@pytest.fixture()
+@pytest.fixture
 def line_factory():
     # queues and headers parameters are together because if no headers are
     # saved the field is completely empty and thus there is no double space

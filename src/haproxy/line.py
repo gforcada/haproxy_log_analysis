@@ -2,7 +2,6 @@ from datetime import datetime
 
 import re
 
-
 # Example log line, to understand the regex below (truncated to fit into
 # 80 chars):
 #
