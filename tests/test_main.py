@@ -10,7 +10,7 @@ import sys
 PY310_OR_HIGHER = sys.version_info[1] > 9
 
 
-@pytest.fixture()
+@pytest.fixture
 def default_arguments():
     """Return all the expected arguments the main function expects."""
     return {
