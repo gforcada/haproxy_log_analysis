@@ -8,17 +8,6 @@ It analyzes HAProxy log files in multiple ways (see commands section below).
 .. note::
    Currently only the `HTTP log format`_ is supported.
 
-Tests and coverage
-------------------
-No project is trustworthy if does not have tests and a decent coverage!
-
-.. image:: https://github.com/gforcada/haproxy_log_analysis/actions/workflows/tests.yml/badge.svg?branch=master
-   :target: https://github.com/gforcada/haproxy_log_analysis/actions/workflows/tests.yml
-
-.. image:: https://coveralls.io/repos/github/gforcada/haproxy_log_analysis/badge.svg?branch=master
-   :target: https://coveralls.io/github/gforcada/haproxy_log_analysis?branch=master
-
-
 Documentation
 -------------
 See the `documentation and API`_ at ReadTheDocs_.
