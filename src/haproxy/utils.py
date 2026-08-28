@@ -3,7 +3,6 @@ from datetime import timedelta
 
 import re
 
-
 DELTA_REGEX = re.compile(r'\A(?P<value>\d+)(?P<time_unit>[smhd])\Z')
 
 START_REGEX = re.compile(

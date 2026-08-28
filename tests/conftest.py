@@ -3,7 +3,6 @@ from haproxy.line import Line
 
 import pytest
 
-
 DEFAULT_DATA = {
     'syslog_date': 'Dec  9 13:01:26',
     'process_name_and_pid': 'localhost haproxy[28029]:',

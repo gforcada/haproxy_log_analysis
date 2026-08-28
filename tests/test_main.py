@@ -7,7 +7,6 @@ from haproxy.utils import VALID_FILTERS
 import pytest
 import sys
 
-
 PY310_OR_HIGHER = sys.version_info[1] > 9
 
 
