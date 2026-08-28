@@ -4,8 +4,8 @@ CHANGES
 6.0.0a5 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- Update python versions and dependencies.
+  [gforcada]
 
 6.0.0a4 (2023-11-25)
 --------------------
