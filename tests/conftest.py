@@ -41,9 +41,9 @@ class LinesGenerator:
         self.data['client_ip_and_port'] = '{client_ip}:{client_port}'.format(
             **self.data
         )
-        self.data[
-            'server_names'
-        ] = '{frontend_name} {backend_name}/{server_name}'.format(**self.data)
+        self.data['server_names'] = (
+            '{frontend_name} {backend_name}/{server_name}'.format(**self.data)
+        )
         self.data['timers'] = '{tq}/{tw}/{tc}/{tr}/{tt}'.format(**self.data)
         self.data['status_and_bytes'] = '{status} {bytes}'.format(**self.data)
         self.data['connections_and_retries'] = '{act}/{fe}/{be}/{srv}/{retries}'.format(
