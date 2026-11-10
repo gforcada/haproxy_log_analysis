@@ -40,6 +40,24 @@ def test_parser_boolean_arguments(argument, option):
     assert data[option] is True
 
 
+def test_invalid_flag_prints_invalid_lines():
+    """--invalid must enable printing of unparseable lines.
+
+    It used to store the --json flag value instead, so --invalid never
+    printed anything while --json accidentally toggled it.
+    """
+    parser = create_parser()
+    data = parse_arguments(parser.parse_args(['--invalid']))
+    assert data['invalid_lines'] is True
+
+
+def test_json_flag_does_not_toggle_invalid_lines():
+    """--json alone must leave invalid-line printing off."""
+    parser = create_parser()
+    data = parse_arguments(parser.parse_args(['--json']))
+    assert data['invalid_lines'] is False
+
+
 @pytest.mark.parametrize(
     ('start', 'delta'), [('30/Dec/2019', '3d'), ('20/Jun/2015', '2h')]
 )
