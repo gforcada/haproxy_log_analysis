@@ -71,7 +71,7 @@ def create_parser():
     parser.add_argument('--json', action='store_true', help='Output results in json.')
     parser.add_argument(
         '--invalid',
-        action='store_false',
+        action='store_true',
         help='Print the lines that could not be parsed. '
         'Be aware that mixing it with the print command will mix their output.',
     )
@@ -127,8 +127,7 @@ def parse_arguments(args):
     if args.json is not None:
         data['json'] = args.json
 
-    if args.invalid:
-        data['invalid_lines'] = args.json
+    data['invalid_lines'] = args.invalid
 
     return data
 
